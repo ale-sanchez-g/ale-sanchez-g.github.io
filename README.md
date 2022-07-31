@@ -1,4 +1,7 @@
-![Alejandro](img/alejandro.jpeg) 
+<div style="float:left;margin:0 10px 10px 0" markdown="1">
+![Alejandro](img/alejandro.jpeg) ![backview](img/backview.jpg)
+</div>
+
 # Alejandro Sanchez Giraldo 
 
 [Contact me](mailto:alejandrosanchezau@yahoo.com.au)
