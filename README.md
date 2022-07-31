@@ -1,3 +1,4 @@
+![Alejandro](img/alejandro.jpeg) 
 # Alejandro Sanchez Giraldo 
 
 [Contact me](mailto:alejandrosanchezau@yahoo.com.au)
