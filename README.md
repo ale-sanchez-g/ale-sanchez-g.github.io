@@ -1,4 +1,4 @@
 # Alejandro Sanchez Giraldo 
 
-Email alejandrosanchezau@yahoo.com.au  
-LinkedIn https://www.linkedin.com/in/alejandrosanchezgiraldo  
+[Contact me](mailto:alejandrosanchezau@yahoo.com.au)
+[Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo)
