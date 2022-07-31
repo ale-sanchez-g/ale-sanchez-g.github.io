@@ -3,8 +3,7 @@
 
 # Alejandro Sanchez Giraldo 
 
-| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) |[Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo) |
-| - | - |
+| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo) |
 
 ## Personal Statement
 
@@ -12,11 +11,13 @@ I see myself as the Product Owner for Quality and the person that will collabora
 
 Metrics are an essential way of how I do work. I enjoy building the right scorecards for each team to ensure data-driven decisions take place, and the relevant capabilities are built. I am not shy and like to present the team success to stakeholders as well as taking responsibility for our mistakes. I am a firm believer of fail fast, fail often, learn from your mistakes and don't repeat them. 
 
-## My recent achievements
+## Achievements
 
--   Create and deliver a strategic roadmap to evolve from testing services into Quality Engineering capabilities in 2 major Enterprises. [Read more](achivements/From%20test%20to%20Quality%20Engineering.md)
-- 3 major projects for Qantas Loyalty
+- Create and deliver a strategic roadmap to evolve from testing services into Quality Engineering capabilities in 2 major Enterprises. [Read more](achivements/From%20test%20to%20Quality%20Engineering.md)
+- 3 major projects for Qantas Loyalty [Read more](achivements/Qantas%20loyalty.md)
     - Titanium credit card
     - Qantas Travel Money re-platform
     - Qantas Car Insurance
+- Leading and developing small and large teams
+- Educate teams on how to use CI/CD tools to enable self-service for quality capabilities
 
