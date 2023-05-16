@@ -1,1 +1,0 @@
-# From Testing to Quality Engineering

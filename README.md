@@ -1,9 +1,9 @@
 <img src="img/alejandro.jpeg" alt="alejandro" height="100px"/>
 
-# Alejandro Sanchez Giraldo 
+# Alejandro Sanchez-Giraldo 
 🛠️ Helping Teams Engineer Quality | 🗣️ Product Owner for Quality | Head of Quality Engineering and Observability
 
-| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo) |
+| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo) | [Portfolio](https://github.com/ale-sanchez-g?tab=repositories)
 
 ## Personal Statement
 
@@ -13,8 +13,14 @@ I am a Product Owner for Quality who is passionate about engineering quality int
 
 • 📈 Create and deliver a strategic roadmap to evolve from testing services into Quality Engineering capabilities
 
-• 🙋‍♂️Leading and developing teams towards building quality in their delivery process.
+• 🙋‍♂️ Leading and developing teams towards building quality in their delivery process.
 
 • 🛠️ Exploring DevSecOps tools to enable self-service for quality capabilities.
 
-[Work Experience](/work/WORKEXPERIENCE.MD)
+• 👁️ Strengthening Observability practices to enable faster and secure troubleshooting
+
+[Work Experience](/reference/WORKEXPERIENCE.MD)
+
+[Publications](/reference/PUBLICATIONS.MD)
+
+[Conferences](/reference/CONFERENCES.MD)
