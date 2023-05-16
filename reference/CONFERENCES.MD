@@ -6,4 +6,4 @@
 - [Automate to collaborate | Applitools Webinar](https://applitools.com/blog/vodafone-webinar/) - Event — November 29, 2020
 
 
-[Back home](/README.md)
+[Back home](/)
