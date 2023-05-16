@@ -3,7 +3,7 @@
 # Alejandro Sanchez-Giraldo 
 🛠️ Helping Teams Engineer Quality | 🗣️ Product Owner for Quality | Head of Quality Engineering and Observability
 
-| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo) | [Portfolio](https://github.com/ale-sanchez-g?tab=repositories)
+| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo){:target="_blank"} | [Portfolio](https://github.com/ale-sanchez-g?tab=repositories){:target="_blank"}
 
 ## Personal Statement
 
