@@ -1,5 +1,7 @@
 ## Publications
 
+| [Medium](https://ale-sanchez-g.medium.com/about) | [LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo/recent-activity/posts/) |
+
 ### Blogs
 
 - [The paradigm of Quality ](https://qualitywithmillan.github.io/post/the-paradigm-of-quality.html){:target="_blank"}
