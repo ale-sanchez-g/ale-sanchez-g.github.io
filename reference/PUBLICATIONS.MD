@@ -4,6 +4,7 @@
 
 ### Blogs
 
+- [Observability the last choice](https://ale-sanchez-g.medium.com/observability-the-last-choice-2463a51a824f){:target="_blank"}
 - [The paradigm of Quality ](https://qualitywithmillan.github.io/post/the-paradigm-of-quality.html){:target="_blank"}
 - [The paradigm of Quality - Embedded ](https://qualitywithmillan.github.io/post/the-paradigm-of-quality-embedded.html){:target="_blank"}
 - [The paradigm of Quality - Built-In ](https://qualitywithmillan.github.io/post/the-paradigm-of-quality-built-in.html){:target="_blank"}
