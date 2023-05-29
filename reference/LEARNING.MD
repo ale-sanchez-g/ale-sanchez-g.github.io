@@ -1,4 +1,4 @@
-## Training References
+## References
 
 The duration of each topic may vary based on the complexity and depth of the topic. It is recommended to do hands-on exercises, practice projects, and real-world scenarios to reinforce the learning and ensure practical proficiency.
 
