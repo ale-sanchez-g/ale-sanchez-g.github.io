@@ -12,4 +12,6 @@
 - Test Analyst, [Optus](https://www.optus.com.au/){:target="_blank"} (04/2010 - 04/2013)
 - Test Analyst, Virgin Mobile Australia (01/2007 - 04/2010)
 
+📝 Download my CV/Resume [here](https://1drv.ms/w/s!AoLNJ5agumbCjGjxw-r0Pl6zPWAA?e=td87jT){:target="_blank"}
+
 [Back home](/)
