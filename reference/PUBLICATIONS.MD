@@ -1,9 +1,11 @@
 ## Publications
 
-| [Medium](https://ale-sanchez-g.medium.com/about) | [LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo/recent-activity/posts/) |
+| [Medium](https://ale-sanchez-g.medium.com/about) | [LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo/recent-activity/posts/) | 
 
 ### Blogs
 
+- [The Elevation of Quality Engineering: An Exploration of Visual Validation Tools](https://www.devops1.com.au/blog/the-elevation-of-quality-engineering-an-exploration-of-visual-validation-tools){:target="_blank"}
+- [Unveiling the Misunderstood Practice of Executable Documentation in Quality Engineering: Debunking Gherkin Misuse and the Pitfalls of Swagger Design](https://medium.com/@ale-sanchez-g/unveiling-the-misunderstood-practice-of-executable-documentation-in-quality-engineering-debunking-6722e093b13b){:target="_blank"}
 - [Observability the last choice](https://ale-sanchez-g.medium.com/observability-the-last-choice-2463a51a824f){:target="_blank"}
 - [The paradigm of Quality ](https://qualitywithmillan.github.io/post/the-paradigm-of-quality.html){:target="_blank"}
 - [The paradigm of Quality - Embedded ](https://qualitywithmillan.github.io/post/the-paradigm-of-quality-embedded.html){:target="_blank"}
