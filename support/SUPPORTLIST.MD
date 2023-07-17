@@ -4,7 +4,8 @@ Welcome to the Support Materials section. Here you can find a collection of help
 
 ## Test Data
 
-- [Fake phone numbers](/support/FAKENUMBERS.MD)
-- [Stripe credit cards](https://stripe.com/docs/testing?testing-method=card-numbers){:target="_blank"}
+[Fake phone numbers](/support/FAKENUMBERS.MD)
+
+[Stripe credit cards](https://stripe.com/docs/testing?testing-method=card-numbers){:target="_blank"}
 
 [Back home](/)

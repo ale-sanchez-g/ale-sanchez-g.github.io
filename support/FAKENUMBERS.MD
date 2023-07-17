@@ -56,4 +56,6 @@ For example, in NSW they would be (02) 5550 xxxx and (02) 7010 xxxx. You can att
 Please note that these numbers are for testing purposes only and should not be used for any real communication.
 
 
-[Back Support](/support/SUPPORTLIST.MD) || [Back home](/)
+[Back Support](/support/SUPPORTLIST.MD)
+
+[Back home](/)
