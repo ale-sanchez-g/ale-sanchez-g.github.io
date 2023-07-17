@@ -30,6 +30,8 @@ With over 15 years of invaluable experience, I have built my expertise in develo
 
 [Learning](/reference/LEARNING.MD)
 
+[Support](/support/SUPPORTLIST.MD)
+
 ### Interest
 
 In addition to my extensive experience, I have developed a keen interest in emerging fields and technologies that are shaping the future of engineering. I have actively pursued knowledge and expertise in areas such as Artificial Intelligence (AI), Prompt Engineering, Observability, and Community engagement. These areas have become integral components of my professional growth, as I recognize their potential to revolutionize the way we approach quality engineering and product development. By staying ahead of the latest advancements and actively engaging with communities of like-minded professionals, I continually strive to expand my horizons and contribute to the forefront of cutting-edge engineering practices.
