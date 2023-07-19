@@ -1,7 +1,5 @@
 <img src="img/alejandro.jpeg" alt="alejandro" height="100px"/>
 
-## Alejandro Sanchez-Giraldo
-
 🛠️ Helping Teams Engineer Quality : 🗣️ Product Owner for Quality : Head of Quality Engineering and Observability
 
 | [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo){:target="\_blank"} | [Portfolio](https://github.com/ale-sanchez-g?tab=repositories){:target="\_blank"}
