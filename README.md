@@ -1,4 +1,7 @@
 <img src="img/alejandro.jpeg" alt="alejandro" height="100px"/>
+<a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54">
+<img src="img/dynaBadge.png" height="30px"/>
+</a>
 
 🛠️ Helping Teams Engineer Quality : 🗣️ Product Owner for Quality : Head of Quality Engineering and Observability
 
@@ -20,6 +23,7 @@ With over 15 years of invaluable experience, I have built my expertise in develo
 
 • 👁️ Strengthening Observability practices to enable faster and secure engineering
 
+
 [Work Experience](/reference/WORKEXPERIENCE.MD)
 
 [Publications](/reference/PUBLICATIONS.MD)
@@ -29,6 +33,9 @@ With over 15 years of invaluable experience, I have built my expertise in develo
 [Learning](/reference/LEARNING.MD)
 
 [Support](/support/SUPPORTLIST.MD)
+
+### Certifications
+- [Dynatrace Associate](https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54){:target="\_blank"} 
 
 ### Interest
 
