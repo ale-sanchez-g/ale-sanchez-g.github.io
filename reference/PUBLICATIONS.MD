@@ -4,6 +4,7 @@
 
 ### Blogs
 
+- [The beauty in Ch@o$](https://ale-sanchez-g.medium.com/the-beauty-in-ch-o-c46f514ba8d1){:target="_blank"}
 - [The Elevation of Quality Engineering: An Exploration of Visual Validation Tools](https://www.devops1.com.au/blog/the-elevation-of-quality-engineering-an-exploration-of-visual-validation-tools){:target="_blank"}
 - [Unveiling the Misunderstood Practice of Executable Documentation in Quality Engineering: Debunking Gherkin Misuse and the Pitfalls of Swagger Design](https://medium.com/@ale-sanchez-g/unveiling-the-misunderstood-practice-of-executable-documentation-in-quality-engineering-debunking-6722e093b13b){:target="_blank"}
 - [Observability the last choice](https://ale-sanchez-g.medium.com/observability-the-last-choice-2463a51a824f){:target="_blank"}
