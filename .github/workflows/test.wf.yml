@@ -1,6 +1,9 @@
 name: Run Playwright Tests on Deployment Success
 
 on:
+  push:
+    branches:
+      - action
   deployment_status:
     types:
       - success
