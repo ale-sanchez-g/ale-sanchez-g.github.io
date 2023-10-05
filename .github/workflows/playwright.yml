@@ -17,7 +17,9 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npm test
+      env:
+        APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
     - uses: actions/upload-artifact@v3
       if: always()
       with:
