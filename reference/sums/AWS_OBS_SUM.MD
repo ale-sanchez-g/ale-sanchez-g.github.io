@@ -34,6 +34,6 @@ The notes outline a strategy for observability in AWS (Amazon Web Services) and 
 
 Overall, the strategy encourages a customer-centric approach, automation, and the strategic use of tools to ensure effective observability in AWS environments while keeping the focus on business goals and delivering value.
 
-<img src="https://ale-sanchez-g.github.io/img/obsStrategy.jpg" height=50%>
+[Photos](https://ale-sanchez-g.github.io/img/obsStrategy.jpg){:target="\_blank"}
 
 [Back home](/)
