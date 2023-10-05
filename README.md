@@ -40,6 +40,7 @@ With over 15 years of invaluable experience, I have built my expertise in develo
 
 ### Certifications
 - [Dynatrace Associate](https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54){:target="\_blank"} 
+- [Microsoft - Github Actions](https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61){:target="\_blank"}
 
 ### Interest
 
