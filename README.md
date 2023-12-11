@@ -18,7 +18,8 @@
   }
 
   .text {
-    font-size: 15px;
+    font-family: "Lucida Handwriting";
+    font-size: 12px;
     padding-left: 20px;
   }
 
@@ -50,8 +51,7 @@
     <img src="img/AJ-low.jpg" alt="alejandro" height="100px"/>
     </div>
     <div class="text">
-    Aim for your vision as you journey through the roadmap.
-    pivots are just a way to get there.
+    "As you navigate the intricate pathways of purpose, direct your aspirations towards the envisioned objective. Recognize that strategic adjustments, akin to pivots, serve as tactical instruments in the pursuit of your journey."
     </div>
 </div>
 
