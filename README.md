@@ -1,4 +1,32 @@
-<img src="img/AJ-low.jpg" alt="alejandro" height="100px"/>
+<style>
+  .container {
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+
+img {
+  max-width: 100%;
+  max-height:100%;
+  border-radius: 20%;
+}
+
+.text {
+  font-size: 20px;
+  padding-left: 20px;
+}
+  </style>
+
+<h1>Alejandro Sanchez-Giraldo</h1>
+
+<div class="container">
+    <div class="image">
+    <img src="img/AJ-low.jpg" alt="alejandro" height="100px"/>
+    </div>
+    <div class="text">
+    Journey into a roadmap, and follow your vision!
+    </div>
+</div>
 
 <a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54">
     <img src="img/dynaBadge.png" height="30px"/>

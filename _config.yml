@@ -1,5 +1,5 @@
-title: Alejandro Sanchez-Giraldo
-description: Engineering quality with your team
+title: Engineering quality with your team
+description: automation, performace, observability, and more
 remote_theme: pages-themes/architect@v0.2.0
 plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
