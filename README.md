@@ -3,46 +3,44 @@
   display: flex;
   align-items: center;
   justify-content: center
-}
-
-img {
-  max-width: 100%;
-  max-height:100%;
-  border-radius: 20%;
-}
-
-.image {
-  width: 250px;
-  height: 100px;
-  margin-right: 20px;
-}
-
-.text {
-  font-size: 15px;
-  padding-left: 20px;
-}
-@keyframes wave {
-  0%, 100% {
-    transform: translateY(0);
   }
-  25% {
-    transform: translateY(-10px);
-  }
-  50% {
-    transform: translateY(0);
-  }
-  75% {
-    transform: translateY(10px);
-  }
-}
 
-.cool-title {
-  font-size: 3em;
-  color: #3498db;
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  animation: wave 2s infinite;
-}
+  img {
+    max-width: 100%;
+    max-height:100%;
+    border-radius: 20%;
+  }
+
+  .image {
+    width: 250px;
+    height: 100px;
+    margin-right: 20px;
+  }
+
+  .text {
+    font-size: 15px;
+    padding-left: 20px;
+  }
+
+  @keyframes earthquake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+      transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+      transform: translateX(5px);
+    }
+  }
+
+  .cool-title {
+    font-size: 3em;
+    color: #3498db;
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+    animation: earthquake 12s infinite;
+  }
   </style>
 
 <div class="cool-title">Alejandro Sanchez-Giraldo</div>
