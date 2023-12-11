@@ -11,6 +11,12 @@ img {
   border-radius: 20%;
 }
 
+.image {
+  width: 250px;
+  height: 100px;
+  margin-right: 20px;
+}
+
 .text {
   font-size: 20px;
   padding-left: 20px;
