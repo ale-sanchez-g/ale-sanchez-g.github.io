@@ -18,19 +18,42 @@ img {
 }
 
 .text {
-  font-size: 20px;
+  font-size: 15px;
   padding-left: 20px;
+}
+@keyframes wave {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(10px);
+  }
+}
+
+.cool-title {
+  font-size: 3em;
+  color: #3498db;
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  animation: wave 2s infinite;
 }
   </style>
 
-<h1>Alejandro Sanchez-Giraldo</h1>
+<div class="cool-title">Alejandro Sanchez-Giraldo</div>
 
 <div class="container">
     <div class="image">
     <img src="img/AJ-low.jpg" alt="alejandro" height="100px"/>
     </div>
     <div class="text">
-    Journey into a roadmap, and follow your vision!
+    Aim for your vision as you journey through the roadmap.
+    pivots are just a way to get there.
     </div>
 </div>
 
