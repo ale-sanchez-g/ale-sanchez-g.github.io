@@ -1,4 +1,4 @@
-<img src="img/alejandro.jpeg" alt="alejandro" height="100px"/>
+<img src="img/AJ-low.jpg" alt="alejandro" height="100px"/>
 
 <a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54">
     <img src="img/dynaBadge.png" height="30px"/>
