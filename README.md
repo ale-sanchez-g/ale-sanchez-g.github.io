@@ -61,6 +61,9 @@
 <a href="https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61">
     <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-automate-tasks.svg" height="30px">
 </a>
+<a href="https://learn.microsoft.com/api/achievements/share/en-gb/AlejandroSG-3988/FZD6SK5X?sharingId=7539A66B782C7D61">
+    <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-ci.svg" height="30px">
+</a>
 <br>
 <a href="https://verify.skilljar.com/c/x7xmdncdguxm">
     <img src="img/ldBronze.png" height="30px">
