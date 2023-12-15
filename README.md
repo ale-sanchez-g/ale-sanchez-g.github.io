@@ -61,6 +61,9 @@
 <a href="https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61">
     <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-automate-tasks.svg" height="30px">
 </a>
+<a href="https://verify.skilljar.com/c/x7xmdncdguxm">
+    <img src="img/ldBronze.png" height="30px">
+</a>
 
 🛠️ Helping Teams Engineer Quality : 🗣️ Product Owner for Quality : Head of Quality Engineering and Observability
 
