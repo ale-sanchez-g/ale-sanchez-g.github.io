@@ -1,48 +1,22 @@
-<style>
-  .container {
-  display: flex;
-  align-items: center;
-  justify-content: center
-  }
-
-  img {
-    max-width: 100%;
-    max-height:100%;
-    border-radius: 20%;
-  }
-
-  .image {
-    width: 250px;
-    height: 100px;
-    margin-right: 20px;
-  }
-
-  .text {
-    font-family: "Lucida Handwriting";
-    font-size: 12px;
-    padding-left: 20px;
-  }
-
-  @keyframes earthquake {
-    0%, 100% {
-      transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-      transform: translateX(-5px);
-    }
-    20%, 40%, 60%, 80% {
-      transform: translateX(5px);
-    }
-  }
-
-  .cool-title {
-    font-size: 3em;
-    color: #3498db;
-    font-family: 'Arial', sans-serif;
-    text-align: center;
-    animation: earthquake 12s infinite;
-  }
-  </style>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+</head>
+  <header class="mega-menu">
+    <div class="logo">
+      <img src="/img/AJ-low.jpg" alt="Logo">
+    </div>
+    <nav class="menu-items">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
 <div class="cool-title">Alejandro Sanchez-Giraldo</div>
 
@@ -110,3 +84,5 @@ With over 15 years of invaluable experience, I have built my expertise in develo
 ### Interest
 
 In addition to my extensive experience, I have developed a keen interest in emerging fields and technologies that are shaping the future of engineering. I have actively pursued knowledge and expertise in areas such as Artificial Intelligence (AI), Prompt Engineering, Observability, and Community engagement. These areas have become integral components of my professional growth, as I recognize their potential to revolutionize the way we approach quality engineering and product development. By staying ahead of the latest advancements and actively engaging with communities of like-minded professionals, I continually strive to expand my horizons and contribute to the forefront of cutting-edge engineering practices.
+
+<html>
