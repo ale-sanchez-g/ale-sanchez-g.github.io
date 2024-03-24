@@ -28,7 +28,6 @@
             <li><a href="/reference/CONFERENCES">Conferences</a></li>
             <li><a href="/reference/LEARNING">Learning</a></li>
             <li><a href="/support/SUPPORTLIST">Support</a></li>
-            <li><a href="(mailto:alejandrosanchezau@yahoo.com.au)">Contact</a></li>
         </ul>
     </nav>
 </div>
