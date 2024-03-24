@@ -28,7 +28,6 @@
             <li><a href="/reference/CONFERENCES">Conferences</a></li>
             <li><a href="/reference/LEARNING">Learning</a></li>
             <li><a href="/support/SUPPORTLIST">Support</a></li>
-            <li><a href="(mailto:alejandrosanchezau@yahoo.com.au)">Contact</a></li>
         </ul>
     </nav>
 </div>
@@ -52,7 +51,7 @@
         </a>
     </div>
 </div>
-<div class="container tier">
+<div class="container">
     <div class="column">🛠️ Helping Teams Engineer Quality</div>
     <div class="column">🗣️ Product Owner for Quality</div>
     <div class="column">👁️ Head of Quality Engineering and Observability</div>
