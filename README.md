@@ -51,7 +51,7 @@
         </a>
     </div>
 </div>
-<div class="container tier">
+<div class="container">
     <div class="column">🛠️ Helping Teams Engineer Quality</div>
     <div class="column">🗣️ Product Owner for Quality</div>
     <div class="column">👁️ Head of Quality Engineering and Observability</div>
