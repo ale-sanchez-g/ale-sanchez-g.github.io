@@ -9,10 +9,11 @@
     --colourText: rgb(255, 255, 255);
 }
 .container {
-    padding: 10px 20px;
+    padding: 10px 60px;
     display: flex;
     align-items: center;
-    justify-content: center
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 img {
@@ -42,14 +43,15 @@ img {
 
 /* Reset some default styles for better consistency */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--bgColorCream);
-  }
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--bgColorCream);
+  line-height: 1.8; /* Adjust as needed */
+}
   
   /* Basic styles for the header and logo */
-  .mega-menu {
+  .mega-menu, .mega-menu-2 {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,10 +60,19 @@ body {
     background-image: var(--bg-gradient);
     color: var(--colourText);
   }
-  
+
   .logo img {
     max-height: 150px; /* Adjust as needed */
     border-radius: 90%;
+  }
+
+  .column {
+    flex: 1 0 21%; /* The browser automatically calculates the width */
+    margin: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
   }
   
   /* Styles for the menu items */
@@ -103,4 +114,30 @@ body {
     max-width: 50px;
     margin: 0 10px;
     border-radius: 90%;
+}
+
+@media screen and (max-width: 768px) {
+  .mega-menu {
+    display: flex;
+    justify-content: space-between;
+    height: 20%;
+    padding: 20px 20px;
+    background-image: var(--bg-gradient);
+    color: var(--colourText);
+  }
+  .mega-menu-2 {
+    display: none;
+  }
+
+  .logo img {
+    max-height: 70px; /* Adjust as needed */
+    border-radius: 90%;
+  }
+  .container {
+    padding: 10px 20px;
+  }
+  
+  .column {
+    flex: 1 0 100%; /* The browser automatically calculates the width */
+  }
 }

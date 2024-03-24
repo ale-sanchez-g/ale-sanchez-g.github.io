@@ -1,88 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alejandro Sanchez-Giraldo</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 </head>
-  <header class="mega-menu">
+<header class="mega-menu">
     <div class="logo">
-      <img src="/img/AJ-low.jpg" alt="Logo">
+        <img src="/img/cap.png" alt="Logo">
     </div>
+    <div class="burger" style="display: none;">
+        <svg height="40px" width="40px" fill="none" stroke="white" stroke-width="2">
+            <line x1="0" y1="5" x2="40" y2="5" />
+            <line x1="0" y1="20" x2="40" y2="20" />
+            <line x1="0" y1="35" x2="40" y2="35" />
+        </svg>
+    </div>
+</header>
+<div class="mega-menu-2">
     <nav class="menu-items">
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/reference/WORKEXPERIENCE">Work Experience</a></li>
+            <li><a href="/reference/PUBLICATIONS">Publications</a></li>
+            <li><a href="/reference/CONFERENCES">Conferences</a></li>
+            <li><a href="/reference/LEARNING">Learning</a></li>
+            <li><a href="/support/SUPPORTLIST">Support</a></li>
+            <li><a href="(mailto:alejandrosanchezau@yahoo.com.au)">Contact</a></li>
+        </ul>
     </nav>
-  </header>
-
-<div class="cool-title">Alejandro Sanchez-Giraldo</div>
-
+</div>
 <div class="container">
-    <div class="image">
-    <img src="img/AJ-low.jpg" alt="alejandro" height="100px"/>
-    </div>
-    <div class="text">
-    "As you navigate the intricate pathways of purpose, direct your aspirations towards the envisioned objective. Recognize that strategic adjustments, akin to pivots, serve as tactical instruments in the pursuit of your journey."
+    <div class="badges">
+        <a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54">
+            <img src="img/dynaBadge.png" height="30px" alt="Dynatrace Associate" />
+        </a>
+        <a
+            href="https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61">
+            <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-automate-tasks.svg"
+                height="30px" alt="Github Actions - automation">
+        </a>
+        <a
+            href="https://learn.microsoft.com/api/achievements/share/en-gb/AlejandroSG-3988/FZD6SK5X?sharingId=7539A66B782C7D61">
+            <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-ci.svg"
+                height="30px" alt="Github Actions - workflows">
+        </a>
+        <a href="https://verify.skilljar.com/c/cvjv4kdfwztp">
+            <img src="img/ldGold.png" height="30px" alt="LaunchDarkly Gold">
+        </a>
     </div>
 </div>
+<div class="container tier">
+    <div class="column">🛠️ Helping Teams Engineer Quality</div>
+    <div class="column">🗣️ Product Owner for Quality</div>
+    <div class="column">👁️ Head of Quality Engineering and Observability</div>
+</div>
+<div class="container">
+    <a href="https://www.linkedin.com/in/alejandrosanchezgiraldo">
+        <img src="img/linkedin-black.svg" height="30px" alt="linkedin" />
+    </a>
+</div>
+<div class="container">
+    <p>
+        <strong>Personal Statement: </strong>
+        I am an accomplished Product Owner for Quality with a profound dedication to embedding engineering excellence
+        into
+        all
+        aspects of my work. I firmly hold the belief that quality should be upheld as a collective responsibility, and I
+        derive
+        great satisfaction from collaborating with teams to foster a culture rooted in exceptional standards. Moreover,
+        I am
+        a
+        staunch advocate for data-driven decision-making, recognizing it as the sole influencer essential for the
+        triumph of
+        any
+        product.
 
-<a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54">
-    <img src="img/dynaBadge.png" height="30px"/>
-</a>
-<a href="https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61">
-    <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-automate-tasks.svg" height="30px">
-</a>
-<a href="https://learn.microsoft.com/api/achievements/share/en-gb/AlejandroSG-3988/FZD6SK5X?sharingId=7539A66B782C7D61">
-    <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-ci.svg" height="30px">
-</a>
-<br>
-<a href="https://verify.skilljar.com/c/x7xmdncdguxm">
-    <img src="img/ldBronze.png" height="30px">
-</a>
-<a href="https://verify.skilljar.com/c/kqjsxdciv2ih">
-    <img src="img/ldSilver.png" height="30px">
-</a>
+        With over 15 years of invaluable experience, I have built my expertise in developing engineering capabilities
+        across
+        a
+        diverse range of industries. My professional journey has encompassed sectors including Telecommunications,
+        Airlines,
+        Media, Loyalty, Insurance, Financial Services, and AgriTech, in both Enterprise and Start-up environments. This
+        extensive background has allowed me to gain comprehensive insights into the unique challenges and intricacies
+        associated
+        with each industry, equipping me with a versatile skill set that adapts to various organizational landscapes.
+    </p>
+</div>
+<div class="container">
+    <p>
+        In addition to my extensive experience, I have developed a keen interest in emerging fields and technologies
+        that
+        are
+        shaping the future of engineering. I have actively pursued knowledge and expertise in areas such as Artificial
+        Intelligence (AI), Prompt Engineering, Observability, and Community engagement. These areas have become integral
+        components of my professional growth, as I recognize their potential to revolutionize the way we approach
+        quality
+        engineering and product development. By staying ahead of the latest advancements and actively engaging with
+        communities
+        of like-minded professionals, I continually strive to expand my horizons and contribute to the forefront of
+        cutting-edge
+        engineering practices.
+    </p>
+</div>
+<div class="container">
+    <h2> Achievements </h2>
+</div>
+<div class="container">
+    <ul>
+        <li>📈 Create and deliver a strategic roadmap to evolve from testing services into Quality Engineering
+            capabilities</li>
+        <li>🙋‍♂️ Leading and developing teams towards building quality in their delivery process.</li>
+        <li>🛠️ Exploring DevSecOps tools to enable self-service for quality capabilities.</li>
+        <li>👁️ Strengthening Observability practices to enable faster and secure engineering</li>
+    </ul>
+</div>
 
-🛠️ Helping Teams Engineer Quality : 🗣️ Product Owner for Quality : Head of Quality Engineering and Observability
-
-| [Contact me](mailto:alejandrosanchezau@yahoo.com.au) | [Follow me on LinkedIn](https://www.linkedin.com/in/alejandrosanchezgiraldo){:target="\_blank"} | [Portfolio](https://github.com/ale-sanchez-g?tab=repositories){:target="\_blank"}
-
-### Personal Statement
-
-I am an accomplished Product Owner for Quality with a profound dedication to embedding engineering excellence into all aspects of my work. I firmly hold the belief that quality should be upheld as a collective responsibility, and I derive great satisfaction from collaborating with teams to foster a culture rooted in exceptional standards. Moreover, I am a staunch advocate for data-driven decision-making, recognizing it as the sole influencer essential for the triumph of any product.
-
-With over 15 years of invaluable experience, I have built my expertise in developing engineering capabilities across a diverse range of industries. My professional journey has encompassed sectors including Telecommunications, Airlines, Media, Loyalty, Insurance, Financial Services, and AgriTech, in both Enterprise and Start-up environments. This extensive background has allowed me to gain comprehensive insights into the unique challenges and intricacies associated with each industry, equipping me with a versatile skill set that adapts to various organizational landscapes.
-
-### Achievements
-
-• 📈 Create and deliver a strategic roadmap to evolve from testing services into Quality Engineering capabilities
-
-• 🙋‍♂️ Leading and developing teams towards building quality in their delivery process.
-
-• 🛠️ Exploring DevSecOps tools to enable self-service for quality capabilities.
-
-• 👁️ Strengthening Observability practices to enable faster and secure engineering
-
-
-[Work Experience](/reference/WORKEXPERIENCE.MD)
-
-[Publications](/reference/PUBLICATIONS.MD)
-
-[Conferences](/reference/CONFERENCES.MD)
-
-[Learning](/reference/LEARNING.MD)
-
-[Support](/support/SUPPORTLIST.MD)
-
-### Certifications
-- [Dynatrace Associate](https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54){:target="\_blank"} 
-- [Microsoft - Github Actions](https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61){:target="\_blank"}
-
-### Interest
-
-In addition to my extensive experience, I have developed a keen interest in emerging fields and technologies that are shaping the future of engineering. I have actively pursued knowledge and expertise in areas such as Artificial Intelligence (AI), Prompt Engineering, Observability, and Community engagement. These areas have become integral components of my professional growth, as I recognize their potential to revolutionize the way we approach quality engineering and product development. By staying ahead of the latest advancements and actively engaging with communities of like-minded professionals, I continually strive to expand my horizons and contribute to the forefront of cutting-edge engineering practices.
-
+<footer class="footer">
+    <nav class="menu-items">
+        <ul>
+            <li><a href="https://github.com/ale-sanchez-g">GitHub Profile</a></li>
+        </ul>
+    </nav>
+</footer>
+<script src="/assets/js/main.js"></script>
 <html>
