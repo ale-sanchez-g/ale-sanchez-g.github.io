@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,18 +6,6 @@
     <title>AJ - Connectoins</title>
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
 </head>
-<header class="mega-menu">
-    <div class="logo">
-        <img src="/img/cap.png" alt="Logo">
-    </div>
-    <div class="burger" style="display: none;">
-        <svg height="40px" width="40px" fill="none" stroke="white" stroke-width="2">
-            <line x1="0" y1="5" x2="40" y2="5" />
-            <line x1="0" y1="20" x2="40" y2="20" />
-            <line x1="0" y1="35" x2="40" y2="35" />
-        </svg>
-    </div>
-</header>
 
 <h1>Connections (people)</h1>
 
