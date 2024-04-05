@@ -11,14 +11,31 @@
     <div class="logo">
         <img src="/img/cap.png" alt="Logo">
     </div>
-    <div class="burger" style="display: none;">
+    <div class="burger">
         <svg height="40px" width="40px" fill="none" stroke="white" stroke-width="2">
             <line x1="0" y1="5" x2="40" y2="5" />
             <line x1="0" y1="20" x2="40" y2="20" />
             <line x1="0" y1="35" x2="40" y2="35" />
         </svg>
     </div>
+    <div class="mobile-menu">
+        <div class="cross">
+            <svg height="20px" width="20px" fill="none" stroke="white" stroke-width="2">
+                <line x1="0" y1="0" x2="20" y2="20" />
+                <line x1="0" y1="20" x2="20" y2="0" />
+            </svg>
+        </div>
+        <nav class="mobile-menu-items">
+                <a href="/">Home</a></br>
+                <a href="/reference/WORKEXPERIENCE">Work Experience</a></br>
+                <a href="/reference/PUBLICATIONS">Publications</a></br>
+                <a href="/reference/CONFERENCES">Conferences</a></br>
+                <a href="/reference/LEARNING">Learning</a></br>
+                <a href="/support/SUPPORTLIST">Support</a>
+        </nav>
+    </div> 
 </header>
+<body>   
 <div class="mega-menu-2">
     <nav class="menu-items">
         <ul>
@@ -125,4 +142,5 @@
     </nav>
 </footer>
 <script src="/assets/js/main.js"></script>
+</body>
 <html>
