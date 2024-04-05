@@ -1,12 +1,33 @@
-function displayLogo() {
-  var isDesktop = window.innerWidth < 768;
-  document.getElementsByClassName("burger")[0].style.display = isDesktop
-    ? "block"
-    : "none";
+// Function to log a message when a burger element is clicked
+function handleBurgerClick() {
+  console.log("Burger element clicked!");
+  // hide burger element and show cross element
+  const burger = document.querySelector(".burger");
+  const cross = document.querySelector(".cross");
+  const mobileMenu = document.querySelector(".mobile-menu");
+
+  burger.style.display = "none";
+  cross.style.display = "block";
+  mobileMenu.style.display = "block";
 }
 
-// Call the function when the page loads
-displayLogo();
+function closeMobileMenu() {
+  const burger = document.querySelector(".burger");
+  const cross = document.querySelector(".cross");
+  const mobileMenu = document.querySelector(".mobile-menu");
 
-// Call the function when the window is resized
-window.onresize = displayLogo;
+  burger.style.display = "block";
+  cross.style.display = "none";
+  mobileMenu.style.display = "none";
+} 
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Path: assets/js/main.js
+  // Get the burger element
+  const burger = document.querySelector(".burger");
+  const cross = document.querySelector(".cross");
+
+  // Add an event listener to the burger element
+  burger.addEventListener("click", handleBurgerClick);
+  cross.addEventListener("click", closeMobileMenu);
+}); 

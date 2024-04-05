@@ -51,7 +51,7 @@ body {
 }
   
   /* Basic styles for the header and logo */
-  .mega-menu, .mega-menu-2 {
+  .mega-menu, .mega-menu-2, footer {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -94,15 +94,6 @@ body {
   .menu-items a:hover {
     color: var(--bgColorHover); /* Change to desired hover color */
   }
-  
-.footer {
-    width: 100%;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-image: var(--bg-gradient);
-    color: var(--colourText);
-}
 
 .badges {
     display: flex;
@@ -114,6 +105,11 @@ body {
     max-width: 50px;
     margin: 0 10px;
     border-radius: 90%;
+}
+
+.burger, .cross {
+  display: none; /* Hide by default */
+  cursor: pointer;
 }
 
 @media screen and (max-width: 768px) {
@@ -140,4 +136,23 @@ body {
   .column {
     flex: 1 0 100%; /* The browser automatically calculates the width */
   }
+}
+
+@media (max-width: 768px) {
+  .burger {
+    display: block; /* Show on desktop */
+  }
+}
+
+.mobile-menu {
+  display: none; /* Hide by default */
+  color: var(--colourText);
+  justify-content: left;
+  align-items: left;
+}
+
+.mobile-menu a {
+  color: var(--colourText);
+  font-family: 'Roboto', sans-serif;
+  transition: color 0.3s ease;
 }
