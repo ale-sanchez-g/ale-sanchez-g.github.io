@@ -27,6 +27,7 @@
         </div>
         <nav class="mobile-menu-items">
                 <a href="/">Home</a></br>
+                <a href="/reference/APPS">Apps</a></br>
                 <a href="/reference/WORKEXPERIENCE">Work Experience</a></br>
                 <a href="/reference/PUBLICATIONS">Publications</a></br>
                 <a href="/reference/CONFERENCES">Conferences</a></br>
