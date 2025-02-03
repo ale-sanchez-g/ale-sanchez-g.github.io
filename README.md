@@ -41,6 +41,7 @@
     <nav class="menu-items">
         <ul>
             <li><a href="/">Home</a></li>
+            <li><a href="/reference/APPS">Home</a></li>
             <li><a href="/reference/WORKEXPERIENCE">Work Experience</a></li>
             <li><a href="/reference/PUBLICATIONS">Publications</a></li>
             <li><a href="/reference/CONFERENCES">Conferences</a></li>
