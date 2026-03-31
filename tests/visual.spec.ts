@@ -21,9 +21,10 @@ test.describe('Visual regression — full page', () => {
       // Allow time for fonts and layout to settle
       await page.waitForTimeout(500);
 
-      // Hide sticky header so scroll position doesn't affect baseline diffs
+      // Hide sticky nav so scroll position doesn't affect baseline diffs
       await page.addStyleTag({
         content: `
+          nav { position: relative !important; }
           .mega-menu { position: relative !important; }
           .mega-menu-2 { position: relative !important; }
         `
@@ -52,18 +53,27 @@ test.describe('Navigation — links and titles', () => {
       const heading = page.locator('h1').first();
       await expect(heading).toBeVisible();
 
-      // On desktop the horizontal nav bar is visible; on mobile it is hidden and
-      // replaced by the burger menu. Check whichever is present.
       const isMobile = page.viewportSize()?.width !== undefined && page.viewportSize()!.width < 768;
-      if (isMobile) {
-        await expect(page.locator('.burger')).toBeVisible();
-        await expect(page.locator('.mobile-menu-items a[href*="WORKEXPERIENCE"]')).toBeAttached();
+
+      if (pg.path === '/index.html') {
+        // New dark-theme design — uses <nav> with .nav-links (hidden on mobile)
+        if (!isMobile) {
+          await expect(page.locator('nav')).toBeVisible();
+        }
+        // Work Experience link lives in the contact section
+        await expect(page.locator('a[href*="WORKEXPERIENCE"]').first()).toBeAttached();
       } else {
-        await expect(page.locator('.mega-menu-2')).toBeVisible();
-        await expect(page.locator('.mega-menu-2 a[href*="WORKEXPERIENCE"]')).toBeVisible();
+        // Reference pages retain the classic .mega-menu-2 / burger nav
+        if (isMobile) {
+          await expect(page.locator('.burger')).toBeVisible();
+          await expect(page.locator('.mobile-menu-items a[href*="WORKEXPERIENCE"]')).toBeAttached();
+        } else {
+          await expect(page.locator('.mega-menu-2')).toBeVisible();
+          await expect(page.locator('.mega-menu-2 a[href*="WORKEXPERIENCE"]')).toBeVisible();
+        }
       }
 
-      // Footer must contain SLO Education link
+      // Footer must contain SLO Education link on all pages
       await expect(page.locator('footer a[href*="slo-education"]')).toBeVisible();
     });
   }
@@ -95,21 +105,36 @@ test.describe('Home page — key sections', () => {
     await expect(banner.locator('.slo-banner-badge')).toContainText('Editor');
   });
 
-  test('Role cards are visible', async ({ page }) => {
+  test('Capability cards are visible (6 cards)', async ({ page }) => {
     await page.goto('/index.html');
-    const cards = page.locator('.role-card');
-    await expect(cards).toHaveCount(3);
+    const cards = page.locator('.cap-card');
+    await expect(cards).toHaveCount(6);
   });
 
-  test('Achievements list has 4 items', async ({ page }) => {
+  test('Achievement cards show 4 items', async ({ page }) => {
     await page.goto('/index.html');
-    const items = page.locator('.achievements-list li');
+    const items = page.locator('.ach-card');
     await expect(items).toHaveCount(4);
   });
 
-  test('LinkedIn and GitHub social links present', async ({ page }) => {
+  test('LinkedIn and GitHub CTA links present in hero', async ({ page }) => {
     await page.goto('/index.html');
-    await expect(page.locator('.hero-social a[href*="linkedin"]')).toBeVisible();
-    await expect(page.locator('.hero-social a[href*="github"]')).toBeVisible();
+    await expect(page.locator('.hero-cta a[href*="linkedin"]')).toBeVisible();
+    await expect(page.locator('.hero-cta a[href*="github"]')).toBeVisible();
+  });
+
+  test('Industries list has 7 items', async ({ page }) => {
+    await page.goto('/index.html');
+    const items = page.locator('.industry-item');
+    await expect(items).toHaveCount(7);
+  });
+
+  test('Contact section links to all reference pages', async ({ page }) => {
+    await page.goto('/index.html');
+    await expect(page.locator('#contact a[href*="WORKEXPERIENCE"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="PUBLICATIONS"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="CONFERENCES"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="LEARNING"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="SUPPORTLIST"]')).toBeVisible();
   });
 });

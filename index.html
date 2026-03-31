@@ -1,194 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Alejandro Sanchez-Giraldo | Quality Engineering Leader</title>
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alejandro Sanchez-Giraldo | Head of Quality Engineering &amp; Observability</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f0ede8;
+      --muted: #555;
+      --accent: #e8ff4a;
+      --border: #1e1e1e;
+      --mono: 'Space Mono', monospace;
+      --sans: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.2rem 3rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: var(--mono); font-size: 0.85rem; letter-spacing: 0.12em;
+      color: var(--accent); text-transform: uppercase; text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--muted); font-size: 0.8rem; letter-spacing: 0.1em;
+      text-transform: uppercase; text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--fg); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 8rem 3rem 5rem;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .hero-tag {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--accent);
+      letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 9vw, 9rem);
+      font-weight: 900; line-height: 0.95;
+      letter-spacing: -0.04em; text-transform: uppercase;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero-sub {
+      margin-top: 2.5rem; max-width: 560px;
+      font-size: 1.05rem; color: #aaa; line-height: 1.7;
+    }
+    .hero-cta {
+      margin-top: 3rem; display: flex; gap: 1.2rem; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block; padding: 0.85rem 2rem;
+      font-family: var(--mono); font-size: 0.78rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      text-decoration: none; border: 1px solid; transition: all 0.2s;
+    }
+    .btn-primary { background: var(--accent); color: #000; border-color: var(--accent); }
+    .btn-primary:hover { background: transparent; color: var(--accent); }
+    .btn-outline { background: transparent; color: var(--fg); border-color: var(--border); }
+    .btn-outline:hover { border-color: var(--fg); }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      overflow: hidden; border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 0; background: var(--bg);
+    }
+    .ticker {
+      display: flex; gap: 4rem; width: max-content;
+      animation: ticker 28s linear infinite;
+    }
+    .ticker-item {
+      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--muted); white-space: nowrap;
+    }
+    .ticker-item span { color: var(--accent); margin-right: 0.5rem; }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* ── SLO BANNER ── */
+    .slo-banner {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1.5rem;
+      padding: 2rem 3rem;
+      background: #0f0f0f;
+      border-bottom: 1px solid var(--border);
+    }
+    .slo-banner-content { display: flex; flex-direction: column; gap: 0.4rem; }
+    .slo-banner-badge {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .slo-banner h3 {
+      font-size: 1.1rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .slo-banner p { color: #888; font-size: 0.9rem; max-width: 560px; }
+    .slo-banner-cta a {
+      font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); text-decoration: none;
+      border: 1px solid var(--accent); padding: 0.7rem 1.5rem;
+      transition: all 0.2s; white-space: nowrap;
+    }
+    .slo-banner-cta a:hover { background: var(--accent); color: #000; }
+
+    /* ── SECTIONS ── */
+    section { padding: 7rem 3rem; border-bottom: 1px solid var(--border); }
+
+    .section-label {
+      font-family: var(--mono); font-size: 0.7rem; color: var(--accent);
+      letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 3.5rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border); max-width: 80px;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 5vw, 4rem); font-weight: 900;
+      line-height: 1.05; letter-spacing: -0.03em; text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+    }
+    .about-body p {
+      color: #aaa; font-size: 1rem; line-height: 1.8; margin-bottom: 1.2rem;
+    }
+    .about-stats { display: flex; flex-direction: column; gap: 0; }
+    .stat-row {
+      display: flex; justify-content: space-between; align-items: baseline;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .stat-num {
+      font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 900;
+      color: var(--accent); letter-spacing: -0.04em; line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+      letter-spacing: 0.12em; text-transform: uppercase; text-align: right; max-width: 160px;
+    }
+
+    /* ── BADGES ── */
+    .badges-wrap {
+      padding: 2.5rem 3rem;
+      border-bottom: 1px solid var(--border);
+      background: #0d0d0d;
+    }
+    .badges-label {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+      letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .badges-row {
+      display: flex; gap: 2rem; flex-wrap: wrap; align-items: center;
+    }
+    .badges-row a { display: flex; align-items: center; opacity: 0.75; transition: opacity 0.2s; }
+    .badges-row a:hover { opacity: 1; }
+    .badges-row img { height: 56px; width: auto; }
+
+    /* ── CAPABILITIES ── */
+    .caps-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0; border-top: 1px solid var(--border); border-left: 1px solid var(--border);
+    }
+    .cap-card {
+      padding: 2.5rem 2rem; border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border); transition: background 0.2s;
+    }
+    .cap-card:hover { background: #111; }
+    .cap-num {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
+      letter-spacing: 0.15em; margin-bottom: 1.2rem;
+    }
+    .cap-card h3 {
+      font-size: 1rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem;
+    }
+    .cap-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag {
+      font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+      border: 1px solid var(--border); padding: 0.2rem 0.6rem; letter-spacing: 0.08em;
+    }
+
+    /* ── INDUSTRIES ── */
+    .industry-list { list-style: none; }
+    .industry-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.4rem 0; border-bottom: 1px solid var(--border);
+      font-size: clamp(1rem, 2.5vw, 1.5rem); font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      cursor: default; transition: color 0.2s;
+    }
+    .industry-item:hover { color: var(--accent); }
+    .industry-item span { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+
+    /* ── ACHIEVEMENTS ── */
+    .ach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .ach-card {
+      background: #111; padding: 2.5rem; transition: background 0.2s;
+    }
+    .ach-card:hover { background: #161616; }
+    .ach-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .ach-card p { color: #888; font-size: 0.95rem; line-height: 1.6; }
+
+    /* ── CONTACT ── */
+    .contact-inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center;
+    }
+    .contact-links { display: flex; flex-direction: column; gap: 1.2rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 1rem;
+      text-decoration: none; color: var(--fg);
+      font-family: var(--mono); font-size: 0.85rem;
+      letter-spacing: 0.1em; transition: color 0.2s;
+      padding-bottom: 1.2rem; border-bottom: 1px solid var(--border);
+    }
+    .contact-link:hover { color: var(--accent); }
+    .contact-link-label {
+      color: var(--muted); font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; display: block; margin-bottom: 0.2rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; }
+    footer a { color: var(--muted); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 4rem; }
+      section { padding: 5rem 1.5rem; }
+      .slo-banner { padding: 1.5rem; }
+      .badges-wrap { padding: 1.5rem; }
+      .about-grid, .contact-inner, .ach-grid { grid-template-columns: 1fr; gap: 3rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem; }
+    }
+  </style>
 </head>
-
-<header class="mega-menu">
-    <div class="logo">
-        <img src="/img/cap.png" alt="Logo">
-    </div>
-    <div class="burger">
-        <svg height="36px" width="36px" fill="none" stroke="white" stroke-width="2">
-            <line x1="0" y1="5" x2="36" y2="5" />
-            <line x1="0" y1="18" x2="36" y2="18" />
-            <line x1="0" y1="31" x2="36" y2="31" />
-        </svg>
-    </div>
-    <div class="mobile-menu">
-        <div class="cross">
-            <svg height="20px" width="20px" fill="none" stroke="white" stroke-width="2">
-                <line x1="0" y1="0" x2="20" y2="20" />
-                <line x1="0" y1="20" x2="20" y2="0" />
-            </svg>
-        </div>
-        <nav class="mobile-menu-items">
-            <a href="/">Home</a>
-            <a href="/reference/WORKEXPERIENCE.html">Work Experience</a>
-            <a href="/reference/PUBLICATIONS.html">Publications</a>
-            <a href="/reference/CONFERENCES.html">Conferences</a>
-            <a href="/reference/LEARNING.html">Learning</a>
-            <a href="/support/SUPPORTLIST.html">Support</a>
-        </nav>
-    </div>
-</header>
-
 <body>
 
-    <div class="mega-menu-2">
-        <nav class="menu-items">
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/reference/WORKEXPERIENCE.html">Work Experience</a></li>
-                <li><a href="/reference/PUBLICATIONS.html">Publications</a></li>
-                <li><a href="/reference/CONFERENCES.html">Conferences</a></li>
-                <li><a href="/reference/LEARNING.html">Learning</a></li>
-                <li><a href="/support/SUPPORTLIST.html">Support</a></li>
-            </ul>
-        </nav>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">AJ / ASG</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#capabilities">Capabilities</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-tag">// Head of Quality Engineering &amp; Observability</p>
+  <h1>Alejandro<br/><span>Sanchez-</span><br/>Giraldo</h1>
+  <p class="hero-sub">
+    Engineering quality as a collective responsibility. 15+ years building engineering capabilities
+    across Telco, Airlines, FinServ, InsurTech &amp; AgriTech — from enterprise to startup.
+  </p>
+  <div class="hero-cta">
+    <a href="#contact" class="btn btn-primary">Get in Touch</a>
+    <a href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener" class="btn btn-outline">LinkedIn ↗</a>
+    <a href="https://github.com/ale-sanchez-g" target="_blank" rel="noopener" class="btn btn-outline">GitHub ↗</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span>●</span> Quality Engineering</span>
+    <span class="ticker-item"><span>●</span> Observability</span>
+    <span class="ticker-item"><span>●</span> DevSecOps</span>
+    <span class="ticker-item"><span>●</span> AI &amp; Prompt Engineering</span>
+    <span class="ticker-item"><span>●</span> SRE Practices</span>
+    <span class="ticker-item"><span>●</span> Product Owner for Quality</span>
+    <span class="ticker-item"><span>●</span> Platform Engineering</span>
+    <span class="ticker-item"><span>●</span> CI/CD Pipelines</span>
+    <span class="ticker-item"><span>●</span> Community &amp; Conferences</span>
+    <span class="ticker-item"><span>●</span> Quality Engineering</span>
+    <span class="ticker-item"><span>●</span> Observability</span>
+    <span class="ticker-item"><span>●</span> DevSecOps</span>
+    <span class="ticker-item"><span>●</span> AI &amp; Prompt Engineering</span>
+    <span class="ticker-item"><span>●</span> SRE Practices</span>
+    <span class="ticker-item"><span>●</span> Product Owner for Quality</span>
+    <span class="ticker-item"><span>●</span> Platform Engineering</span>
+    <span class="ticker-item"><span>●</span> CI/CD Pipelines</span>
+    <span class="ticker-item"><span>●</span> Community &amp; Conferences</span>
+  </div>
+</div>
+
+<!-- SLO EDUCATION BANNER -->
+<div class="slo-banner">
+  <div class="slo-banner-content">
+    <span class="slo-banner-badge">Editor &amp; Contributor</span>
+    <h3>SLO Education</h3>
+    <p>A dedicated resource for learning Site Reliability Engineering, Service Level Objectives, and Observability practices — curated and edited by Alejandro.</p>
+  </div>
+  <div class="slo-banner-cta">
+    <a href="https://slo-education.com.au" target="_blank" rel="noopener">Visit slo-education.com.au &rarr;</a>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label">01 — About</p>
+  <div class="about-grid">
+    <div class="about-body">
+      <h2>Engineering<br/>Excellence,<br/>By Design</h2>
+      <p>
+        I am an accomplished Product Owner for Quality with a profound dedication to embedding
+        engineering excellence into all aspects of my work. I firmly believe that quality is a
+        collective responsibility — not a gate at the end of a pipeline.
+      </p>
+      <p>
+        Over 15+ years I've built engineering capabilities across diverse industries, developing
+        a versatile skill set that adapts to unique organisational landscapes. I actively pursue
+        emerging fields including AI, Prompt Engineering, Observability, and Community engagement.
+      </p>
+      <p>
+        I champion data-driven decision-making as the essential influencer for any product's success —
+        and I thrive on collaborating with teams to foster cultures rooted in exceptional standards.
+      </p>
     </div>
-
-    <!-- Hero -->
-    <section class="hero">
-        <h1>Alejandro Sanchez-Giraldo</h1>
-        <p class="hero-subtitle">Quality Engineering Leader &nbsp;·&nbsp; Observability &nbsp;·&nbsp; AI Enthusiast</p>
-        <div class="hero-social">
-            <a href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">
-                <img src="/img/linkedin-black.svg" alt="LinkedIn" />
-                LinkedIn
-            </a>
-            <a href="https://github.com/ale-sanchez-g" target="_blank" rel="noopener">
-                <svg height="18" width="18" viewBox="0 0 24 24" fill="white" style="flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
-                GitHub
-            </a>
-        </div>
-    </section>
-
-    <!-- Badges -->
-    <div class="badges-section">
-        <a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54" target="_blank" rel="noopener" title="Dynatrace Associate">
-            <img src="/img/dynaBadge.png" alt="Dynatrace Associate" />
-        </a>
-        <a href="https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61" target="_blank" rel="noopener" title="GitHub Actions - Automation">
-            <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-automate-tasks.svg" alt="GitHub Actions - Automation" />
-        </a>
-        <a href="https://learn.microsoft.com/api/achievements/share/en-gb/AlejandroSG-3988/FZD6SK5X?sharingId=7539A66B782C7D61" target="_blank" rel="noopener" title="GitHub Actions - CI">
-            <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-ci.svg" alt="GitHub Actions - CI" />
-        </a>
-        <a href="https://verify.skilljar.com/c/cvjv4kdfwztp" target="_blank" rel="noopener" title="LaunchDarkly Gold">
-            <img src="/img/ldGold.png" alt="LaunchDarkly Gold" />
-        </a>
+    <div class="about-stats">
+      <div class="stat-row">
+        <span class="stat-num">15+</span>
+        <span class="stat-label">Years of Engineering Experience</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-num">7+</span>
+        <span class="stat-label">Industries Across Enterprise &amp; Startup</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-num">∞</span>
+        <span class="stat-label">Commitment to Quality Culture</span>
+      </div>
     </div>
+  </div>
+</section>
 
-    <!-- Main content -->
-    <main class="content-wrapper">
+<!-- CERTIFICATIONS -->
+<div class="badges-wrap">
+  <p class="badges-label">Certifications &amp; Credentials</p>
+  <div class="badges-row">
+    <a href="https://www.credly.com/badges/5461b72b-82ec-4fec-b779-35eb078f5ceb/linked_in?t=s0sy54" target="_blank" rel="noopener" title="Dynatrace Associate">
+      <img src="/img/dynaBadge.png" alt="Dynatrace Associate" />
+    </a>
+    <a href="https://learn.microsoft.com/en-gb/training/achievements/learn.github.github-actions-automate-tasks.badge?username=AlejandroSG-3988&sharingId=7539A66B782C7D61" target="_blank" rel="noopener" title="GitHub Actions - Automation">
+      <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-automate-tasks.svg" alt="GitHub Actions - Automation" />
+    </a>
+    <a href="https://learn.microsoft.com/api/achievements/share/en-gb/AlejandroSG-3988/FZD6SK5X?sharingId=7539A66B782C7D61" target="_blank" rel="noopener" title="GitHub Actions - CI">
+      <img src="https://learn.microsoft.com/en-us/training/achievements/github/github-actions-ci.svg" alt="GitHub Actions - CI" />
+    </a>
+    <a href="https://verify.skilljar.com/c/cvjv4kdfwztp" target="_blank" rel="noopener" title="LaunchDarkly Gold">
+      <img src="/img/ldGold.png" alt="LaunchDarkly Gold" />
+    </a>
+  </div>
+</div>
 
-        <!-- Role summary cards -->
-        <div class="roles-grid">
-            <div class="role-card">
-                <span class="role-icon">🛠️</span>
-                Helping Teams Engineer Quality
-            </div>
-            <div class="role-card">
-                <span class="role-icon">🗣️</span>
-                Product Owner for Quality
-            </div>
-            <div class="role-card">
-                <span class="role-icon">👁️</span>
-                Head of Quality Engineering &amp; Observability
-            </div>
+<!-- CAPABILITIES -->
+<section id="capabilities">
+  <p class="section-label">02 — Capabilities</p>
+  <h2>What<br/>I Do</h2>
+  <br/>
+  <div class="caps-grid">
+    <div class="cap-card">
+      <p class="cap-num">01-QE</p>
+      <h3>Quality Engineering</h3>
+      <div class="cap-tags">
+        <span class="tag">Strategy</span><span class="tag">Roadmaps</span>
+        <span class="tag">Shift-Left</span><span class="tag">TDD/BDD</span>
+        <span class="tag">QA Culture</span><span class="tag">Self-Service</span>
+      </div>
+    </div>
+    <div class="cap-card">
+      <p class="cap-num">02-OBS</p>
+      <h3>Observability</h3>
+      <div class="cap-tags">
+        <span class="tag">APM</span><span class="tag">Logging</span>
+        <span class="tag">Tracing</span><span class="tag">Metrics</span>
+        <span class="tag">Grafana</span><span class="tag">Datadog</span>
+        <span class="tag">OpenTelemetry</span>
+      </div>
+    </div>
+    <div class="cap-card">
+      <p class="cap-num">03-AI</p>
+      <h3>AI &amp; Automation</h3>
+      <div class="cap-tags">
+        <span class="tag">Prompt Engineering</span><span class="tag">Agentic AI</span>
+        <span class="tag">AI Test Gen</span><span class="tag">LLMs</span>
+        <span class="tag">GitHub Copilot</span>
+      </div>
+    </div>
+    <div class="cap-card">
+      <p class="cap-num">04-DEVSEC</p>
+      <h3>DevSecOps</h3>
+      <div class="cap-tags">
+        <span class="tag">CI/CD</span><span class="tag">GitHub Actions</span>
+        <span class="tag">Security Gates</span><span class="tag">Compliance</span>
+        <span class="tag">SAST/DAST</span>
+      </div>
+    </div>
+    <div class="cap-card">
+      <p class="cap-num">05-LEAD</p>
+      <h3>Leadership &amp; Product</h3>
+      <div class="cap-tags">
+        <span class="tag">Product Owner</span><span class="tag">Team Building</span>
+        <span class="tag">Mentoring</span><span class="tag">Roadmaps</span>
+        <span class="tag">Stakeholders</span>
+      </div>
+    </div>
+    <div class="cap-card">
+      <p class="cap-num">06-CMT</p>
+      <h3>Community &amp; Speaking</h3>
+      <div class="cap-tags">
+        <span class="tag">Conferences</span><span class="tag">Workshops</span>
+        <span class="tag">Publications</span><span class="tag">Mentoring</span>
+        <span class="tag">Open Source</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <p class="section-label">03 — Sector Experience</p>
+  <h2>Industries<br/>Served</h2>
+  <br/>
+  <ul class="industry-list">
+    <li class="industry-item">Telecommunications <span>ENT</span></li>
+    <li class="industry-item">Airlines <span>ENT</span></li>
+    <li class="industry-item">Media &amp; Broadcasting <span>ENT / STARTUP</span></li>
+    <li class="industry-item">Loyalty &amp; Rewards <span>STARTUP</span></li>
+    <li class="industry-item">Insurance <span>ENT</span></li>
+    <li class="industry-item">Financial Services <span>ENT / STARTUP</span></li>
+    <li class="industry-item">AgriTech <span>STARTUP</span></li>
+  </ul>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <p class="section-label">04 — Key Achievements</p>
+  <h2>Built to<br/>Last</h2>
+  <br/>
+  <div class="ach-grid">
+    <div class="ach-card">
+      <div class="ach-icon">📈</div>
+      <h3>Strategic QE Roadmaps</h3>
+      <p>Created and delivered strategic roadmaps to evolve organisations from testing services into full Quality Engineering capabilities.</p>
+    </div>
+    <div class="ach-card">
+      <div class="ach-icon">🙋</div>
+      <h3>High-Performing Teams</h3>
+      <p>Led and developed cross-functional teams towards building quality directly into their delivery processes — not bolted on at the end.</p>
+    </div>
+    <div class="ach-card">
+      <div class="ach-icon">🛠️</div>
+      <h3>DevSecOps Self-Service</h3>
+      <p>Explored and implemented DevSecOps tooling to enable developer self-service for quality capabilities, reducing bottlenecks at scale.</p>
+    </div>
+    <div class="ach-card">
+      <div class="ach-icon">👁️</div>
+      <h3>Observability at Scale</h3>
+      <p>Strengthened observability practices across engineering orgs — enabling faster feedback loops, more secure systems, and data-driven decisions.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">05 — Contact</p>
+  <div class="contact-inner">
+    <div>
+      <h2>Ready to<br/>Build<br/>Something<br/>Great?</h2>
+    </div>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener" class="contact-link">
+        <div>
+          <span class="contact-link-label">LinkedIn</span>
+          alejandrosanchezgiraldo ↗
         </div>
-
-        <!-- SLO Education banner -->
-        <div class="slo-banner">
-            <div class="slo-banner-content">
-                <span class="slo-banner-badge">Editor &amp; Contributor</span>
-                <h3>SLO Education</h3>
-                <p>A dedicated resource for learning Site Reliability Engineering, Service Level Objectives, and Observability practices — curated and edited by Alejandro.</p>
-            </div>
-            <div class="slo-banner-cta">
-                <a href="https://slo-education.com.au" target="_blank" rel="noopener">Visit slo-education.com.au &rarr;</a>
-            </div>
+      </a>
+      <a href="https://github.com/ale-sanchez-g" target="_blank" rel="noopener" class="contact-link">
+        <div>
+          <span class="contact-link-label">GitHub</span>
+          ale-sanchez-g ↗
         </div>
+      </a>
+      <a href="/reference/WORKEXPERIENCE.html" class="contact-link">
+        <div>
+          <span class="contact-link-label">Work Experience</span>
+          View full history ↗
+        </div>
+      </a>
+      <a href="/reference/PUBLICATIONS.html" class="contact-link">
+        <div>
+          <span class="contact-link-label">Publications</span>
+          Read my writing ↗
+        </div>
+      </a>
+      <a href="/reference/CONFERENCES.html" class="contact-link">
+        <div>
+          <span class="contact-link-label">Conferences</span>
+          Speaking engagements ↗
+        </div>
+      </a>
+      <a href="/reference/LEARNING.html" class="contact-link">
+        <div>
+          <span class="contact-link-label">Learning</span>
+          Resources &amp; courses ↗
+        </div>
+      </a>
+      <a href="/support/SUPPORTLIST.html" class="contact-link">
+        <div>
+          <span class="contact-link-label">Support</span>
+          Support materials ↗
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
 
-        <!-- About -->
-        <section class="about-section">
-            <h2 class="section-title">About Me</h2>
-            <p>
-                I am an accomplished Product Owner for Quality with a profound dedication to embedding engineering excellence
-                into all aspects of my work. I firmly believe that quality should be upheld as a collective responsibility,
-                and I derive great satisfaction from collaborating with teams to foster a culture rooted in exceptional standards.
-                I am a staunch advocate for data-driven decision-making, recognising it as the sole influencer essential for the
-                success of any product.
-            </p>
-            <p>
-                With over 15 years of invaluable experience, I have built my expertise in developing engineering capabilities
-                across a diverse range of industries. My professional journey has encompassed sectors including:
-            </p>
-            <div class="industry-tags">
-                <span class="tag">Telecommunications</span>
-                <span class="tag">Airlines</span>
-                <span class="tag">Media</span>
-                <span class="tag">Loyalty</span>
-                <span class="tag">Insurance</span>
-                <span class="tag">Financial Services</span>
-                <span class="tag">AgriTech</span>
-                <span class="tag">Enterprise</span>
-                <span class="tag">Start-ups</span>
-            </div>
-        </section>
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Alejandro Sanchez-Giraldo</p>
+  <p>
+    <a href="https://slo-education.com.au" target="_blank" rel="noopener">SLO Education</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/ale-sanchez-g" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">LinkedIn</a>
+  </p>
+</footer>
 
-        <!-- Interests -->
-        <section class="interests-section">
-            <h2 class="section-title">Emerging Interests</h2>
-            <div class="interest-pills">
-                <span class="interest-pill">🤖 Artificial Intelligence</span>
-                <span class="interest-pill">✍️ Prompt Engineering</span>
-                <span class="interest-pill">👁️ Observability</span>
-                <span class="interest-pill">🌐 SLOs &amp; SRE</span>
-                <span class="interest-pill">🤝 Community Engagement</span>
-            </div>
-        </section>
-
-        <!-- Achievements -->
-        <section class="achievements-section">
-            <h2 class="section-title">Key Achievements</h2>
-            <ul class="achievements-list">
-                <li>
-                    <span class="ach-icon">📈</span>
-                    <span>Created and delivered a strategic roadmap to evolve from testing services into Quality Engineering capabilities</span>
-                </li>
-                <li>
-                    <span class="ach-icon">🙋‍♂️</span>
-                    <span>Led and developed high-performing teams towards building quality into their delivery process</span>
-                </li>
-                <li>
-                    <span class="ach-icon">🛠️</span>
-                    <span>Explored and implemented DevSecOps tools to enable self-service quality capabilities across engineering teams</span>
-                </li>
-                <li>
-                    <span class="ach-icon">👁️</span>
-                    <span>Strengthened Observability practices to enable faster, more secure, and more reliable engineering delivery</span>
-                </li>
-            </ul>
-        </section>
-
-    </main>
-
-    <footer class="footer">
-        <nav class="menu-items">
-            <ul>
-                <li><a href="https://github.com/ale-sanchez-g" target="_blank" rel="noopener">GitHub Profile</a></li>
-                <li><a href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">LinkedIn</a></li>
-                <li><a href="https://slo-education.com.au" target="_blank" rel="noopener">SLO Education</a></li>
-            </ul>
-        </nav>
-    </footer>
-
-    <script src="/assets/js/main.js"></script>
 </body>
 </html>
