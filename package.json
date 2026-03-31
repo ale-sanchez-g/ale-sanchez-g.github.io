@@ -1,0 +1,15 @@
+{
+  "name": "ale-sanchez-g-website",
+  "version": "1.0.0",
+  "description": "Visual tests for ale-sanchez-g.github.io",
+  "scripts": {
+    "test": "playwright test",
+    "test:visual": "playwright test tests/visual.spec.ts",
+    "test:update": "playwright test tests/visual.spec.ts --update-snapshots",
+    "serve": "python3 -m http.server 8765"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "wait-on": "^9.0.4"
+  }
+}

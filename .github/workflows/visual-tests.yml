@@ -1,0 +1,158 @@
+name: Visual Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: 'Update baseline snapshots'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  visual-tests:
+    name: Playwright Visual Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local web server
+        run: python3 -m http.server 8765 &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://127.0.0.1:8765 --timeout 10000
+
+      - name: Check for existing baselines
+        id: check-baselines
+        run: |
+          COUNT=$(find tests/snapshots -name "*.png" 2>/dev/null | wc -l)
+          echo "snapshot_count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Found $COUNT existing baseline snapshots"
+
+      - name: Generate / update baselines
+        id: generate
+        if: steps.check-baselines.outputs.snapshot_count == '0' || inputs.update_snapshots == true || github.event_name == 'push'
+        run: npx playwright test tests/visual.spec.ts --update-snapshots
+
+      - name: Commit baselines back to branch
+        if: steps.generate.outcome == 'success'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/snapshots/
+          if git diff --staged --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            BRANCH="${{ github.head_ref || github.ref_name }}"
+            git commit -m "chore: update visual test baselines [skip ci]"
+            git push origin HEAD:"$BRANCH"
+            echo "Baselines committed and pushed to $BRANCH"
+          fi
+
+      - name: Compare against baselines
+        id: compare
+        if: github.event_name == 'pull_request' && inputs.update_snapshots != true && steps.check-baselines.outputs.snapshot_count != '0'
+        run: npx playwright test tests/visual.spec.ts
+        continue-on-error: true
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload screenshots and diffs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-screenshots
+          path: |
+            tests/snapshots/
+            test-results/
+          retention-days: 30
+
+      - name: Post visual summary comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const generateOutcome = '${{ steps.generate.outcome }}';
+            const compareOutcome  = '${{ steps.compare.outcome }}';
+
+            let icon, status, note;
+            if (generateOutcome === 'success') {
+              icon   = '📸';
+              status = 'Baselines generated and committed to this branch';
+              note   = '> The **next CI run** on this PR will compare against these baselines.';
+            } else if (compareOutcome === 'success') {
+              icon   = '✅';
+              status = 'All visual tests passed — no regressions detected';
+              note   = '';
+            } else {
+              icon   = '❌';
+              status = 'Visual differences detected — review the diff screenshots';
+              note   = '> ⚠️ Pixel diff images are in `test-results/` inside the artifact.';
+            }
+
+            const body = [
+              `## ${icon} Visual Test Results`,
+              `**Status:** ${status}`,
+              '',
+              '### Pages tested (Desktop Chrome + Mobile Chrome)',
+              '| Page |',
+              '|------|',
+              '| 🏠 Home |',
+              '| 💼 Work Experience |',
+              '| 📝 Publications |',
+              '| 🎤 Conferences |',
+              '| 📚 Learning Resources |',
+              '| 🛠 Apps |',
+              '| ☁️ AWS Observability Day |',
+              '| 🆘 Support Materials |',
+              '| 📱 Fake Phone Numbers |',
+              '| 🤝 Connections |',
+              '',
+              '### How to review',
+              '1. Download the **playwright-report** artifact from this PR',
+              '2. Unzip and open `index.html` in your browser',
+              '3. Click any test to see its full-page screenshot',
+              note,
+            ].filter(Boolean).join('\n');
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body,
+            });
+
+      - name: Fail job if visual comparison failed
+        if: steps.compare.outcome == 'failure'
+        run: exit 1
