@@ -1,0 +1,132 @@
+name: Visual Tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  # Allow manually updating snapshot baselines
+  workflow_dispatch:
+    inputs:
+      update_snapshots:
+        description: 'Update baseline snapshots'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  visual-tests:
+    name: Playwright Visual Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Installs exactly the Chromium build pinned by @playwright/test in package-lock.json.
+      # This guarantees the same browser binary in CI as locally — preventing false snapshot diffs.
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Start local web server
+        run: python3 -m http.server 8765 &
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://127.0.0.1:8765 --timeout 10000
+
+      # On pushes to main or manual dispatch with update_snapshots=true: regenerate baselines.
+      # On PRs: compare against committed baselines (fail on visual diff).
+      - name: Run visual tests (update baselines)
+        if: github.event_name == 'push' || inputs.update_snapshots == 'true'
+        run: npx playwright test tests/visual.spec.ts --update-snapshots
+
+      - name: Run visual tests (compare)
+        if: github.event_name == 'pull_request' && inputs.update_snapshots != 'true'
+        id: compare-tests
+        run: npx playwright test tests/visual.spec.ts
+        continue-on-error: true
+
+      # Commit updated baselines back to the branch when run on main
+      - name: Commit updated snapshots
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/snapshots/ || true
+          git diff --staged --quiet || git commit -m "chore: update visual test baselines [skip ci]"
+          git push
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload screenshots and diffs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-screenshots
+          path: |
+            tests/snapshots/
+            test-results/
+          retention-days: 30
+
+      - name: Post visual summary comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const outcome = '${{ steps.compare-tests.outcome }}';
+            const passed = outcome === 'success' || outcome === '';
+            const icon = passed ? '✅' : '❌';
+            const status = passed ? 'All visual tests passed — no regressions detected' : 'Visual differences detected — review the screenshots below';
+
+            const body = [
+              `## ${icon} Visual Test Results`,
+              '',
+              `**Status:** ${status}`,
+              '',
+              '### Pages screenshotted (Desktop + Mobile)',
+              '| Page |',
+              '|------|',
+              '| 🏠 Home |',
+              '| 💼 Work Experience |',
+              '| 📝 Publications |',
+              '| 🎤 Conferences |',
+              '| 📚 Learning Resources |',
+              '| 🛠 Apps |',
+              '| ☁️ AWS Observability Day |',
+              '| 🆘 Support Materials |',
+              '| 📱 Fake Phone Numbers |',
+              '| 🤝 Connections |',
+              '',
+              '### How to review',
+              '1. Download the **playwright-report** artifact from this PR',
+              '2. Unzip and open `index.html` in your browser',
+              '3. Each test has a screenshot attached for visual review',
+              passed ? '' : '4. ⚠️ Diff images showing changed pixels are in `test-results/` inside the artifact',
+            ].filter(l => l !== undefined).join('\n');
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body,
+            });
+
+      - name: Fail job if visual comparison failed
+        if: steps.compare-tests.outcome == 'failure'
+        run: exit 1
