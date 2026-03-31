@@ -19,10 +19,19 @@ jobs:
     name: Playwright Visual Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Allow the job to push baseline commits back to the branch
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          # Fetch with a token so the bot can push baselines back to the branch
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # For PRs, check out the actual head branch (not the merge commit)
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -44,7 +53,7 @@ jobs:
       - name: Wait for server to be ready
         run: npx wait-on http://127.0.0.1:8765 --timeout 10000
 
-      # Detect whether baseline snapshots exist yet
+      # Detect whether baseline snapshots have been committed to the repo
       - name: Check for existing baselines
         id: check-baselines
         run: |
@@ -52,34 +61,46 @@ jobs:
           echo "snapshot_count=$COUNT" >> "$GITHUB_OUTPUT"
           echo "Found $COUNT existing baseline snapshots"
 
-      # On pushes to main, manual update, OR when no baselines exist yet → generate/update baselines
-      - name: Run visual tests (update baselines)
+      # ── GENERATE MODE ──────────────────────────────────────────────────────
+      # Runs when: no baselines exist yet, manual update requested, or push to main.
+      # After generating, commits the new baselines back to the branch so the
+      # NEXT run can actually compare rather than generate again.
+      - name: Generate / update baselines
+        id: generate
         if: >
-          github.event_name == 'push' ||
+          steps.check-baselines.outputs.snapshot_count == '0' ||
           inputs.update_snapshots == 'true' ||
-          steps.check-baselines.outputs.snapshot_count == '0'
+          github.event_name == 'push'
         run: npx playwright test tests/visual.spec.ts --update-snapshots
 
-      # On PRs when baselines already exist → compare and fail on regression
-      - name: Run visual tests (compare)
+      - name: Commit baselines back to branch
+        if: steps.generate.outcome == 'success'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/snapshots/
+          if git diff --staged --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            BRANCH="${{ github.head_ref || github.ref_name }}"
+            git commit -m "chore: update visual test baselines [skip ci]"
+            git push origin HEAD:"$BRANCH"
+            echo "Baselines committed and pushed to $BRANCH"
+          fi
+
+      # ── COMPARE MODE ───────────────────────────────────────────────────────
+      # Runs on PRs when baselines already exist in the repo.
+      # Fails if any page differs from the committed baseline by more than 2%.
+      - name: Compare against baselines
+        id: compare
         if: >
           github.event_name == 'pull_request' &&
           inputs.update_snapshots != 'true' &&
           steps.check-baselines.outputs.snapshot_count != '0'
-        id: compare-tests
         run: npx playwright test tests/visual.spec.ts
         continue-on-error: true
 
-      # Commit updated baselines back to the branch when run on main
-      - name: Commit updated snapshots
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tests/snapshots/ || true
-          git diff --staged --quiet || git commit -m "chore: update visual test baselines [skip ci]"
-          git push
-
+      # ── ARTIFACTS ──────────────────────────────────────────────────────────
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
@@ -98,22 +119,36 @@ jobs:
             test-results/
           retention-days: 30
 
+      # ── PR COMMENT ─────────────────────────────────────────────────────────
       - name: Post visual summary comment on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
-            const outcome = '${{ steps.compare-tests.outcome }}';
-            const passed = outcome === 'success' || outcome === '';
-            const icon = passed ? '✅' : '❌';
-            const status = passed ? 'All visual tests passed — no regressions detected' : 'Visual differences detected — review the screenshots below';
+            const generateOutcome = '${{ steps.generate.outcome }}';
+            const compareOutcome  = '${{ steps.compare.outcome }}';
+
+            let icon, status, note;
+            if (generateOutcome === 'success') {
+              icon   = '📸';
+              status = 'Baselines generated for the first time and committed to this branch';
+              note   = '> The **next CI run** on this PR will compare against these baselines.';
+            } else if (compareOutcome === 'success') {
+              icon   = '✅';
+              status = 'All visual tests passed — no regressions detected';
+              note   = '';
+            } else {
+              icon   = '❌';
+              status = 'Visual differences detected — review the diff screenshots';
+              note   = '> ⚠️ Pixel diff images are in `test-results/` inside the artifact.';
+            }
 
             const body = [
               `## ${icon} Visual Test Results`,
               '',
               `**Status:** ${status}`,
               '',
-              '### Pages screenshotted (Desktop + Mobile)',
+              '### Pages tested (Desktop Chrome + Mobile Chrome)',
               '| Page |',
               '|------|',
               '| 🏠 Home |',
@@ -127,12 +162,12 @@ jobs:
               '| 📱 Fake Phone Numbers |',
               '| 🤝 Connections |',
               '',
-              '### How to review',
+              '### How to review screenshots',
               '1. Download the **playwright-report** artifact from this PR',
               '2. Unzip and open `index.html` in your browser',
-              '3. Each test has a screenshot attached for visual review',
-              passed ? '' : '4. ⚠️ Diff images showing changed pixels are in `test-results/` inside the artifact',
-            ].filter(l => l !== undefined).join('\n');
+              '3. Click any test to see its full-page screenshot',
+              note,
+            ].filter(Boolean).join('\n');
 
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
@@ -142,5 +177,5 @@ jobs:
             });
 
       - name: Fail job if visual comparison failed
-        if: steps.compare-tests.outcome == 'failure'
+        if: steps.compare.outcome == 'failure'
         run: exit 1
