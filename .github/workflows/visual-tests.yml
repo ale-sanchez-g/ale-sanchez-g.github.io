@@ -5,13 +5,12 @@ on:
     branches: [main]
   push:
     branches: [main]
-  # Allow manually updating snapshot baselines
   workflow_dispatch:
     inputs:
       update_snapshots:
         description: 'Update baseline snapshots'
         required: false
-        default: 'false'
+        default: false
         type: boolean
 
 jobs:
@@ -19,7 +18,6 @@ jobs:
     name: Playwright Visual Tests
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Allow the job to push baseline commits back to the branch
     permissions:
       contents: write
       pull-requests: write
@@ -28,9 +26,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          # Fetch with a token so the bot can push baselines back to the branch
           token: ${{ secrets.GITHUB_TOKEN }}
-          # For PRs, check out the actual head branch (not the merge commit)
           ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Set up Node.js
@@ -42,8 +38,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Installs exactly the Chromium build pinned by @playwright/test in package-lock.json.
-      # This guarantees the same browser binary in CI as locally — preventing false snapshot diffs.
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
@@ -53,7 +47,6 @@ jobs:
       - name: Wait for server to be ready
         run: npx wait-on http://127.0.0.1:8765 --timeout 10000
 
-      # Detect whether baseline snapshots have been committed to the repo
       - name: Check for existing baselines
         id: check-baselines
         run: |
@@ -61,16 +54,9 @@ jobs:
           echo "snapshot_count=$COUNT" >> "$GITHUB_OUTPUT"
           echo "Found $COUNT existing baseline snapshots"
 
-      # ── GENERATE MODE ──────────────────────────────────────────────────────
-      # Runs when: no baselines exist yet, manual update requested, or push to main.
-      # After generating, commits the new baselines back to the branch so the
-      # NEXT run can actually compare rather than generate again.
       - name: Generate / update baselines
         id: generate
-        if: >
-          steps.check-baselines.outputs.snapshot_count == '0' ||
-          inputs.update_snapshots == 'true' ||
-          github.event_name == 'push'
+        if: steps.check-baselines.outputs.snapshot_count == '0' || inputs.update_snapshots == true || github.event_name == 'push'
         run: npx playwright test tests/visual.spec.ts --update-snapshots
 
       - name: Commit baselines back to branch
@@ -88,19 +74,12 @@ jobs:
             echo "Baselines committed and pushed to $BRANCH"
           fi
 
-      # ── COMPARE MODE ───────────────────────────────────────────────────────
-      # Runs on PRs when baselines already exist in the repo.
-      # Fails if any page differs from the committed baseline by more than 2%.
       - name: Compare against baselines
         id: compare
-        if: >
-          github.event_name == 'pull_request' &&
-          inputs.update_snapshots != 'true' &&
-          steps.check-baselines.outputs.snapshot_count != '0'
+        if: github.event_name == 'pull_request' && inputs.update_snapshots != true && steps.check-baselines.outputs.snapshot_count != '0'
         run: npx playwright test tests/visual.spec.ts
         continue-on-error: true
 
-      # ── ARTIFACTS ──────────────────────────────────────────────────────────
       - name: Upload Playwright HTML report
         if: always()
         uses: actions/upload-artifact@v4
@@ -119,7 +98,6 @@ jobs:
             test-results/
           retention-days: 30
 
-      # ── PR COMMENT ─────────────────────────────────────────────────────────
       - name: Post visual summary comment on PR
         if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
@@ -131,7 +109,7 @@ jobs:
             let icon, status, note;
             if (generateOutcome === 'success') {
               icon   = '📸';
-              status = 'Baselines generated for the first time and committed to this branch';
+              status = 'Baselines generated and committed to this branch';
               note   = '> The **next CI run** on this PR will compare against these baselines.';
             } else if (compareOutcome === 'success') {
               icon   = '✅';
@@ -145,7 +123,6 @@ jobs:
 
             const body = [
               `## ${icon} Visual Test Results`,
-              '',
               `**Status:** ${status}`,
               '',
               '### Pages tested (Desktop Chrome + Mobile Chrome)',
@@ -162,7 +139,7 @@ jobs:
               '| 📱 Fake Phone Numbers |',
               '| 🤝 Connections |',
               '',
-              '### How to review screenshots',
+              '### How to review',
               '1. Download the **playwright-report** artifact from this PR',
               '2. Unzip and open `index.html` in your browser',
               '3. Click any test to see its full-page screenshot',
