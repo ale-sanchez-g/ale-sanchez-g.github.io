@@ -21,13 +21,9 @@ test.describe('Visual regression — full page', () => {
       // Allow time for fonts and layout to settle
       await page.waitForTimeout(500);
 
-      // Hide sticky nav so scroll position doesn't affect baseline diffs
+      // Hide fixed nav so scroll position doesn't affect baseline diffs
       await page.addStyleTag({
-        content: `
-          nav { position: relative !important; }
-          .mega-menu { position: relative !important; }
-          .mega-menu-2 { position: relative !important; }
-        `
+        content: `nav { position: relative !important; }`
       });
 
       const screenshot = await page.screenshot({ fullPage: true, animations: 'disabled' });
@@ -49,31 +45,23 @@ test.describe('Navigation — links and titles', () => {
       await page.goto(pg.path);
       await page.waitForLoadState('domcontentloaded');
 
-      // Page must have a visible hero h1
-      const heading = page.locator('h1').first();
-      await expect(heading).toBeVisible();
+      // Every page must have a visible h1
+      await expect(page.locator('h1').first()).toBeVisible();
 
-      const isMobile = page.viewportSize()?.width !== undefined && page.viewportSize()!.width < 768;
+      const isMobile = (page.viewportSize()?.width ?? 1280) < 768;
 
-      if (pg.path === '/index.html') {
-        // New dark-theme design — uses <nav> with .nav-links (hidden on mobile)
-        if (!isMobile) {
-          await expect(page.locator('nav')).toBeVisible();
-        }
-        // Work Experience link lives in the contact section
-        await expect(page.locator('a[href*="WORKEXPERIENCE"]').first()).toBeAttached();
+      // The new unified nav is present on all pages
+      await expect(page.locator('nav')).toBeVisible();
+
+      if (isMobile) {
+        // On mobile the nav-links are hidden; just confirm the logo is visible
+        await expect(page.locator('.nav-logo')).toBeVisible();
       } else {
-        // Reference pages retain the classic .mega-menu-2 / burger nav
-        if (isMobile) {
-          await expect(page.locator('.burger')).toBeVisible();
-          await expect(page.locator('.mobile-menu-items a[href*="WORKEXPERIENCE"]')).toBeAttached();
-        } else {
-          await expect(page.locator('.mega-menu-2')).toBeVisible();
-          await expect(page.locator('.mega-menu-2 a[href*="WORKEXPERIENCE"]')).toBeVisible();
-        }
+        // Desktop: nav Work Experience link must be visible
+        await expect(page.locator('nav a[href*="WORKEXPERIENCE"]')).toBeVisible();
       }
 
-      // Footer must contain SLO Education link on all pages
+      // Footer must contain SLO Education link on every page
       await expect(page.locator('footer a[href*="slo-education"]')).toBeVisible();
     });
   }
@@ -107,14 +95,12 @@ test.describe('Home page — key sections', () => {
 
   test('Capability cards are visible (6 cards)', async ({ page }) => {
     await page.goto('/index.html');
-    const cards = page.locator('.cap-card');
-    await expect(cards).toHaveCount(6);
+    await expect(page.locator('.cap-card')).toHaveCount(6);
   });
 
   test('Achievement cards show 4 items', async ({ page }) => {
     await page.goto('/index.html');
-    const items = page.locator('.ach-card');
-    await expect(items).toHaveCount(4);
+    await expect(page.locator('.ach-card')).toHaveCount(4);
   });
 
   test('LinkedIn and GitHub CTA links present in hero', async ({ page }) => {
@@ -125,8 +111,7 @@ test.describe('Home page — key sections', () => {
 
   test('Industries list has 7 items', async ({ page }) => {
     await page.goto('/index.html');
-    const items = page.locator('.industry-item');
-    await expect(items).toHaveCount(7);
+    await expect(page.locator('.industry-item')).toHaveCount(7);
   });
 
   test('Contact section links to all reference pages', async ({ page }) => {
@@ -137,4 +122,30 @@ test.describe('Home page — key sections', () => {
     await expect(page.locator('#contact a[href*="LEARNING"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="SUPPORTLIST"]')).toBeVisible();
   });
+});
+
+test.describe('Inner pages — nav links', () => {
+  const navPages = [
+    '/reference/WORKEXPERIENCE.html',
+    '/reference/PUBLICATIONS.html',
+    '/reference/CONFERENCES.html',
+    '/reference/LEARNING.html',
+    '/reference/APPS.html',
+    '/support/SUPPORTLIST.html',
+  ];
+
+  for (const path of navPages) {
+    test(`${path} has full nav`, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState('domcontentloaded');
+      // All main nav destinations must be linked
+      await expect(page.locator('nav a[href="/"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="WORKEXPERIENCE"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="PUBLICATIONS"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="CONFERENCES"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="LEARNING"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="APPS"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="SUPPORTLIST"]')).toBeAttached();
+    });
+  }
 });
