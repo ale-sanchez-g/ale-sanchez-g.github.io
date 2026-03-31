@@ -1,5 +1,12 @@
 import { test, expect } from '@playwright/test';
 
+// Block external font requests in every test to avoid ~40s network timeouts
+// in offline/CI environments where fonts.googleapis.com is unreachable.
+test.beforeEach(async ({ page }) => {
+  await page.route('https://fonts.googleapis.com/**', route => route.abort());
+  await page.route('https://fonts.gstatic.com/**', route => route.abort());
+});
+
 const pages = [
   { name: 'home',            path: '/index.html',                          title: 'Home' },
   { name: 'work-experience', path: '/reference/WORKEXPERIENCE.html',       title: 'Work Experience' },
@@ -18,8 +25,8 @@ test.describe('Visual regression — full page', () => {
     test(`${pg.title}`, async ({ page }, testInfo) => {
       await page.goto(pg.path, { waitUntil: 'domcontentloaded' });
 
-      // Allow time for fonts and layout to settle
-      await page.waitForTimeout(500);
+      // Allow time for layout to settle
+      await page.waitForTimeout(300);
 
       // Hide fixed nav so scroll position doesn't affect baseline diffs
       await page.addStyleTag({
@@ -56,8 +63,11 @@ test.describe('Navigation — links and titles', () => {
       if (isMobile) {
         // On mobile the nav-links are hidden; just confirm the logo is visible
         await expect(page.locator('.nav-logo')).toBeVisible();
+      } else if (pg.path === '/index.html') {
+        // Home page nav has section anchors, not page links
+        await expect(page.locator('nav a[href*="about"]')).toBeVisible();
       } else {
-        // Desktop: nav Work Experience link must be visible
+        // Reference pages: nav Work Experience link must be visible
         await expect(page.locator('nav a[href*="WORKEXPERIENCE"]')).toBeVisible();
       }
 
@@ -139,7 +149,7 @@ test.describe('Inner pages — nav links', () => {
       await page.goto(path);
       await page.waitForLoadState('domcontentloaded');
       // All main nav destinations must be linked
-      await expect(page.locator('nav a[href="/"]')).toBeAttached();
+      await expect(page.locator('.nav-links a[href="/"]')).toBeAttached();
       await expect(page.locator('nav a[href*="WORKEXPERIENCE"]')).toBeAttached();
       await expect(page.locator('nav a[href*="PUBLICATIONS"]')).toBeAttached();
       await expect(page.locator('nav a[href*="CONFERENCES"]')).toBeAttached();

@@ -20,7 +20,7 @@ export default defineConfig({
       animations: 'disabled',
     },
   },
-  snapshotPathTemplate: 'tests/snapshots/{testName}-{arg}{ext}',
+  snapshotPathTemplate: 'tests/snapshots/{projectName}-{testName}-{arg}{ext}',
   projects: [
     // Desktop Chrome is the canonical snapshot browser used in CI (Ubuntu).
     // Always use `npx playwright install chromium` to keep the binary in sync with package-lock.json.
