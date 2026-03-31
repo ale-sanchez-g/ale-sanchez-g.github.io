@@ -44,14 +44,28 @@ jobs:
       - name: Wait for server to be ready
         run: npx wait-on http://127.0.0.1:8765 --timeout 10000
 
-      # On pushes to main or manual dispatch with update_snapshots=true: regenerate baselines.
-      # On PRs: compare against committed baselines (fail on visual diff).
+      # Detect whether baseline snapshots exist yet
+      - name: Check for existing baselines
+        id: check-baselines
+        run: |
+          COUNT=$(find tests/snapshots -name "*.png" 2>/dev/null | wc -l)
+          echo "snapshot_count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "Found $COUNT existing baseline snapshots"
+
+      # On pushes to main, manual update, OR when no baselines exist yet → generate/update baselines
       - name: Run visual tests (update baselines)
-        if: github.event_name == 'push' || inputs.update_snapshots == 'true'
+        if: >
+          github.event_name == 'push' ||
+          inputs.update_snapshots == 'true' ||
+          steps.check-baselines.outputs.snapshot_count == '0'
         run: npx playwright test tests/visual.spec.ts --update-snapshots
 
+      # On PRs when baselines already exist → compare and fail on regression
       - name: Run visual tests (compare)
-        if: github.event_name == 'pull_request' && inputs.update_snapshots != 'true'
+        if: >
+          github.event_name == 'pull_request' &&
+          inputs.update_snapshots != 'true' &&
+          steps.check-baselines.outputs.snapshot_count != '0'
         id: compare-tests
         run: npx playwright test tests/visual.spec.ts
         continue-on-error: true
