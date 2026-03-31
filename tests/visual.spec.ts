@@ -52,9 +52,16 @@ test.describe('Navigation — links and titles', () => {
       const heading = page.locator('h1').first();
       await expect(heading).toBeVisible();
 
-      // Nav must contain Work Experience link
-      await expect(page.locator('.mega-menu-2')).toBeVisible();
-      await expect(page.locator('.mega-menu-2 a[href*="WORKEXPERIENCE"]')).toBeVisible();
+      // On desktop the horizontal nav bar is visible; on mobile it is hidden and
+      // replaced by the burger menu. Check whichever is present.
+      const isMobile = page.viewportSize()?.width !== undefined && page.viewportSize()!.width < 768;
+      if (isMobile) {
+        await expect(page.locator('.burger')).toBeVisible();
+        await expect(page.locator('.mobile-menu-items a[href*="WORKEXPERIENCE"]')).toBeAttached();
+      } else {
+        await expect(page.locator('.mega-menu-2')).toBeVisible();
+        await expect(page.locator('.mega-menu-2 a[href*="WORKEXPERIENCE"]')).toBeVisible();
+      }
 
       // Footer must contain SLO Education link
       await expect(page.locator('footer a[href*="slo-education"]')).toBeVisible();
