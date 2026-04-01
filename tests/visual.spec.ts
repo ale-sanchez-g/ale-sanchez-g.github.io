@@ -9,15 +9,15 @@ test.beforeEach(async ({ page }) => {
 
 const pages = [
   { name: 'home',            path: '/index.html',                          title: 'Home' },
-  { name: 'work-experience', path: '/reference/WORKEXPERIENCE.html',       title: 'Work Experience' },
-  { name: 'publications',    path: '/reference/PUBLICATIONS.html',          title: 'Publications' },
-  { name: 'conferences',     path: '/reference/CONFERENCES.html',           title: 'Conferences' },
-  { name: 'learning',        path: '/reference/LEARNING.html',              title: 'Learning Resources' },
-  { name: 'apps',            path: '/reference/APPS.html',                  title: 'Apps' },
-  { name: 'aws-obs-summary', path: '/reference/sums/AWS_OBS_SUM.html',     title: 'AWS Observability Day' },
-  { name: 'support',         path: '/support/SUPPORTLIST.html',             title: 'Support Materials' },
-  { name: 'fake-numbers',    path: '/support/FAKENUMBERS.html',             title: 'Fake Phone Numbers' },
-  { name: 'connections',     path: '/people/CONNECTIONS.html',              title: 'Connections' },
+  { name: 'work-experience', path: '/reference/work-experience.html',       title: 'Work Experience' },
+  { name: 'publications',    path: '/reference/publications.html',          title: 'Publications' },
+  { name: 'conferences',     path: '/reference/conferences.html',           title: 'Conferences' },
+  { name: 'learning',        path: '/reference/learning.html',              title: 'Learning Resources' },
+  { name: 'apps',            path: '/reference/apps.html',                  title: 'Apps' },
+  { name: 'aws-obs-summary', path: '/reference/sums/aws-obs-sum.html',     title: 'AWS Observability Day' },
+  { name: 'support',         path: '/support/support-list.html',            title: 'Support Materials' },
+  { name: 'fake-numbers',    path: '/support/fake-numbers.html',            title: 'Fake Phone Numbers' },
+  { name: 'connections',     path: '/people/connections.html',              title: 'Connections' },
 ];
 
 test.describe('Visual regression — full page', () => {
@@ -68,7 +68,7 @@ test.describe('Navigation — links and titles', () => {
         await expect(page.locator('nav a[href*="about"]')).toBeVisible();
       } else {
         // Reference pages: nav Work Experience link must be visible
-        await expect(page.locator('nav a[href*="WORKEXPERIENCE"]')).toBeVisible();
+        await expect(page.locator('nav a[href*="work-experience"]')).toBeVisible();
       }
 
       // Footer must contain SLO Education link on every page
@@ -79,18 +79,18 @@ test.describe('Navigation — links and titles', () => {
 
 test.describe('Navigation — back links', () => {
   test('Work Experience has back link to home', async ({ page }) => {
-    await page.goto('/reference/WORKEXPERIENCE.html');
+    await page.goto('/reference/work-experience.html');
     await expect(page.locator('.back-link')).toHaveAttribute('href', '/');
   });
 
   test('AWS Obs Summary has back link to Conferences', async ({ page }) => {
-    await page.goto('/reference/sums/AWS_OBS_SUM.html');
-    await expect(page.locator('.back-link')).toHaveAttribute('href', '/reference/CONFERENCES.html');
+    await page.goto('/reference/sums/aws-obs-sum.html');
+    await expect(page.locator('.back-link')).toHaveAttribute('href', '/reference/conferences.html');
   });
 
   test('Fake Numbers has back link to Support', async ({ page }) => {
-    await page.goto('/support/FAKENUMBERS.html');
-    await expect(page.locator('.back-link')).toHaveAttribute('href', '/support/SUPPORTLIST.html');
+    await page.goto('/support/fake-numbers.html');
+    await expect(page.locator('.back-link')).toHaveAttribute('href', '/support/support-list.html');
   });
 });
 
@@ -126,22 +126,22 @@ test.describe('Home page — key sections', () => {
 
   test('Contact section links to all reference pages', async ({ page }) => {
     await page.goto('/index.html');
-    await expect(page.locator('#contact a[href*="WORKEXPERIENCE"]')).toBeVisible();
-    await expect(page.locator('#contact a[href*="PUBLICATIONS"]')).toBeVisible();
-    await expect(page.locator('#contact a[href*="CONFERENCES"]')).toBeVisible();
-    await expect(page.locator('#contact a[href*="LEARNING"]')).toBeVisible();
-    await expect(page.locator('#contact a[href*="SUPPORTLIST"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="work-experience"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="publications"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="conferences"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="learning"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="support-list"]')).toBeVisible();
   });
 });
 
 test.describe('Inner pages — nav links', () => {
   const navPages = [
-    '/reference/WORKEXPERIENCE.html',
-    '/reference/PUBLICATIONS.html',
-    '/reference/CONFERENCES.html',
-    '/reference/LEARNING.html',
-    '/reference/APPS.html',
-    '/support/SUPPORTLIST.html',
+    '/reference/work-experience.html',
+    '/reference/publications.html',
+    '/reference/conferences.html',
+    '/reference/learning.html',
+    '/reference/apps.html',
+    '/support/support-list.html',
   ];
 
   for (const path of navPages) {
@@ -150,12 +150,12 @@ test.describe('Inner pages — nav links', () => {
       await page.waitForLoadState('domcontentloaded');
       // All main nav destinations must be linked
       await expect(page.locator('.nav-links a[href="/"]')).toBeAttached();
-      await expect(page.locator('nav a[href*="WORKEXPERIENCE"]')).toBeAttached();
-      await expect(page.locator('nav a[href*="PUBLICATIONS"]')).toBeAttached();
-      await expect(page.locator('nav a[href*="CONFERENCES"]')).toBeAttached();
-      await expect(page.locator('nav a[href*="LEARNING"]')).toBeAttached();
-      await expect(page.locator('nav a[href*="APPS"]')).toBeAttached();
-      await expect(page.locator('nav a[href*="SUPPORTLIST"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="work-experience"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="publications"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="conferences"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="learning"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="apps"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="support-list"]')).toBeAttached();
     });
   }
 });
