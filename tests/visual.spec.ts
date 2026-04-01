@@ -1,16 +1,23 @@
 import { test, expect } from '@playwright/test';
 
+// Block external font requests in every test to avoid ~40s network timeouts
+// in offline/CI environments where fonts.googleapis.com is unreachable.
+test.beforeEach(async ({ page }) => {
+  await page.route('https://fonts.googleapis.com/**', route => route.abort());
+  await page.route('https://fonts.gstatic.com/**', route => route.abort());
+});
+
 const pages = [
   { name: 'home',            path: '/index.html',                          title: 'Home' },
-  { name: 'work-experience', path: '/reference/WORKEXPERIENCE.html',       title: 'Work Experience' },
-  { name: 'publications',    path: '/reference/PUBLICATIONS.html',          title: 'Publications' },
-  { name: 'conferences',     path: '/reference/CONFERENCES.html',           title: 'Conferences' },
-  { name: 'learning',        path: '/reference/LEARNING.html',              title: 'Learning Resources' },
-  { name: 'apps',            path: '/reference/APPS.html',                  title: 'Apps' },
-  { name: 'aws-obs-summary', path: '/reference/sums/AWS_OBS_SUM.html',     title: 'AWS Observability Day' },
-  { name: 'support',         path: '/support/SUPPORTLIST.html',             title: 'Support Materials' },
-  { name: 'fake-numbers',    path: '/support/FAKENUMBERS.html',             title: 'Fake Phone Numbers' },
-  { name: 'connections',     path: '/people/CONNECTIONS.html',              title: 'Connections' },
+  { name: 'work-experience', path: '/reference/work-experience.html',       title: 'Work Experience' },
+  { name: 'publications',    path: '/reference/publications.html',          title: 'Publications' },
+  { name: 'conferences',     path: '/reference/conferences.html',           title: 'Conferences' },
+  { name: 'learning',        path: '/reference/learning.html',              title: 'Learning Resources' },
+  { name: 'apps',            path: '/reference/apps.html',                  title: 'Apps' },
+  { name: 'aws-obs-summary', path: '/reference/sums/aws-obs-sum.html',     title: 'AWS Observability Day' },
+  { name: 'support',         path: '/support/support-list.html',            title: 'Support Materials' },
+  { name: 'fake-numbers',    path: '/support/fake-numbers.html',            title: 'Fake Phone Numbers' },
+  { name: 'connections',     path: '/people/connections.html',              title: 'Connections' },
 ];
 
 test.describe('Visual regression — full page', () => {
@@ -18,15 +25,12 @@ test.describe('Visual regression — full page', () => {
     test(`${pg.title}`, async ({ page }, testInfo) => {
       await page.goto(pg.path, { waitUntil: 'domcontentloaded' });
 
-      // Allow time for fonts and layout to settle
-      await page.waitForTimeout(500);
+      // Allow time for layout to settle
+      await page.waitForTimeout(300);
 
-      // Hide sticky header so scroll position doesn't affect baseline diffs
+      // Hide fixed nav so scroll position doesn't affect baseline diffs
       await page.addStyleTag({
-        content: `
-          .mega-menu { position: relative !important; }
-          .mega-menu-2 { position: relative !important; }
-        `
+        content: `nav { position: relative !important; }`
       });
 
       const screenshot = await page.screenshot({ fullPage: true, animations: 'disabled' });
@@ -48,22 +52,26 @@ test.describe('Navigation — links and titles', () => {
       await page.goto(pg.path);
       await page.waitForLoadState('domcontentloaded');
 
-      // Page must have a visible hero h1
-      const heading = page.locator('h1').first();
-      await expect(heading).toBeVisible();
+      // Every page must have a visible h1
+      await expect(page.locator('h1').first()).toBeVisible();
 
-      // On desktop the horizontal nav bar is visible; on mobile it is hidden and
-      // replaced by the burger menu. Check whichever is present.
-      const isMobile = page.viewportSize()?.width !== undefined && page.viewportSize()!.width < 768;
+      const isMobile = (page.viewportSize()?.width ?? 1280) < 768;
+
+      // The new unified nav is present on all pages
+      await expect(page.locator('nav')).toBeVisible();
+
       if (isMobile) {
-        await expect(page.locator('.burger')).toBeVisible();
-        await expect(page.locator('.mobile-menu-items a[href*="WORKEXPERIENCE"]')).toBeAttached();
+        // On mobile the nav-links are hidden; just confirm the logo is visible
+        await expect(page.locator('.nav-logo')).toBeVisible();
+      } else if (pg.path === '/index.html') {
+        // Home page nav has section anchors, not page links
+        await expect(page.locator('nav a[href*="about"]')).toBeVisible();
       } else {
-        await expect(page.locator('.mega-menu-2')).toBeVisible();
-        await expect(page.locator('.mega-menu-2 a[href*="WORKEXPERIENCE"]')).toBeVisible();
+        // Reference pages: nav Work Experience link must be visible
+        await expect(page.locator('nav a[href*="work-experience"]')).toBeVisible();
       }
 
-      // Footer must contain SLO Education link
+      // Footer must contain SLO Education link on every page
       await expect(page.locator('footer a[href*="slo-education"]')).toBeVisible();
     });
   }
@@ -71,18 +79,18 @@ test.describe('Navigation — links and titles', () => {
 
 test.describe('Navigation — back links', () => {
   test('Work Experience has back link to home', async ({ page }) => {
-    await page.goto('/reference/WORKEXPERIENCE.html');
+    await page.goto('/reference/work-experience.html');
     await expect(page.locator('.back-link')).toHaveAttribute('href', '/');
   });
 
   test('AWS Obs Summary has back link to Conferences', async ({ page }) => {
-    await page.goto('/reference/sums/AWS_OBS_SUM.html');
-    await expect(page.locator('.back-link')).toHaveAttribute('href', '/reference/CONFERENCES.html');
+    await page.goto('/reference/sums/aws-obs-sum.html');
+    await expect(page.locator('.back-link')).toHaveAttribute('href', '/reference/conferences.html');
   });
 
   test('Fake Numbers has back link to Support', async ({ page }) => {
-    await page.goto('/support/FAKENUMBERS.html');
-    await expect(page.locator('.back-link')).toHaveAttribute('href', '/support/SUPPORTLIST.html');
+    await page.goto('/support/fake-numbers.html');
+    await expect(page.locator('.back-link')).toHaveAttribute('href', '/support/support-list.html');
   });
 });
 
@@ -95,21 +103,86 @@ test.describe('Home page — key sections', () => {
     await expect(banner.locator('.slo-banner-badge')).toContainText('Editor');
   });
 
-  test('Role cards are visible', async ({ page }) => {
+  test('Capability cards are visible (6 cards)', async ({ page }) => {
     await page.goto('/index.html');
-    const cards = page.locator('.role-card');
-    await expect(cards).toHaveCount(3);
+    await expect(page.locator('.cap-card')).toHaveCount(6);
   });
 
-  test('Achievements list has 4 items', async ({ page }) => {
+  test('Achievement cards show 4 items', async ({ page }) => {
     await page.goto('/index.html');
-    const items = page.locator('.achievements-list li');
-    await expect(items).toHaveCount(4);
+    await expect(page.locator('.ach-card')).toHaveCount(4);
   });
 
-  test('LinkedIn and GitHub social links present', async ({ page }) => {
+  test('LinkedIn and GitHub CTA links present in hero', async ({ page }) => {
     await page.goto('/index.html');
-    await expect(page.locator('.hero-social a[href*="linkedin"]')).toBeVisible();
-    await expect(page.locator('.hero-social a[href*="github"]')).toBeVisible();
+    await expect(page.locator('.hero-cta a[href*="linkedin"]')).toBeVisible();
+    await expect(page.locator('.hero-cta a[href*="github"]')).toBeVisible();
   });
+
+  test('Hero image alignment is responsive across breakpoints', async ({ page }) => {
+    await page.goto('/index.html');
+
+    const heroPhoto = page.locator('.hero-photo');
+    const heroCopy = page.locator('.hero-copy');
+    const heroMedia = page.locator('.hero-media');
+    const heroCta = page.locator('.hero-cta');
+
+    await expect(heroPhoto).toBeVisible();
+    await expect(heroPhoto).toHaveAttribute('src', '/img/aj-low.jpg');
+
+    const viewportWidth = page.viewportSize()?.width ?? 1280;
+    const copyBox = await heroCopy.boundingBox();
+    const mediaBox = await heroMedia.boundingBox();
+    const ctaBox = await heroCta.boundingBox();
+
+    expect(copyBox).not.toBeNull();
+    expect(mediaBox).not.toBeNull();
+    expect(ctaBox).not.toBeNull();
+
+    if (viewportWidth <= 900) {
+      expect(mediaBox!.y).toBeLessThan(ctaBox!.y);
+    } else {
+      expect(mediaBox!.x).toBeGreaterThan(copyBox!.x + copyBox!.width * 0.7);
+    }
+  });
+
+  test('Industries list has 7 items', async ({ page }) => {
+    await page.goto('/index.html');
+    await expect(page.locator('.industry-item')).toHaveCount(7);
+  });
+
+  test('Contact section links to all reference pages', async ({ page }) => {
+    await page.goto('/index.html');
+    await expect(page.locator('#contact a[href*="work-experience"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="publications"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="conferences"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="learning"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="support-list"]')).toBeVisible();
+  });
+});
+
+test.describe('Inner pages — nav links', () => {
+  const navPages = [
+    '/reference/work-experience.html',
+    '/reference/publications.html',
+    '/reference/conferences.html',
+    '/reference/learning.html',
+    '/reference/apps.html',
+    '/support/support-list.html',
+  ];
+
+  for (const path of navPages) {
+    test(`${path} has full nav`, async ({ page }) => {
+      await page.goto(path);
+      await page.waitForLoadState('domcontentloaded');
+      // All main nav destinations must be linked
+      await expect(page.locator('.nav-links a[href="/"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="work-experience"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="publications"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="conferences"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="learning"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="apps"]')).toBeAttached();
+      await expect(page.locator('nav a[href*="support-list"]')).toBeAttached();
+    });
+  }
 });
