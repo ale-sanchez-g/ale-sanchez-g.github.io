@@ -119,6 +119,33 @@ test.describe('Home page — key sections', () => {
     await expect(page.locator('.hero-cta a[href*="github"]')).toBeVisible();
   });
 
+  test('Hero image alignment is responsive across breakpoints', async ({ page }) => {
+    await page.goto('/index.html');
+
+    const heroPhoto = page.locator('.hero-photo');
+    const heroCopy = page.locator('.hero-copy');
+    const heroMedia = page.locator('.hero-media');
+    const heroCta = page.locator('.hero-cta');
+
+    await expect(heroPhoto).toBeVisible();
+    await expect(heroPhoto).toHaveAttribute('src', '/img/aj-low.jpg');
+
+    const viewportWidth = page.viewportSize()?.width ?? 1280;
+    const copyBox = await heroCopy.boundingBox();
+    const mediaBox = await heroMedia.boundingBox();
+    const ctaBox = await heroCta.boundingBox();
+
+    expect(copyBox).not.toBeNull();
+    expect(mediaBox).not.toBeNull();
+    expect(ctaBox).not.toBeNull();
+
+    if (viewportWidth <= 900) {
+      expect(mediaBox!.y).toBeLessThan(ctaBox!.y);
+    } else {
+      expect(mediaBox!.x).toBeGreaterThan(copyBox!.x + copyBox!.width * 0.7);
+    }
+  });
+
   test('Industries list has 7 items', async ({ page }) => {
     await page.goto('/index.html');
     await expect(page.locator('.industry-item')).toHaveCount(7);
