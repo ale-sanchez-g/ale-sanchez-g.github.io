@@ -128,7 +128,7 @@ test.describe('Home page — key sections', () => {
     const heroCta = page.locator('.hero-cta');
 
     await expect(heroPhoto).toBeVisible();
-    await expect(heroPhoto).toHaveAttribute('src', '/img/aj-low.jpg');
+    await expect(heroPhoto).toHaveAttribute('src', '/img/aj-low.png');
 
     const viewportWidth = page.viewportSize()?.width ?? 1280;
     const copyBox = await heroCopy.boundingBox();
