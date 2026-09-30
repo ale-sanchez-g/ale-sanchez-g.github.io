@@ -21,6 +21,7 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── conferences.html        # Conference talks and appearances
 │   ├── learning.html           # Learning resources and certifications
 │   ├── apps.html               # Projects and tools
+│   ├── ai-native-qa-strategy.html  # Open-source, interactive AI-native QA strategy
 │   └── sums/                   # Event summaries (e.g. AWS Observability Day)
 ├── support/
 │   ├── support-list.html       # Support materials index
@@ -28,8 +29,12 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 ├── people/
 │   └── connections.html        # Professional connections
 ├── assets/
-│   ├── css/style.css           # Global styles
-│   └── js/main.js              # Mobile menu toggle
+│   ├── css/design.css          # Design system used by every page
+│   ├── css/style.css           # Legacy styles (unused by current pages)
+│   ├── css/strategy.css        # Components for the strategy page
+│   ├── js/main.js              # Mobile menu toggle
+│   ├── js/strategy.js          # Interactive tools on the strategy page
+│   └── docs/                   # Downloadable documents (strategy PDF)
 └── img/                        # Images and badge icons
 ```
 
@@ -60,6 +65,9 @@ npm run test:visual
 
 # Update baseline snapshots (after intentional UI changes)
 npm run test:update
+
+# Functional tests for the interactive tools on the strategy page
+npm run test:strategy
 ```
 
 Snapshots are stored in `tests/snapshots/` and committed to the repository. A 2% pixel-diff tolerance is applied to account for minor rendering differences.
@@ -86,6 +94,9 @@ Pages covered by visual tests:
 - Support Materials
 - Fake Phone Numbers
 - Connections
+- AI-Native QA Strategy
+
+The strategy page's interactive tools (speed paradox, Swiss cheese simulator, test pyramid, risk-tier router, maturity self-assessment, questionnaire export and more) are covered by `tests/strategy.spec.ts`, which CI runs after the visual checks.
 
 Artifacts (HTML report + screenshots) are retained for 30 days. If a visual regression is detected the workflow fails and diff images are available under `test-results/` in the uploaded artifact.
 

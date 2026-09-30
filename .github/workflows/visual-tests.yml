@@ -138,6 +138,7 @@ jobs:
               '| 🆘 Support Materials |',
               '| 📱 Fake Phone Numbers |',
               '| 🤝 Connections |',
+              '| 🧭 AI-Native QA Strategy |',
               '',
               '### How to review',
               '1. Download the **playwright-report** artifact from this PR',
@@ -156,3 +157,6 @@ jobs:
       - name: Fail job if visual comparison failed
         if: steps.compare.outcome == 'failure'
         run: exit 1
+
+      - name: Run strategy page functional tests
+        run: npx playwright test tests/strategy.spec.ts
