@@ -34,7 +34,7 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── css/strategy.css        # Components for the strategy page
 │   ├── js/main.js              # Mobile menu toggle
 │   ├── js/strategy.js          # Interactive tools on the strategy page
-│   └── docs/                   # Downloadable documents (strategy PDF)
+│   └── docs/                   # Strategy PDF, generated from the page's print layout
 └── img/                        # Images and badge icons
 ```
 
@@ -95,6 +95,8 @@ Pages covered by visual tests:
 - Fake Phone Numbers
 - Connections
 - AI-Native QA Strategy
+
+The downloadable strategy PDF is produced from the page itself: open the page and use Print → Save as PDF (A4). The print layout expands every chapter and hides the interactive controls, so the PDF always matches the page.
 
 The strategy page's interactive tools (speed paradox, Swiss cheese simulator, test pyramid, risk-tier router, maturity self-assessment, questionnaire export and more) are covered by `tests/strategy.spec.ts`, which CI runs after the visual checks.
 

@@ -345,18 +345,18 @@
       text: 'A build agent changes the pricing calculation and writes its own unit tests. Everything is green, so the pipeline auto-merges.',
       answer: 'stop', principles: [2, 3, 4],
       why: 'The same agent wrote the code and the tests, so both slices share the same holes — the tests confirm the code’s own mistakes. Pricing is Tier 3, and it shipped with no human decision.',
-      instead: 'Generate tests independently from the spec, add mutation and contract testing and a second human reviewer, and let a named service owner approve the release.',
+      instead: 'Generate tests independently from the spec, prove them with mutation testing, add NFR and security testing and a second human reviewer, and let the named service owner approve a staged rollout.',
     },
     {
-      text: 'An agent starts building a new checkout step from a chat thread. The acceptance criteria will be written after the demo.',
+      text: 'An agent starts building a new sign-up step from a chat thread. The acceptance criteria will be written after the demo.',
       answer: 'stop', principles: [1],
       why: 'No agent writes production code without an approved spec, acceptance criteria and a risk tier. Vague intent just produces the wrong thing faster.',
       instead: 'Lock the spec first: Given/When/Then criteria, a risk tier and NFRs approved before the build agent starts.',
     },
     {
-      text: 'A typo fix on the FAQ page passes automated tests and scans, gets an agent pre-review and deploys automatically.',
+      text: 'A typo fix on the FAQ page passes its independently generated tests and scans, gets an agent pre-review and ships automatically through a canary with SLO guards.',
       answer: 'ship', principles: [4, 5],
-      why: 'This is Tier 1 — copy, styling, internal tooling and docs. Automated tests, scans and an agent pre-review are the right amount of assurance, and the pipeline produced the evidence.',
+      why: 'This is Tier 1 — copy, styling, internal tooling and docs. Independent tests, scans, an agent pre-review and an automated canary are the right amount of assurance, and the pipeline produced the evidence.',
     },
     {
       text: 'An agent generated 400 unit tests overnight and line coverage jumped to 95%. The team declares the service well tested.',
@@ -371,9 +371,9 @@
       instead: 'Attach the evidence bundle — tests, scans, traces and approvals — and let the named service owner decide on it.',
     },
     {
-      text: 'A recommendations widget ships behind a feature flag. A separate test agent generated its tests from the acceptance criteria, an engineer reviewed the diff and the evidence, and it goes out as a canary.',
+      text: 'A recommendations widget ships behind a feature flag. A separate test agent generated its tests from the acceptance criteria, mutation testing shows they catch real faults, an engineer reviewed the diff and the evidence, and it goes out as a canary.',
       answer: 'ship', principles: [2, 3, 4],
-      why: 'Textbook Tier 2: independent test generation, human code review and a canary release, approved by an engineer on the team.',
+      why: 'Textbook Tier 2: independent tests proven by mutation testing, human code review, and a canary release approved by an engineer on the team.',
     },
     {
       text: 'Leadership sets the AI adoption goal: three times more pull requests per engineer by next quarter.',
@@ -388,7 +388,7 @@
       instead: 'Assert against the acceptance criteria, not the current output.',
     },
     {
-      text: 'An authentication change has design and threat-model sign-off, mutation and contract tests and two human reviewers. A named service owner approves a staged rollout with automatic rollback on SLO breach.',
+      text: 'An authentication change has design and threat-model sign-off, independent tests with a mutation score above 70%, NFR and security testing, and two human reviewers. The named service owner approves a staged rollout with automatic rollback on SLO breach.',
       answer: 'ship', principles: [4, 6],
       why: 'This is what Tier 3 assurance looks like: prevention on the left, fast detection and automatic rollback on the right. If anything escapes, the review asks which slice missed it and adds a test there.',
     },
@@ -1221,12 +1221,12 @@
         weakest.length === DIMS.length
           ? statTile('Weakest link', 'Balanced', '', 'Every dimension at Level ' + lowest)
           : statTile('Weakest link', weakest[0], '', 'Level ' + lowest),
-        statTile('Steps to Level 4', String(gap), gap === 1 ? 'step' : 'steps', 'Target for every dimension by late 2027', gap === 0 ? 'is-good' : ''));
+        statTile('Steps to Level 4', String(gap), gap === 1 ? 'step' : 'steps', 'Target for every dimension within 15 months', gap === 0 ? 'is-good' : ''));
 
       const tier3AtFive = tierSelect.value === '3' && current.some((l) => l === 5);
       let text;
       if (tier3AtFive) {
-        text = 'Tier 3 services never go above Level 4. Keep a named human decision on every high-risk change — agents may own Tier 1 changes end to end, never Tier 3.';
+        text = 'Tier 3 services never go above Level 4. Keep a named human decision on every high-risk change — agents may deliver Tier 1 changes end to end, never Tier 3.';
       } else if (gap === 0) {
         text = 'At or above the Level 4 target in every dimension. Level 5 — autonomous with guardrails — stays off-limits for Tier 3 services.';
       } else {
@@ -1455,12 +1455,26 @@
     });
   }
 
+  /* ── print / save as PDF: every section expanded ───────────── */
+
+  function initPrint() {
+    let opened = [];
+    window.addEventListener('beforeprint', () => {
+      opened = $$('details:not([open])');
+      opened.forEach((d) => { d.open = true; });
+    });
+    window.addEventListener('afterprint', () => {
+      opened.forEach((d) => { d.open = false; });
+      opened = [];
+    });
+  }
+
   /* ── boot ────────────────────────────────────────────────── */
 
   const envs = readEnvironments();
   const tools = [
     initChapters, initResponsiveTables, initSpeedLab, initShipGame, () => initTabs($('#stage-lab')), initCapabilities,
-    () => initEnvironments(envs), initCheese, initPyramid, () => initRisk(envs), initMaturity, initGate, initWorkbook,
+    () => initEnvironments(envs), initCheese, initPyramid, () => initRisk(envs), initMaturity, initGate, initWorkbook, initPrint,
   ];
   tools.forEach((init) => {
     try { init(); } catch (error) { console.error('Strategy tool failed to start:', error); }

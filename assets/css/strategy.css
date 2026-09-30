@@ -869,3 +869,157 @@ button.btn { cursor: pointer; }
   html { scroll-behavior: auto; }
   .st-content *, .st-chapters * { transition: none !important; animation: none !important; }
 }
+
+/* ── PRINT / SAVE AS PDF ──
+   A light, linear document: every chapter expanded, interactive-only controls hidden.
+   The downloadable PDF is generated from this layout. */
+@media print {
+  @page { size: A4; margin: 16mm 15mm 18mm; }
+
+  :root {
+    --bg: #fff; --fg: #151515; --muted: #5c5c5c; --accent: #4a5f00;
+    --border: #d9d9d9; --card: #fff; --line: #cfcfcf; --panel: #fff;
+    --danger: #c0392b; --danger-dim: #a0403a;
+  }
+  html { scroll-behavior: auto; }
+  body { background: #fff; color: var(--fg); font-size: 10pt; line-height: 1.55; overflow: visible; }
+
+  /* Site chrome and interactive-only parts */
+  body > nav, .st-chapters, .back-link, noscript, .st-screen-only, .st-chip,
+  .st-hero .st-actions, .st-oss .st-actions, footer p + p,
+  #speed-lab, #ship-game, #pyramid-lab,
+  #stage-lab .st-lab-head, .st-tabs,
+  #cap-verdict, .st-meter,
+  #env-lab > :not(.st-details),
+  #cheese-lab .st-lab-head, .st-cheese-bar, .st-layer-toggles, #cheese-detail, .st-cheese-results, #cheese-lab .st-details + .st-details,
+  #risk-lab .st-lab-head, .st-examples, .st-step-tier, .st-depth, #risk-envstrip,
+  #maturity-lab > :not(.st-details),
+  .st-gate-controls, #gate-result,
+  .st-wb-toolbar, #wb-status, .st-part-count,
+  .st-details > summary::after, .st-part > summary::after, .st-principle > summary::after { display: none !important; }
+
+  /* Page frame */
+  .page-hero { padding: 0 0 1.2rem; border-bottom: 1px solid var(--border); }
+  .page-hero h1 { font-size: 34pt; margin-bottom: 0.8rem; }
+  .page-hero p { color: #333; max-width: none; }
+  .st-content.page-content { max-width: none; padding: 0.6rem 0 0; }
+  footer { padding: 1rem 0 0; border-top: 1px solid var(--border); justify-content: flex-start; }
+
+  .st-chapter { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--border); }
+  .st-content > .st-chapter:first-of-type { margin-top: 0; padding-top: 1rem; border-top: 0; }
+  .st-h2 { font-size: 20pt; margin-bottom: 0.9rem; }
+  .st-h3 { font-size: 13pt; margin-top: 1.4rem; }
+  .st-h2, .st-h3, h3, h4, .section-label, .section-title, .st-mini-label, .st-details > summary, .st-part > summary { break-after: avoid; }
+  .st-lede { font-size: 11pt; color: #222; max-width: none; }
+  .st-body, .text-muted, .st-verdict, .st-callout, .st-details-body { color: #2a2a2a; max-width: none; }
+  .st-quote p { font-size: 15pt; }
+  .st-quote--soft p { font-size: 10.5pt; color: #2a2a2a; }
+
+  /* Cards become plain blocks */
+  .st-content .page-card, .st-content .st-lab { border: 0; padding: 0; margin: 1.1rem 0 0 !important; background: none; }
+  .st-lab::before { display: none; }
+  .st-lab-head { margin-bottom: 0.8rem; }
+  .st-lab-head h3 { font-size: 12pt; }
+  .st-lab-head p { color: #2a2a2a; }
+
+  /* Keep blocks whole */
+  .st-cell, .st-triple > div, .st-pillar, .st-foundation .st-check, .st-tier, .st-step, .st-anti-card,
+  .st-phase, .st-gate, .st-callout, .st-quote, .st-principles li, .st-q, .st-bstage, .data-table tr,
+  .st-deflist li, .st-levers li, .st-rhythm li, .st-tabpanel, .st-cheese-stage { break-inside: avoid; }
+
+  /* Light surfaces */
+  .st-cell:hover, .st-principle[open], .st-principle.is-at-stake { background: none; box-shadow: none; }
+  .st-cell p:not(.st-num), .st-p-text, .st-p-body p:not(.st-mini-label), .st-list li, .st-deflist li, .st-levers li,
+  .st-anti-why, .st-step-text, .st-tier-text, .st-check, .st-q label, .st-part-intro, .st-phase li, .st-rhythm li, .st-gate span { color: #2a2a2a; }
+  .st-triple > div, .st-pillar, .st-foundation, .st-tier, .st-anti-card, .st-phase, .st-callout, .st-goal { background: #fff; border-color: var(--border); }
+  .st-callout::before { color: #fff; background: var(--accent); }
+  .st-goal { border-color: var(--accent); }
+  .st-principle.is-at-stake .st-p-title { color: var(--fg); }
+
+  /* Multi-column where A4 has the room (the page width triggers the phone rules otherwise) */
+  .st-grid-3, .st-pillars, .st-tiers { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .st-triple { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr); }
+  .st-anti, .st-foundation, .st-deflist, .st-levers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-split { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 1.6rem; }
+  .st-cell { padding: 1.1rem 1rem; }
+
+  /* Tables */
+  .st-table-wrap { overflow: visible; }
+  .st-table-wide { min-width: 0; table-layout: fixed; width: 100%; }
+  .data-table { font-size: 8.5pt; }
+  .data-table th, .data-table td { overflow-wrap: break-word; hyphens: auto; padding: 0.45rem 0.5rem; }
+  #env-table { font-size: 7pt; }
+  #env-table th, #env-table td { padding: 0.4rem 0.25rem; }
+  #env-table thead th:first-child { width: 14%; }
+  #layer-table thead th:first-child, #automate-table thead th:first-child { width: 17%; }
+  .data-table th[scope="row"] { overflow-wrap: normal; }
+  .st-grid { break-inside: avoid; }
+  .st-body:has(+ .st-grid), .st-body:has(+ .st-roadmap), .section-title:has(+ .st-table-wrap) { break-after: avoid; }
+  .data-table thead th { letter-spacing: 0.06em; }
+  .data-table th[scope="row"] { font-size: 8.5pt; }
+  .data-table th, .data-table th[scope="row"] { background: #f2f2f2; color: #151515; }
+  .data-table th[scope="row"] { background: none; }
+  .data-table td { color: #2a2a2a; }
+  .data-table tr:hover td { background: none; }
+  .st-details { border-top: 0; margin-top: 0.6rem; }
+  .st-details > summary { padding: 0.3rem 0; color: var(--muted); }
+  .st-details-body { padding-bottom: 0.4rem; }
+
+  /* Principles: statement plus "in practice" and "proven by" */
+  .st-principle > summary { padding: 0.7rem 0; }
+  .st-p-body { padding: 0 0 0.8rem calc(34px + 0.8rem); gap: 0.4rem 1.4rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* Stages: every panel, one after another */
+  .js .st-panel-title { display: block; }
+  .st-tabpanel[hidden] { display: block !important; }
+  .st-tabpanel { margin-bottom: 0.9rem; }
+  .st-panel-title { margin: 0.6rem 0 0.4rem; font-size: 11pt; }
+  .st-triple > div { padding: 0.8rem; }
+  .st-decision { font-size: 10pt; }
+
+  /* Capabilities read as a paper checklist */
+  .st-check { border-color: var(--border); }
+  .st-check input { border-color: #777; }
+  .st-measure { color: var(--muted); }
+
+  /* Swiss cheese diagram on white */
+  .st-cheese-stage svg { width: 100%; height: auto; }
+  .st-slice rect { fill: #f3f6e4; stroke: #8a9a3a; stroke-width: 1; }
+  .st-slice.is-off rect { fill: #fff; stroke: #cccccc; }
+  .st-hole { fill: #fff; stroke: #9a9a9a; }
+  .st-slice-name, .st-shot-tag { fill: #151515; }
+  .st-slice-sub, .st-cheese-target { fill: #5c5c5c; }
+  .st-shot-x { fill: #fff; }
+
+  /* Risk tiers: all three at full strength */
+  .st-tier { opacity: 1 !important; border-color: var(--border) !important; padding: 0.9rem; }
+  .st-tier .st-mini-label, .st-tier .st-tier-text { display: block !important; }
+  .st-tier-name, .st-tier[aria-pressed="true"] .st-tier-name { color: var(--fg); margin-bottom: 0.4rem !important; }
+  .st-step { grid-template-columns: 26px minmax(0, 1fr); padding: 0.6rem 0; }
+
+  /* Roadmap: four phases in a row, gates beneath (overrides the narrow-screen stack) */
+  .st-roadmap { grid-template-columns: repeat(8, minmax(0, 1fr)); column-gap: 2px; }
+  .st-roadmap .st-phase { padding: 0.8rem; grid-row: 1 !important; }
+  .st-roadmap .st-phase--1 { grid-column: 1 / 3 !important; }
+  .st-roadmap .st-phase--2 { grid-column: 3 / 5 !important; }
+  .st-roadmap .st-phase--3 { grid-column: 5 / 7 !important; }
+  .st-roadmap .st-phase--4 { grid-column: 7 / 9 !important; }
+  .st-roadmap .st-gate { grid-row: 2 !important; text-align: center; padding: 2rem 0 0; border-left: 0; margin-left: 0; }
+  .st-roadmap .st-gate--a { grid-column: 2 / 4 !important; }
+  .st-roadmap .st-gate--b { grid-column: 4 / 6 !important; }
+  .st-roadmap .st-gate--c { grid-column: 6 / 8 !important; }
+  .st-roadmap .st-gate::before { left: 50%; top: calc(1.4rem - 6px); transform: translateX(-50%) rotate(45deg); background: var(--accent); }
+  .st-roadmap .st-gate strong, .st-roadmap .st-gate span { display: block; margin-left: 0; }
+  .st-roadmap .st-roadmap-line { display: block; grid-row: 2; grid-column: 1 / -1; }
+  .st-phase li { font-size: 9pt; }
+
+  /* Questionnaire as a worksheet */
+  .st-part > summary { padding: 0.6rem 0; }
+  .st-part-body { padding-bottom: 0.6rem; }
+  .st-q textarea, .st-bstage input, .st-bstage select { background: #fff; border-color: #bdbdbd; color: #151515; }
+  .st-q { margin-bottom: 0.55rem; }
+  .st-q label { font-size: 9pt; margin-bottom: 0.25rem; }
+  .st-q textarea { min-height: 2.2rem; padding: 0.3rem 0.5rem; }
+  .st-bstage { grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr); padding: 0.6rem 0; }
+  .st-bstage label { color: var(--muted); }
+}
