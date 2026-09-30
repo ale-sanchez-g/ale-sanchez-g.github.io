@@ -180,7 +180,7 @@
             <span class="st-p-tag">Verify</span>
           </summary>
           <div class="st-p-body">
-            <div><p class="st-mini-label">In practice</p><p>Tests are generated from the spec by a separate agent or a human — never by the agent that wrote the code. Mutation testing proves they can fail; secrets, licence and provenance checks run on every change.</p></div>
+            <div><p class="st-mini-label">In practice</p><p>At every tier, tests are generated from the spec by a separate agent or a human — never by the agent that wrote the code. From Tier 2, mutation testing proves they can fail; secrets, licence and provenance checks run on every change.</p></div>
             <div><p class="st-mini-label">Proven by</p><p>Mutation score on changed code (above 70% for Tier 3 as a starting target) and defect density in AI-generated versus human-written code.</p></div>
           </div>
         </details>
@@ -193,7 +193,7 @@
             <span class="st-p-tag">Accountability</span>
           </summary>
           <div class="st-p-body">
-            <div><p class="st-mini-label">In practice</p><p>Every stage keeps a human decision point: the product owner approves intent, the architect signs off design, the engineer owns the diff, the quality owner confirms evidence and a named approver releases high-tier change.</p></div>
+            <div><p class="st-mini-label">In practice</p><p>Every stage keeps a human decision point: the product owner approves intent, the architect signs off Tier 3 designs, the engineer owns the diff, the quality owner confirms the evidence and the named service owner releases Tier 3 change. When automated gates release a Tier 1 change, the engineer who owns it stays accountable.</p></div>
             <div><p class="st-mini-label">Proven by</p><p>Developer satisfaction up and review load per engineer down — agents absorb the toil, not the accountability.</p></div>
           </div>
         </details>
@@ -202,7 +202,7 @@
         <details class="st-principle" id="p4" data-p="4">
           <summary>
             <span class="st-p-num">04</span>
-            <span class="st-p-main"><span class="st-p-title">Risk-proportionate assurance</span><span class="st-p-text">Controls scale with blast radius. A copy change and a trading-engine change do not take the same path.</span></span>
+            <span class="st-p-main"><span class="st-p-title">Risk-proportionate assurance</span><span class="st-p-text">Controls scale with blast radius. A copy change and an authentication change do not take the same path.</span></span>
             <span class="st-p-tag">Risk tiers</span>
           </summary>
           <div class="st-p-body">
@@ -306,7 +306,7 @@
         <div class="st-triple">
           <div><p class="st-mini-label">− Compress with AI</p><ul class="st-list"><li>Generating option papers and ADRs</li><li>Sequence and data-flow diagrams</li><li>Threat-model first drafts</li></ul></div>
           <div><p class="st-mini-label">+ Add to protect quality</p><ul class="st-list"><li>Design review against architecture standards</li><li>Threat model and data classification</li><li>Contract-first APIs</li><li>Testability designed in</li></ul></div>
-          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">Architect or tech lead signs off design and threat model</p></div>
+          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">Architect or tech lead signs off design and threat model — mandatory for Tier 3</p></div>
         </div>
       </div>
       <div class="st-tabpanel" role="tabpanel" id="panel-build" aria-labelledby="tab-build">
@@ -321,8 +321,8 @@
         <h4 class="st-panel-title">Test</h4>
         <div class="st-triple">
           <div><p class="st-mini-label">− Compress with AI</p><ul class="st-list"><li>Test generation from acceptance criteria</li><li>Test data synthesis</li><li>Exploratory and regression runs by agents</li><li>Flaky-test triage</li></ul></div>
-          <div><p class="st-mini-label">+ Add to protect quality</p><ul class="st-list"><li>Independent verification (tests not written by the same agent as the code)</li><li>Mutation testing</li><li>Property-based and contract tests</li><li>AI-assisted plus human code review for high-risk tiers</li></ul></div>
-          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">Quality owner confirms evidence meets tier</p></div>
+          <div><p class="st-mini-label">+ Add to protect quality</p><ul class="st-list"><li>Independent verification (tests not written by the same agent as the code)</li><li>Mutation testing</li><li>Property-based and contract tests</li><li>AI-assisted review of every change, plus human code review from Tier 2</li></ul></div>
+          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">Quality owner confirms evidence meets the tier; for Tier 1, policy-as-code gates confirm it</p></div>
         </div>
       </div>
       <div class="st-tabpanel" role="tabpanel" id="panel-deploy" aria-labelledby="tab-deploy">
@@ -330,7 +330,7 @@
         <div class="st-triple">
           <div><p class="st-mini-label">− Compress with AI</p><ul class="st-list"><li>Release notes and change records</li><li>Pipeline config</li><li>Rollout plans</li></ul></div>
           <div><p class="st-mini-label">+ Add to protect quality</p><ul class="st-list"><li>Policy-as-code gates</li><li>Progressive delivery (canary, feature flags)</li><li>Automated rollback on SLO breach</li><li>Audit trail of AI involvement</li></ul></div>
-          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">Automated for low tier; named approver for high tier</p></div>
+          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">Automated for Tier 1; an engineer on the team for Tier 2; the named service owner for Tier 3</p></div>
         </div>
       </div>
       <div class="st-tabpanel" role="tabpanel" id="panel-maintain" aria-labelledby="tab-maintain">
@@ -338,7 +338,7 @@
         <div class="st-triple">
           <div><p class="st-mini-label">− Compress with AI</p><ul class="st-list"><li>Log and trace triage</li><li>Incident summaries</li><li>Dependency upgrades</li><li>Self-healing runbooks</li></ul></div>
           <div><p class="st-mini-label">+ Add to protect quality</p><ul class="st-list"><li>SLOs and error budgets per service</li><li>Production feedback loop into specs and tests</li><li>Drift and regression detection for AI-generated code</li></ul></div>
-          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">On-call engineer approves remediation</p></div>
+          <div><p class="st-mini-label">◆ Human decision point</p><p class="st-decision">On-call engineer approves any remediation beyond pre-approved runbooks</p></div>
         </div>
       </div>
       <div class="st-tabpanel" role="tabpanel" id="panel-waits" aria-labelledby="tab-waits">
@@ -439,11 +439,11 @@
             </thead>
             <tbody>
               <tr data-short="Sandbox" data-t1="visit" data-t2="visit" data-t3="visit"><th scope="row">Local and agent sandbox</th><td>Fast feedback while code is written; isolated space for agents to build and run code</td><td>Per developer or per agent task; disposable</td><td>Synthetic only</td><td>Unit, component, static analysis, secrets scan</td><td>Agents build and self-test here with least-privilege access and no production credentials</td><td>Unit tests pass; scans clean</td></tr>
-              <tr data-short="PR env" data-t1="visit" data-t2="visit" data-t3="visit"><th scope="row">Ephemeral PR environment</th><td>Validate a single change in a realistic, isolated stack</td><td>Created on PR open, destroyed on merge or close (target under 10 minutes to provision)</td><td>Synthetic plus contract stubs; service virtualisation for dependencies</td><td>Contract, API, integration of the changed service, UI smoke, accessibility</td><td>Test agents generate and run acceptance tests from the spec; agent pre-review</td><td>Acceptance criteria verified; evidence attached to PR</td></tr>
-              <tr data-short="Integration" data-t1="skip" data-t2="visit" data-t3="visit"><th scope="row">Integration (SIT)</th><td>Prove the change works with real neighbouring services, not stubs</td><td>Long-lived, continuously deployed from main</td><td>Synthetic and masked</td><td>End-to-end journeys, cross-service regression, data-flow checks</td><td>Agents run regression, triage failures and flaky tests</td><td>E2E suite green; no new defects above agreed severity</td></tr>
-              <tr data-short="Performance" data-t1="skip" data-t2="optional" data-t3="visit"><th scope="row">Performance and resilience</th><td>Verify non-functional requirements (latency, throughput, failure behaviour)</td><td>On demand, production-like scale, torn down after runs</td><td>Production-shaped synthetic volumes</td><td>Load, soak, chaos, failover, capacity</td><td>Agents generate load models and analyse results against SLO targets</td><td>NFR and SLO targets met (mandatory for Tier 3)</td></tr>
-              <tr data-short="Security" data-t1="skip" data-t2="optional" data-t3="visit"><th scope="row">Security testing</th><td>Probe the running system for vulnerabilities</td><td>On demand or scheduled; can share the perf stack</td><td>Synthetic</td><td>DAST, penetration testing, authZ and data-leak checks, prompt-injection tests for AI features</td><td>Agents run DAST and triage findings; humans lead pen tests</td><td>No open critical or high findings</td></tr>
-              <tr data-short="Staging" data-t1="skip" data-t2="optional" data-t3="visit"><th scope="row">Staging (pre-production)</th><td>Final rehearsal of the release in a production mirror</td><td>Long-lived, configuration-identical to production</td><td>Masked production copy under data governance</td><td>Release rehearsal, migration dry-runs, UAT, deployment and rollback verification</td><td>Agents verify config drift against production and run smoke suites</td><td>Rollback proven; business sign-off for Tier 3</td></tr>
+              <tr data-short="PR env" data-t1="visit" data-t2="visit" data-t3="visit"><th scope="row">Ephemeral PR environment</th><td>Validate a single change in a realistic, isolated stack</td><td>Created on PR open, destroyed on merge or close (target under 10 minutes to provision)</td><td>Synthetic plus contract stubs; service virtualisation for depend&shy;encies</td><td>Contract, API, integration of the changed service, UI smoke, accessibility</td><td>Test agents generate and run acceptance tests from the spec; agent pre-review</td><td>Acceptance criteria verified; evidence attached to PR</td></tr>
+              <tr data-short="Integration" data-t1="skip" data-t2="visit" data-t3="visit"><th scope="row">Integration (SIT)</th><td>Prove the change works with real neigh&shy;bouring services, not stubs</td><td>Long-lived, contin&shy;uously deployed from main</td><td>Synthetic and masked</td><td>End-to-end journeys, cross-service regression, data-flow checks</td><td>Agents run regression, triage failures and flaky tests</td><td>E2E suite green; no new defects above agreed severity</td></tr>
+              <tr data-short="Performance" data-t1="skip" data-t2="skip" data-t3="visit"><th scope="row">Performance and resilience</th><td>Verify non-functional require&shy;ments (latency, throughput, failure behaviour)</td><td>On demand, production-like scale, torn down after runs</td><td>Production-shaped synthetic volumes</td><td>Load, soak, chaos, failover, capacity</td><td>Agents generate load models and analyse results against SLO targets</td><td>NFR and SLO targets met (mandatory for Tier 3)</td></tr>
+              <tr data-short="Security" data-t1="skip" data-t2="skip" data-t3="visit"><th scope="row">Security testing</th><td>Probe the running system for vulner&shy;abilities</td><td>On demand or scheduled; can share the perf stack</td><td>Synthetic</td><td>DAST, penetration testing, authZ and data-leak checks, prompt-injection tests for AI features</td><td>Agents run DAST and triage findings; humans lead pen tests</td><td>No open critical or high findings</td></tr>
+              <tr data-short="Staging" data-t1="skip" data-t2="visit" data-t3="visit"><th scope="row">Staging (pre-production)</th><td>Final rehearsal of the release in a production mirror</td><td>Long-lived, config&shy;uration-identical to production</td><td>Masked production copy under data governance</td><td>Release rehearsal, migration dry-runs, UAT, deployment and rollback verification</td><td>Agents verify config drift against production and run smoke suites</td><td>Rollback proven; business sign-off for Tier 3</td></tr>
               <tr data-short="Production" data-t1="visit" data-t2="visit" data-t3="visit"><th scope="row">Production (progressive)</th><td>Validate with real traffic at controlled blast radius</td><td>Permanent</td><td>Real</td><td>Canary analysis, synthetic monitoring, feature-flag experiments</td><td>Agents watch SLOs and trigger auto-rollback on breach</td><td>SLOs hold across canary stages</td></tr>
             </tbody>
           </table>
@@ -451,15 +451,15 @@
       </details>
     </div>
 
-    <p class="st-callout">Not every change visits every environment: Tier 1 changes may go from the PR environment straight to a production canary, while Tier 3 changes pass through all seven.</p>
+    <p class="st-callout">Not every change visits every environment: Tier 1 changes may go from the PR environment straight to a production canary, Tier 2 changes add the integration environment and a staging rehearsal, and Tier 3 changes pass through all seven.</p>
 
     <div class="page-card">
       <p class="section-title">Capabilities we must add</p>
       <ul class="st-deflist">
-        <li><strong>Environments as code</strong> — every environment defined in version-controlled templates (Terraform, Helm or equivalent), reproducible by agents and humans alike.</li>
+        <li><strong>Environments as code</strong> — every environment defined in version-controlled infrastructure-as-code templates, reproducible by agents and humans alike.</li>
         <li><strong>On-demand ephemeral environments</strong> — self-service provisioning per PR, with automatic teardown and a time-to-live.</li>
         <li><strong>Service virtualisation and contract stubs</strong> — so a change can be tested without waiting for dependent teams or third-party systems.</li>
-        <li><strong>Test data management</strong> — a synthetic data generator per domain, masking pipelines for any production-derived data, and no real client data outside staging and production.</li>
+        <li><strong>Test data management</strong> — a synthetic data generator per domain, masking pipelines for any production-derived data, and no unmasked customer data outside production.</li>
         <li><strong>Configuration drift detection</strong> — automated comparison of staging against production, with drift raised as a defect.</li>
         <li><strong>Isolation for agents</strong> — sandboxed runtimes, scoped credentials, and network egress controls so an agent cannot reach production or exfiltrate data.</li>
         <li><strong>Environment observability and cost control</strong> — the same tracing and logging as production, utilisation dashboards, and spend limits per team.</li>
@@ -489,7 +489,7 @@
     <p class="section-label">06 — Verification</p>
     <h2 class="st-h2" id="verification-title">Stack slices so the <span>holes rarely line up</span></h2>
     <p class="st-lede">No single test layer is trustworthy on its own, least of all when agents write both the code and its tests; we stack independent layers so their gaps rarely line up.</p>
-    <p class="st-body">The Swiss cheese model comes from safety engineering (James Reason, 1990). Each defence is a slice of cheese with holes, which are its blind spots. A hazard only causes harm when the holes in every slice happen to align. Aviation, healthcare and SRE all use it. It maps directly onto software verification.</p>
+    <p class="st-body">The Swiss cheese model comes from safety engineering (James Reason, 1990). Each defence is a slice of cheese with holes, which are its blind spots. A hazard only causes harm when the holes in every slice happen to align. Safety-critical engineering and SRE teams rely on it, and it maps directly onto software verification.</p>
 
     <div class="page-card st-lab" id="cheese-lab">
       <div class="st-lab-head">
@@ -620,7 +620,7 @@
     <div class="page-card">
       <p class="section-title">Efficiency levers that apply across the pyramid</p>
       <ol class="st-levers">
-        <li><strong>Start from risk, not coverage.</strong> Automate Tier 3 services and critical journeys first; a 90% covered admin page is worth less than a 60% covered order flow.</li>
+        <li><strong>Start from risk, not coverage.</strong> Automate Tier 3 services and critical journeys first; a 90% covered admin page is worth less than a 60% covered core customer journey.</li>
         <li><strong>Push every test down.</strong> When a test can move a level lower and still catch the defect, move it; it becomes faster, cheaper and more stable.</li>
         <li><strong>Trace tests to specs.</strong> Every acceptance criterion links to at least one automated test, so gaps are visible before code is written.</li>
         <li><strong>Run only what matters.</strong> Test impact analysis and parallelism keep PR feedback under 15 minutes as suites grow.</li>
@@ -636,6 +636,7 @@
     <p class="section-label">08 — Risk Tiers &amp; Process</p>
     <h2 class="st-h2" id="risk-title">Same eight steps. <span>Different depth.</span></h2>
     <p class="st-lede">Every AI-assisted change follows the same eight steps; the risk tier decides how deep each step goes, not whether it happens.</p>
+    <p class="st-body">Tiers apply to changes and to services: every change is tiered by its own blast radius, and every service carries the tier of the riskiest change it can receive.</p>
 
     <div class="page-card st-lab" id="risk-lab">
       <div class="st-lab-head">
@@ -650,50 +651,50 @@
         <button type="button" class="st-example" data-example-tier="1" aria-pressed="false">Internal tooling script</button>
         <button type="button" class="st-example" data-example-tier="2" aria-pressed="false">New feature behind a flag</button>
         <button type="button" class="st-example" data-example-tier="2" aria-pressed="false">Notification logic</button>
-        <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Order flow</button>
+        <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Payments flow</button>
         <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Pricing calculation</button>
         <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Login and authentication</button>
-        <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Client data storage</button>
-        <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Regulated report</button>
+        <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Personal data storage</button>
+        <button type="button" class="st-example" data-example-tier="3" aria-pressed="false">Audit and compliance logging</button>
       </div>
 
       <div class="st-tiers" role="group" aria-label="Risk tier" data-tier-control>
         <button type="button" class="st-tier" data-tier="1" aria-pressed="false">
           <span class="st-tier-name">Tier 1 — Low</span>
           <span class="st-mini-label">Example change</span><span class="st-tier-text">Copy, styling, internal tooling, docs</span>
-          <span class="st-mini-label">Minimum assurance</span><span class="st-tier-text">Automated tests and scans pass; agent pre-review</span>
+          <span class="st-mini-label">Minimum assurance</span><span class="st-tier-text">Tests generated independently from the acceptance criteria; automated tests and scans pass; agent pre-review; automated canary release</span>
           <span class="st-mini-label">Release approval</span><span class="st-tier-text st-tier-approval">Automated</span>
         </button>
         <button type="button" class="st-tier" data-tier="2" aria-pressed="false">
           <span class="st-tier-name">Tier 2 — Moderate</span>
           <span class="st-mini-label">Example change</span><span class="st-tier-text">New feature behind a flag, non-critical service logic</span>
-          <span class="st-mini-label">Minimum assurance</span><span class="st-tier-text">Tier 1 plus independent test generation, human code review, canary release</span>
+          <span class="st-mini-label">Minimum assurance</span><span class="st-tier-text">Tier 1 plus mutation testing on changed code and human code review</span>
           <span class="st-mini-label">Release approval</span><span class="st-tier-text st-tier-approval">Engineer on the team</span>
         </button>
         <button type="button" class="st-tier" data-tier="3" aria-pressed="false">
           <span class="st-tier-name">Tier 3 — High</span>
-          <span class="st-mini-label">Example change</span><span class="st-tier-text">Order flow, pricing, authentication, client data, regulated reporting</span>
-          <span class="st-mini-label">Minimum assurance</span><span class="st-tier-text">Tier 2 plus design and threat-model sign-off, mutation and contract testing, second human reviewer, staged rollout with auto-rollback</span>
+          <span class="st-mini-label">Example change</span><span class="st-tier-text">Payments, pricing, authentication, personal data, compliance-critical features</span>
+          <span class="st-mini-label">Minimum assurance</span><span class="st-tier-text">Tier 2 plus design and threat-model sign-off, NFR and security testing, a mutation score above the 70% starting target, a second human reviewer and a staged rollout with auto-rollback</span>
           <span class="st-mini-label">Release approval</span><span class="st-tier-text st-tier-approval">Named service owner</span>
         </button>
       </div>
 
       <p class="st-mini-label st-steps-label">The verification process for every change</p>
       <ol class="st-steps" id="risk-steps">
-        <li class="st-step" data-d1="2" data-d2="2" data-d3="3"
-            data-t1="Criteria, tier and NFRs approved before the build agent starts."
+        <li class="st-step" data-d1="1" data-d2="2" data-d3="3"
+            data-t1="Acceptance criteria and tier approved; NFRs only where the change affects them."
             data-t2="Criteria, tier and NFRs approved before the build agent starts."
             data-t3="Plus design and threat-model sign-off.">
           <span class="st-step-num">1</span>
           <div><p class="st-step-title">Spec locked</p><p class="st-step-text">Acceptance criteria, risk tier and NFRs are approved before the build agent starts.</p><p class="st-step-tier"></p></div>
           <span class="st-depth"></span>
         </li>
-        <li class="st-step" data-d1="1" data-d2="2" data-d3="3"
-            data-t1="Automated tests from the acceptance criteria."
-            data-t2="Independent test generation: a separate test agent writes unit and acceptance tests that fail first."
-            data-t3="Independent generation including contract tests, all red before code exists.">
+        <li class="st-step" data-d1="1" data-d2="2" data-d3="2"
+            data-t1="A separate test agent derives the few tests the change needs."
+            data-t2="Independent unit, contract and acceptance tests, with every criterion traced to a test."
+            data-t3="Same as Tier 2: independent tests, every criterion traced to a test.">
           <span class="st-step-num">2</span>
-          <div><p class="st-step-title">Tests derived from the spec</p><p class="st-step-text">A test agent, independent of the build agent, generates unit, contract and acceptance tests from the criteria. They fail first (red) before code exists.</p><p class="st-step-tier"></p></div>
+          <div><p class="st-step-title">Tests derived from the spec</p><p class="st-step-text">At every tier, a test agent independent of the build agent generates unit, contract and acceptance tests from the criteria. They fail first (red) before code exists.</p><p class="st-step-tier"></p></div>
           <span class="st-depth"></span>
         </li>
         <li class="st-step" data-d1="2" data-d2="2" data-d3="2"
@@ -713,35 +714,35 @@
           <span class="st-depth"></span>
         </li>
         <li class="st-step" data-d1="1" data-d2="2" data-d3="3"
-            data-t1="Minimal — mutation testing applies to Tier 2 and 3."
+            data-t1="Red, then green: every new test is seen failing before the change makes it pass."
             data-t2="Mutation testing on changed code."
-            data-t3="Mutation testing on changed code — above 70% as a starting target.">
+            data-t3="Mutation score on changed code above the 70% starting target.">
           <span class="st-step-num">5</span>
-          <div><p class="st-step-title">Test-quality check</p><p class="st-step-text">Mutation testing on changed code (Tier 2 and 3) proves the tests would catch a real fault.</p><p class="st-step-tier"></p></div>
+          <div><p class="st-step-title">Test-quality check</p><p class="st-step-text">Every new test must be seen to fail before it passes; from Tier 2, mutation testing on changed code proves the tests would catch a real fault.</p><p class="st-step-tier"></p></div>
           <span class="st-depth"></span>
         </li>
         <li class="st-step" data-d1="1" data-d2="2" data-d3="3"
-            data-t1="PR environment, then straight to a production canary."
-            data-t2="Contract, integration and E2E tests in the PR and integration environments."
-            data-t3="Plus NFR and security testing.">
+            data-t1="PR environment only, then straight to a production canary."
+            data-t2="Plus integration and E2E tests in the integration environment, and a staging rehearsal."
+            data-t3="Plus NFR and security testing, and business sign-off in staging.">
           <span class="st-step-num">6</span>
-          <div><p class="st-step-title">Environment verification</p><p class="st-step-text">Contract, integration and E2E tests run in the PR and integration environments; NFR and security tests run for Tier 3.</p><p class="st-step-tier"></p></div>
+          <div><p class="st-step-title">Environment verification</p><p class="st-step-text">Contract, API and smoke tests run in the PR environment for every change; integration and E2E tests run in the integration environment from Tier 2; NFR and security tests run for Tier 3.</p><p class="st-step-tier"></p></div>
           <span class="st-depth"></span>
         </li>
         <li class="st-step" data-d1="1" data-d2="2" data-d3="3"
-            data-t1="Agent pre-review; release approval is automated."
+            data-t1="Agent pre-review; the engineer who owns the change stays accountable."
             data-t2="An engineer reviews the diff, the tests and the evidence bundle."
-            data-t3="Plus a second human reviewer; a named service owner approves the release.">
+            data-t3="Plus a second human reviewer; the named service owner approves the release.">
           <span class="st-step-num">7</span>
-          <div><p class="st-step-title">Human review</p><p class="st-step-text">An engineer reviews the diff, the tests and the evidence bundle; a second reviewer for Tier 3.</p><p class="st-step-tier"></p></div>
+          <div><p class="st-step-title">Review</p><p class="st-step-text">An agent pre-reviews every change; from Tier 2 an engineer reviews the diff, the tests and the evidence bundle, and Tier 3 adds a second human reviewer.</p><p class="st-step-tier"></p></div>
           <span class="st-depth"></span>
         </li>
-        <li class="st-step" data-d1="2" data-d2="2" data-d3="3"
-            data-t1="Production canary with SLO guards."
-            data-t2="Canary release with SLO guards and automatic rollback."
+        <li class="st-step" data-d1="1" data-d2="2" data-d3="3"
+            data-t1="Automated canary with SLO guards and automatic rollback."
+            data-t2="Canary release approved by an engineer on the team."
             data-t3="Staged rollout with automatic rollback on SLO breach.">
           <span class="st-step-num">8</span>
-          <div><p class="st-step-title">Production verification</p><p class="st-step-text">Canary release with SLO guards, synthetic monitoring and automatic rollback; any escape triggers a “which slice missed it?” review.</p><p class="st-step-tier"></p></div>
+          <div><p class="st-step-title">Production verification</p><p class="st-step-text">Every change is released through a canary with SLO guards, synthetic monitoring and automatic rollback; any escape triggers a “which slice missed it?” review.</p><p class="st-step-tier"></p></div>
           <span class="st-depth"></span>
         </li>
       </ol>
@@ -824,8 +825,8 @@
   <!-- ═════════════════════════ 10 — MATURITY & ROADMAP ═════════════════════════ -->
   <section class="st-chapter" id="roadmap" aria-labelledby="roadmap-title">
     <p class="section-label">10 — Maturity &amp; Roadmap</p>
-    <h2 class="st-h2" id="roadmap-title">Level 2 today. <span>Level 4</span> by late 2027.</h2>
-    <p class="st-lede">Most teams will self-assess at Level 2 today; the target is Level 4 for all product teams by late 2027, with Tier 3 services never above Level 4.</p>
+    <h2 class="st-h2" id="roadmap-title">Level 2 today. <span>Level 4</span> in 15 months.</h2>
+    <p class="st-lede">Most teams will self-assess at Level 2 today; the target is Level 4 for all product teams within 15 months, with Tier 3 services never above Level 4.</p>
 
     <div class="page-card st-lab" id="maturity-lab">
       <div class="st-lab-head">
@@ -855,10 +856,10 @@
             <thead><tr><th scope="col">Level</th><th scope="col">Name</th><th scope="col">Plan and design</th><th scope="col">Build</th><th scope="col">Test</th><th scope="col">Deploy and operate</th></tr></thead>
             <tbody>
               <tr><td>1</td><th scope="row">Ad hoc</th><td>Informal requirements; no AI use</td><td>Manual coding; individual AI experiments</td><td>Mostly manual, late testing</td><td>Manual releases and approvals</td></tr>
-              <tr><td>2</td><th scope="row">Assisted</th><td>AI drafts stories; criteria vary</td><td>Copilot-style assistance; no shared standards</td><td>Some AI-generated unit tests</td><td>CI/CD in place; manual gates</td></tr>
+              <tr><td>2</td><th scope="row">Assisted</th><td>AI drafts stories; criteria vary</td><td>Inline AI code assistance; no shared standards</td><td>Some AI-generated unit tests</td><td>CI/CD in place; manual gates</td></tr>
               <tr><td>3</td><th scope="row">Integrated</th><td>Spec templates and risk tiers used consistently</td><td>Agents build from approved specs with repo context</td><td>Independent test generation; mutation testing on key services</td><td>Policy-as-code gates; canary releases</td></tr>
               <tr><td>4</td><th scope="row">Agentic</th><td>Agents draft specs, designs and threat models for human sign-off</td><td>Multi-agent build with guardrails and full evidence trail</td><td>Agentic regression and exploratory testing; evidence per tier</td><td>SLO-driven auto-rollback; agent-assisted incident triage</td></tr>
-              <tr><td>5</td><th scope="row">Autonomous with guardrails</th><td>Production signals feed specs automatically</td><td>Agents own Tier 1 changes end to end</td><td>Continuous verification in production</td><td>Self-healing runbooks within error budgets</td></tr>
+              <tr><td>5</td><th scope="row">Autonomous with guardrails</th><td>Production signals draft spec updates for human approval</td><td>Agents deliver Tier 1 changes end to end; a named engineer stays accountable</td><td>Continuous verification in production</td><td>Self-healing runbooks, pre-approved by on-call, act within error budgets</td></tr>
             </tbody>
           </table>
         </div>
@@ -866,33 +867,33 @@
     </div>
 
     <h3 class="st-h3">Four phases, three gates</h3>
-    <p class="st-body">Four phases move every team to AI-native delivery by late 2027.</p>
+    <p class="st-body">Four phases move every team to AI-native delivery within 15 months. Timings count from the start of adoption.</p>
     <ol class="st-roadmap">
       <li class="st-phase st-phase--1">
         <p class="st-phase-num">Phase 1</p>
         <h4>Foundations</h4>
-        <p class="st-phase-date">Oct to Dec 2026</p>
+        <p class="st-phase-date">Months 1 to 3</p>
         <ul><li>Platform, guardrails</li><li>Risk tiers agreed</li><li>Baseline scorecard</li><li>Questionnaires in</li></ul>
       </li>
       <li class="st-gate st-gate--a"><strong>Gate A</strong><span>Baseline captured</span></li>
       <li class="st-phase st-phase--2">
         <p class="st-phase-num">Phase 2</p>
         <h4>Pilot</h4>
-        <p class="st-phase-date">Jan to Mar 2027</p>
+        <p class="st-phase-date">Months 4 to 6</p>
         <ul><li>2 to 3 pilot teams</li><li>Spec and test agents</li><li>Evidence gates live</li><li>Playbook v1</li></ul>
       </li>
       <li class="st-gate st-gate--b"><strong>Gate B</strong><span>Pilot CFR holds</span></li>
       <li class="st-phase st-phase--3">
         <p class="st-phase-num">Phase 3</p>
         <h4>Scale</h4>
-        <p class="st-phase-date">Apr to Sep 2027</p>
+        <p class="st-phase-date">Months 7 to 12</p>
         <ul><li>All teams onboard</li><li>Shared skills library</li><li>Tier 3 controls live</li><li>Review SLAs enforced</li></ul>
       </li>
       <li class="st-gate st-gate--c"><strong>Gate C</strong><span>Lead time down</span></li>
       <li class="st-phase st-phase--4">
         <p class="st-phase-num">Phase 4</p>
         <h4>Optimise</h4>
-        <p class="st-phase-date">Oct 2027 onward</p>
+        <p class="st-phase-date">Month 13 onward</p>
         <ul><li>Agentic ops loops</li><li>Self-healing runbooks</li><li>Tier 1 fully automated</li><li>Continuous tuning</li></ul>
       </li>
       <li class="st-roadmap-line" aria-hidden="true"></li>
@@ -902,7 +903,7 @@
       <div class="st-lab-head">
         <span class="st-chip">Interactive</span>
         <h3>Gate check</h3>
-        <p>Each gate is a go/no-go: a phase does not start until the previous phase's scorecard shows lead time falling with change failure rate flat or better. Set the trends and try it.</p>
+        <p>Each gate is a go/no-go: a phase does not start until the previous phase's scorecard shows lead time falling with change failure rate flat or better.<span class="st-screen-only"> Set the trends and try it.</span></p>
       </div>
       <div class="st-gate-controls">
         <div>
@@ -930,14 +931,14 @@
   <section class="st-chapter" id="journey" aria-labelledby="journey-title">
     <p class="section-label">11 — Your Journey</p>
     <h2 class="st-h2" id="journey-title">Write your own <span>AI-native journey</span></h2>
-    <p class="st-lede">Each team completes this in a 90-minute working session with its tech lead, product owner and quality lead, then returns it before its Phase 1 review.</p>
+    <p class="st-lede">Each team completes this in a 90-minute working session with its tech lead, product owner and quality lead; the answers become its baseline for Gate A.</p>
     <p class="st-body">Answer honestly: this is a baseline, not an audit. Where you do not know, write “unknown” — that is a finding in itself.</p>
 
     <div class="page-card st-lab" id="workbook">
       <div class="st-lab-head">
         <span class="st-chip">Interactive</span>
         <h3>Team questionnaire</h3>
-        <p>Answers are saved in this browser only — nothing is sent anywhere. Export them as Markdown for your team's working session.</p>
+        <p class="st-screen-only">Answers are saved in this browser only — nothing is sent anywhere. Export them as Markdown for your team's working session.</p>
       </div>
 
       <div class="st-wb-toolbar">
@@ -1068,7 +1069,7 @@
         <details class="st-part" data-part="E">
           <summary><span class="st-part-title">Part E — Risk and guardrails</span><span class="st-part-count"></span></summary>
           <div class="st-part-body">
-            <div class="st-q"><label for="wb-e1"><span class="st-q-id">E1</span>What data do your services handle (client, market, personal, regulated)?</label><textarea id="wb-e1" name="e1" rows="2"></textarea></div>
+            <div class="st-q"><label for="wb-e1"><span class="st-q-id">E1</span>What data do your services handle (customer, personal, payment, sensitive or regulated)?</label><textarea id="wb-e1" name="e1" rows="2"></textarea></div>
             <div class="st-q"><label for="wb-e2"><span class="st-q-id">E2</span>Which changes must never be made without a human reviewer?</label><textarea id="wb-e2" name="e2" rows="2"></textarea></div>
             <div class="st-q"><label for="wb-e3"><span class="st-q-id">E3</span>What permissions do AI agents have in your repos, pipelines and environments today?</label><textarea id="wb-e3" name="e3" rows="2"></textarea></div>
             <div class="st-q"><label for="wb-e4"><span class="st-q-id">E4</span>How would you prove, after the fact, what an agent changed and why?</label><textarea id="wb-e4" name="e4" rows="2"></textarea></div>
@@ -1098,7 +1099,7 @@
               <li><label class="st-check"><input type="checkbox" name="g3"/><span>Classify every service by risk tier</span></label></li>
               <li><label class="st-check"><input type="checkbox" name="g4"/><span>Stand up independent test generation on one service</span></label></li>
               <li><label class="st-check"><input type="checkbox" name="g5"/><span>Set a review SLA and measure it</span></label></li>
-              <li><label class="st-check"><input type="checkbox" name="g6"/><span>Present your journey at the Phase 1 review</span></label></li>
+              <li><label class="st-check"><input type="checkbox" name="g6"/><span>Present your journey at Gate A</span></label></li>
             </ul>
           </div>
         </details>
@@ -1110,11 +1111,11 @@
   <section class="st-chapter st-oss" id="open-source" aria-labelledby="oss-title">
     <p class="section-label">Open Source</p>
     <h2 class="st-h2" id="oss-title">Fork it. Adapt it. <span>Make it yours.</span></h2>
-    <p class="st-lede">This strategy is published openly so any team can adapt it to its own context. The page — text, simulators and all — lives in this site's GitHub repository under the MIT License.</p>
+    <p class="st-lede">This strategy is published openly so any team can adapt it to its own context. The page — text, simulators and all — lives in this site's public source repository under the MIT License.</p>
     <div class="st-actions">
-      <a class="btn btn-accent" href="https://github.com/ale-sanchez-g/ale-sanchez-g.github.io/blob/main/reference/ai-native-qa-strategy.html" target="_blank" rel="noopener">View source on GitHub &#8599;</a>
+      <a class="btn btn-accent" href="https://github.com/ale-sanchez-g/ale-sanchez-g.github.io/blob/main/reference/ai-native-qa-strategy.html" target="_blank" rel="noopener">View the source &#8599;</a>
       <a class="btn btn-ghost" href="/assets/docs/ai-native-qa-strategy.pdf" download>Download the PDF</a>
-      <a class="btn btn-ghost" href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">Discuss on LinkedIn &#8599;</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">Discuss it with me &#8599;</a>
     </div>
   </section>
 </main>

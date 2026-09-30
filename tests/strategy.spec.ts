@@ -25,6 +25,31 @@ test.describe('AI-Native QA Strategy — page', () => {
     expect(errors).toEqual([]);
   });
 
+  test('stays free of company, product, industry and dated-rollout references', async ({ page }) => {
+    await page.goto(PATH);
+    const pageText = await page.locator('main').evaluate(main => main.textContent ?? '');
+    const scriptText = readFileSync('assets/js/strategy.js', 'utf8');
+    const banned = [/trading/i, /client data/i, /regulated report/i, /order flow/i, /checkout/i, /\bmarket\b/i,
+      /copilot/i, /terraform/i, /\bhelm\b/i, /aviation/i, /healthcare/i, /\b20(26|27)\b/, /phase 1 review/i];
+    for (const term of banned) {
+      expect(pageText, `page text mentions ${term}`).not.toMatch(term);
+      expect(scriptText, `strategy.js mentions ${term}`).not.toMatch(term);
+    }
+  });
+
+  test('printing expands every chapter and hides the interactive controls', async ({ page }) => {
+    await page.goto(PATH);
+    await page.emulateMedia({ media: 'print' });
+    await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+    await expect(page.locator('#panel-waits')).toBeVisible();
+    await expect(page.locator('#env-table')).toBeVisible();
+    await expect(page.locator('#maturity-table')).toBeVisible();
+    await expect(page.locator('#wb-c1')).toBeVisible();
+    await expect(page.locator('#speed-lab')).toBeHidden();
+    await expect(page.locator('.st-chapters')).toBeHidden();
+    await expect(page.locator('#risk-lab .st-examples')).toBeHidden();
+  });
+
   test('every chapter link points at a section on the page', async ({ page }) => {
     await page.goto(PATH);
     const hrefs = await page.locator('#st-chapters a').evaluateAll(links => links.map(a => a.getAttribute('href')));
@@ -108,6 +133,9 @@ test.describe('AI-Native QA Strategy — lifecycle, capabilities and environment
     await page.goto(PATH);
     const visits = page.locator('#env-path .st-env-node.is-visit');
     await expect(visits).toHaveCount(3);
+    await page.locator('#env-lab [data-tier="2"]').click();
+    await expect(visits).toHaveCount(5);
+    await expect(page.locator('#env-summary')).toContainText('Integration → Staging → Production');
     await page.locator('#env-lab [data-tier="3"]').click();
     await expect(visits).toHaveCount(7);
     await expect(page.locator('#env-summary')).toContainText('all seven');
@@ -164,6 +192,19 @@ test.describe('AI-Native QA Strategy — pyramid, risk tiers and gates', () => {
     await expect(page.locator('#risk-steps .st-step').nth(4).locator('.st-depth-label')).toHaveText('Deep');
     await expect(page.locator('#risk-steps .st-step').nth(6)).toContainText('named service owner');
     await expect(page.locator('#env-path .st-env-node.is-visit')).toHaveCount(7);
+  });
+
+  test('every verification step applies at every tier; only its depth changes', async ({ page }) => {
+    await page.goto(PATH);
+    for (const tier of ['1', '2', '3']) {
+      await page.locator(`#risk-lab .st-tier[data-tier="${tier}"]`).click();
+      const steps = page.locator('#risk-steps .st-step');
+      await expect(steps).toHaveCount(8);
+      for (let i = 0; i < 8; i++) {
+        await expect(steps.nth(i).locator('.st-step-tier')).not.toBeEmpty();
+        await expect(steps.nth(i).locator('.st-depth-label')).toHaveText(/Light|Standard|Deep/);
+      }
+    }
   });
 
   test('the gate only opens when lead time falls without failure rate rising', async ({ page }) => {
