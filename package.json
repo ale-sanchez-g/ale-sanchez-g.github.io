@@ -6,6 +6,7 @@
     "test": "playwright test",
     "test:visual": "playwright test tests/visual.spec.ts",
     "test:update": "playwright test tests/visual.spec.ts --update-snapshots",
+    "test:strategy": "playwright test tests/strategy.spec.ts",
     "serve": "python3 -m http.server 8765"
   },
   "devDependencies": {

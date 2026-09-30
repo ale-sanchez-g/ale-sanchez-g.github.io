@@ -150,7 +150,7 @@
     @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
     /* ── SLO BANNER ── */
-    .slo-banner {
+    .slo-banner, .strategy-banner {
       display: flex; justify-content: space-between; align-items: center;
       flex-wrap: wrap; gap: 1.5rem;
       padding: 2rem 3rem;
@@ -162,11 +162,11 @@
       font-family: var(--mono); font-size: 0.65rem; color: var(--accent);
       letter-spacing: 0.15em; text-transform: uppercase;
     }
-    .slo-banner h3 {
+    .slo-banner h3, .strategy-banner h3 {
       font-size: 1.1rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    .slo-banner p { color: #888; font-size: 0.9rem; max-width: 560px; }
+    .slo-banner p, .strategy-banner p { color: #888; font-size: 0.9rem; max-width: 560px; }
     .slo-banner-cta a {
       font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.1em;
       text-transform: uppercase; color: var(--accent); text-decoration: none;
@@ -376,7 +376,7 @@
         padding: 0.65rem;
       }
       section { padding: 5rem 1.5rem; }
-      .slo-banner { padding: 1.5rem; }
+      .slo-banner, .strategy-banner { padding: 1.5rem; }
       .badges-wrap { padding: 1.5rem; }
       .about-grid, .contact-inner, .ach-grid { grid-template-columns: 1fr; gap: 3rem; }
       footer { flex-direction: column; gap: 1rem; text-align: center; padding: 1.5rem; }
@@ -463,6 +463,18 @@
   </div>
   <div class="slo-banner-cta">
     <a href="https://slo-education.com.au" target="_blank" rel="noopener">Visit slo-education.com.au &rarr;</a>
+  </div>
+</div>
+
+<!-- STRATEGY BANNER -->
+<div class="strategy-banner">
+  <div class="slo-banner-content">
+    <span class="slo-banner-badge">Open Source Strategy · New</span>
+    <h3>AI-Native Quality Assurance Strategy</h3>
+    <p>Quality is an input to agent speed, not a tax on it. An interactive, open-source test strategy for the age of AI agents — play with the principles, fire defects through a Swiss cheese model and assess your team's maturity.</p>
+  </div>
+  <div class="slo-banner-cta">
+    <a href="/reference/ai-native-qa-strategy.html">Explore the strategy &rarr;</a>
   </div>
 </div>
 
@@ -668,6 +680,12 @@
         <div>
           <span class="contact-link-label">Publications</span>
           Read my writing ↗
+        </div>
+      </a>
+      <a href="/reference/ai-native-qa-strategy.html" class="contact-link">
+        <div>
+          <span class="contact-link-label">Strategy</span>
+          AI-native quality strategy ↗
         </div>
       </a>
       <a href="/reference/conferences.html" class="contact-link">

@@ -18,11 +18,14 @@ const pages = [
   { name: 'support',         path: '/support/support-list.html',            title: 'Support Materials' },
   { name: 'fake-numbers',    path: '/support/fake-numbers.html',            title: 'Fake Phone Numbers' },
   { name: 'connections',     path: '/people/connections.html',              title: 'Connections' },
+  { name: 'ai-native-qa-strategy', path: '/reference/ai-native-qa-strategy.html', title: 'AI-Native QA Strategy' },
 ];
 
 test.describe('Visual regression — full page', () => {
   for (const pg of pages) {
     test(`${pg.title}`, async ({ page }, testInfo) => {
+      // Long pages (e.g. the strategy page) need longer to capture two stable full-page shots.
+      test.setTimeout(90_000);
       await page.goto(pg.path, { waitUntil: 'domcontentloaded' });
 
       // Allow time for layout to settle
@@ -41,7 +44,7 @@ test.describe('Visual regression — full page', () => {
         contentType: 'image/png',
       });
 
-      await expect(page).toHaveScreenshot(`${pg.name}.png`, { fullPage: true });
+      await expect(page).toHaveScreenshot(`${pg.name}.png`, { fullPage: true, timeout: 45_000 });
     });
   }
 });
@@ -92,6 +95,16 @@ test.describe('Navigation — back links', () => {
     await page.goto('/support/fake-numbers.html');
     await expect(page.locator('.back-link')).toHaveAttribute('href', '/support/support-list.html');
   });
+
+  test('AI-Native QA Strategy has back link to Publications', async ({ page }) => {
+    await page.goto('/reference/ai-native-qa-strategy.html');
+    await expect(page.locator('.back-link')).toHaveAttribute('href', '/reference/publications.html');
+  });
+
+  test('Publications links to the AI-Native QA Strategy', async ({ page }) => {
+    await page.goto('/reference/publications.html');
+    await expect(page.locator('main a[href="/reference/ai-native-qa-strategy.html"]')).toBeVisible();
+  });
 });
 
 test.describe('Home page — key sections', () => {
@@ -101,6 +114,13 @@ test.describe('Home page — key sections', () => {
     await expect(banner).toBeVisible();
     await expect(banner.locator('a')).toHaveAttribute('href', 'https://slo-education.com.au');
     await expect(banner.locator('.slo-banner-badge')).toContainText('Editor');
+  });
+
+  test('Strategy banner links to the AI-native strategy page', async ({ page }) => {
+    await page.goto('/index.html');
+    const banner = page.locator('.strategy-banner');
+    await expect(banner).toBeVisible();
+    await expect(banner.locator('a')).toHaveAttribute('href', '/reference/ai-native-qa-strategy.html');
   });
 
   test('Capability cards are visible (6 cards)', async ({ page }) => {
@@ -155,6 +175,7 @@ test.describe('Home page — key sections', () => {
     await page.goto('/index.html');
     await expect(page.locator('#contact a[href*="work-experience"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="publications"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="ai-native-qa-strategy"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="conferences"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="learning"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="support-list"]')).toBeVisible();
@@ -169,6 +190,7 @@ test.describe('Inner pages — nav links', () => {
     '/reference/learning.html',
     '/reference/apps.html',
     '/support/support-list.html',
+    '/reference/ai-native-qa-strategy.html',
   ];
 
   for (const path of navPages) {
