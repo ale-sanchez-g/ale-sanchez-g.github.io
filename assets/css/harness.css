@@ -560,6 +560,7 @@ html:not(.js) .hx-slot { cursor: default; }
 .hx-ch-time, .hx-ch-num { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.06em; }
 .hx-ch-time { color: var(--muted); }
 .hx-ch-num { color: var(--accent); }
+.hx-voice-credit { margin-top: 0.9rem; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.04em; color: var(--muted); }
 .hx-keys { margin-top: 0.9rem; font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.04em; color: var(--muted); }
 .hx-keys kbd {
   font-family: var(--mono); font-size: 0.62rem; color: #cfcfcf;

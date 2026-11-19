@@ -14,13 +14,23 @@ const builtFloors = (page: Page) => page.locator('.hx-floor.is-built');
 const chapter = (page: Page, index: number) => page.locator('#hx-chapters button').nth(index);
 const rangeValue = async (page: Page) => Number(await page.locator('#hx-range').inputValue());
 
-// Start a chapter, pause it, then step through it five seconds at a time from the scrub bar.
-async function openPaused(page: Page, index: number) {
-  await chapter(page, index).click();
-  await page.locator('#hx-play').click();
-  await expect(stage(page)).toHaveAttribute('data-mode', 'paused');
-  await page.locator('#hx-range').focus();
+// Jump to a moment inside a narrated line, using the timings the page publishes on its transcript,
+// so these tests keep working when the voice-over is recorded again.
+async function seekTo(page: Page, scene: string, line: number, fraction: number) {
+  const ms = await page.locator(`#hx-script li[data-scene="${scene}"] p[data-seg]`).nth(line - 1)
+    .evaluate((p, f) => Number((p as HTMLElement).dataset.start) + Number((p as HTMLElement).dataset.ms) * f, fraction);
+  await page.locator('#hx-range').evaluate((input, value) => {
+    const range = input as HTMLInputElement;
+    range.step = 'any';
+    range.value = String(value);
+    range.dispatchEvent(new Event('input', { bubbles: true }));
+  }, ms);
 }
+
+const audioState = (page: Page) => page.locator('#hx-audio').evaluate(el => {
+  const audio = el as HTMLAudioElement;
+  return { playing: !audio.paused, time: audio.currentTime };
+});
 
 test.describe('AI Harness — page', () => {
   test('renders the player, chapters and transcript without script errors', async ({ page }) => {
@@ -111,13 +121,12 @@ test.describe('AI Harness — playback', () => {
 
   test('day one rents the brain, and the first question breaks it', async ({ page }) => {
     await page.goto(PATH);
-    await openPaused(page, 0);
+    await seekTo(page, 'day-one', 1, 0);
     await expect(page.locator('.hx-floor[data-floor="1"]')).not.toHaveClass(/is-built/);
-    await page.keyboard.press('ArrowRight'); // 5 s: the brain is rented
+    await seekTo(page, 'day-one', 1, 0.6); // the brain is rented
     await expect(page.locator('.hx-floor[data-floor="1"]')).toHaveClass(/is-built/);
     await expect(page.locator('.hx-sys[data-floor="1"]')).toHaveClass(/is-on/);
-    await page.keyboard.press('ArrowRight');
-    await page.keyboard.press('ArrowRight'); // 15 s: "Who are you?" — "I'm ChatGPT."
+    await seekTo(page, 'day-one', 3, 0.95); // "Who are you?" — "I'm ChatGPT."
     const log = page.locator('#hx-panel .hx-log');
     await expect(log.locator('.hx-li--user.is-on')).toContainText('Who are you?');
     await expect(log.locator('.hx-li.is-on .hx-msg--bad')).toContainText('I’m ChatGPT.');
@@ -127,7 +136,7 @@ test.describe('AI Harness — playback', () => {
 
   test('each floor fixes the last question, then a new question breaks it', async ({ page }) => {
     await page.goto(PATH);
-    await openPaused(page, 2); // RAG
+    await seekTo(page, 'rag', 1, 0);
     const log = page.locator('#hx-panel .hx-log');
     const floor = page.locator('.hx-floor[data-floor="3"]');
 
@@ -137,21 +146,21 @@ test.describe('AI Harness — playback', () => {
     await expect(page.locator('#hx-panel .hx-badge--bad.is-on')).toHaveText('Break 2 of 7');
     await expect(log.locator('.hx-li.is-on .hx-msg--bad')).toContainText('30 paid days');
 
-    await page.keyboard.press('ArrowRight'); // 5 s: the floor lands
+    await seekTo(page, 'rag', 1, 0.5); // the floor lands
     await expect(floor).toHaveClass(/is-built/);
     await expect(floor).toHaveClass(/is-current/);
     await expect(floor.locator('.hx-slot')).toHaveAttribute('aria-current', 'step');
     await expect(page.locator('.hx-sys[data-floor="3"]')).toHaveClass(/is-on/);
     await expect(page.locator('#hx-panel .hx-plain.is-on')).toContainText('open-book exam');
 
-    await page.keyboard.press('ArrowRight'); // 10 s: the same question again, now answered properly
+    await seekTo(page, 'rag', 2, 0.9); // the same question again, now answered properly
     await expect(log.locator('.hx-li--user.is-on').last()).toContainText('What is my leave policy?');
     await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('20 days a year');
     await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('Fixed by floor 03');
     await expect(log.locator('.hx-li.is-struck .hx-msg--bad')).toContainText('30 paid days');
     await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('✓ Break 2 fixed');
 
-    await page.keyboard.press('ArrowRight'); // 15 s: a new question breaks it, and the next floor is needed
+    await seekTo(page, 'rag', 3, 0.95); // a new question breaks it, and the next floor is needed
     await expect(log.locator('.hx-li.is-on .hx-msg--bad').last()).toContainText('Open the HR portal');
     await expect(log.locator('.hx-li.is-on .hx-msg--bad').last()).toContainText('can’t act');
     await expect(page.locator('#hx-panel .hx-badge--bad.is-on')).toHaveText('Break 3 of 7');
@@ -161,15 +170,14 @@ test.describe('AI Harness — playback', () => {
 
   test('the last floor finds the root cause and closes every break', async ({ page }) => {
     await page.goto(PATH);
-    await openPaused(page, 7); // observability + evals
-    for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight'); // 15 s: the trace has found the cause
+    await seekTo(page, 'observe', 2, 0.9); // the trace has found the cause
     const log = page.locator('#hx-panel .hx-log');
     await expect(log.locator('.hx-li.is-on .hx-trace')).toContainText('Answered from the cache');
     await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('✓ Break 7 fixed');
     await expect(page.locator('.hx-floor.is-gap')).toHaveCount(0);
 
-    await page.keyboard.press('k'); // play on to the final answer
-    await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('25 days a year', { timeout: 10_000 });
+    await seekTo(page, 'observe', 3, 0.97); // fixed, tested, and the right answer
+    await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('25 days a year');
     await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('✓ All seven breaks fixed');
   });
 
@@ -200,54 +208,98 @@ test.describe('AI Harness — playback', () => {
   });
 });
 
-test.describe('AI Harness — narration', () => {
-  test('speaks each line and holds the picture until the narrator finishes it', async ({ page }) => {
-    // A stand-in voice that only finishes a line when the test says so.
-    await page.addInitScript(() => {
-      const w = window as any;
-      w.__spoken = [] as string[];
-      let current: any = null;
-      w.SpeechSynthesisUtterance = class { text: string; constructor(text: string) { this.text = text; } };
-      const synth = {
-        speaking: false, pending: false,
-        getVoices: () => [{ name: 'Test voice', lang: 'en-AU', localService: true }],
-        addEventListener() {},
-        speak(line: any) {
-          current = line; this.speaking = true; w.__spoken.push(line.text);
-          setTimeout(() => line.onstart && line.onstart({}), 10);
-        },
-        cancel() { this.speaking = false; current = null; },
-      };
-      w.__finishLine = () => { const line = current; current = null; synth.speaking = false; if (line && line.onend) line.onend({}); };
-      Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
-    });
+test.describe('AI Harness — voice-over', () => {
+  test('every line has its own recording, and the recordings set the timeline', async ({ page, request }) => {
     await page.goto(PATH);
-    await page.locator('#hx-voice').click(); // narration on starts the video
-    await expect(page.locator('#hx-voice')).toHaveAttribute('aria-pressed', 'true');
-    await expect(stage(page)).toHaveAttribute('data-mode', 'playing');
-    await expect.poll(() => page.evaluate(() => (window as any).__spoken[0])).toBe('Day one: you rent a brain, with a single API call.');
-
-    // The first line lasts about four seconds; the narrator is still talking, so the picture waits.
-    await page.waitForTimeout(6500);
-    await expect(page.locator('#hx-caption')).toContainText('Day one: you rent a brain');
-    expect(await page.evaluate(() => (window as any).__spoken.length)).toBe(1);
-
-    // Once the line ends the clock moves on, and the next line is spoken. (Generous timeouts for slow CI runners.)
-    await page.evaluate(() => (window as any).__finishLine());
-    await expect(page.locator('#hx-caption')).toContainText('brilliant new hire', { timeout: 10_000 });
-    await expect.poll(() => page.evaluate(() => (window as any).__spoken[1]), { timeout: 10_000 }).toContain('brilliant new hire');
+    const lines = await page.locator('#hx-script p[data-seg]').evaluateAll(ps => ps.map(p => ({
+      scene: p.closest('li')?.getAttribute('data-scene') ?? '',
+      ms: Number((p as HTMLElement).dataset.ms),
+      start: Number((p as HTMLElement).dataset.start),
+    })));
+    expect(lines).toHaveLength(30);
+    const counts = new Map<string, number>();
+    for (const [i, line] of lines.entries()) {
+      const n = (counts.get(line.scene) ?? 0) + 1;
+      counts.set(line.scene, n);
+      const name = `${line.scene}-${n}.mp3`;
+      expect(line.ms, `${name} has a length`).toBeGreaterThan(1000);
+      if (i > 0) expect(line.start - lines[i - 1].start, `${name} starts after the previous line ends`).toBeGreaterThanOrEqual(lines[i - 1].ms);
+      const response = await request.get(`/assets/audio/harness/${name}`);
+      expect.soft(response.status(), name).toBe(200);
+    }
   });
 
-  test('falls back to captions when the browser has no voice', async ({ page }) => {
-    await page.addInitScript(() => {
-      const w = window as any;
-      w.SpeechSynthesisUtterance = class { text: string; constructor(text: string) { this.text = text; } };
-      const silent = { speaking: false, pending: false, getVoices: () => [], addEventListener() {}, speak() {}, cancel() {} };
-      Object.defineProperty(window, 'speechSynthesis', { value: silent, configurable: true });
+  test('the British voice-over is on by default and follows the captions', async ({ page }) => {
+    await page.goto(PATH);
+    await expect(page.locator('#hx-voice')).toHaveAttribute('aria-pressed', 'true');
+    await page.locator('#hx-bigplay').click();
+    await expect.poll(async () => (await audioState(page)).playing).toBe(true);
+    await expect(page.locator('#hx-caption')).toContainText('Day one: you rent a brain');
+    await expect(page.locator('#hx-caption')).toContainText('brilliant new hire', { timeout: 10_000 });
+    await expect.poll(async () => (await audioState(page)).playing).toBe(true);
+  });
+
+  test('pausing pauses the voice, and play carries on mid-sentence', async ({ page }) => {
+    await page.goto(PATH);
+    await page.locator('#hx-bigplay').click();
+    await expect.poll(async () => (await audioState(page)).time, { timeout: 8000 }).toBeGreaterThan(1);
+    await page.locator('#hx-play').click();
+    await expect(stage(page)).toHaveAttribute('data-mode', 'paused');
+    const paused = await audioState(page);
+    expect(paused.playing).toBe(false);
+
+    await page.locator('#hx-play').click();
+    await expect.poll(async () => (await audioState(page)).playing).toBe(true);
+    expect((await audioState(page)).time).toBeGreaterThanOrEqual(paused.time - 0.05);
+  });
+
+  test('muting silences the voice while the video keeps playing', async ({ page }) => {
+    await page.goto(PATH);
+    await page.locator('#hx-bigplay').click();
+    await expect.poll(async () => (await audioState(page)).playing).toBe(true);
+    await page.locator('#hx-voice').click();
+    await expect(page.locator('#hx-voice')).toHaveAttribute('aria-pressed', 'false');
+    expect((await audioState(page)).playing).toBe(false);
+    const at = await rangeValue(page);
+    await expect.poll(() => rangeValue(page)).toBeGreaterThan(at);
+
+    await page.keyboard.press('m');
+    await expect(page.locator('#hx-voice')).toHaveAttribute('aria-pressed', 'true');
+    await expect.poll(async () => (await audioState(page)).playing).toBe(true);
+  });
+
+  test('the picture waits for a line that is slow to load', async ({ page }) => {
+    await page.route('**/assets/audio/harness/day-one-1.mp3', async route => {
+      await new Promise(resolve => setTimeout(resolve, 2500));
+      await route.continue();
     });
     await page.goto(PATH);
-    await page.locator('#hx-voice').click();
-    await expect(page.locator('#hx-voice-note')).toContainText('captions carry the full script', { timeout: 6000 });
+    await page.locator('#hx-bigplay').click();
+    await page.waitForTimeout(1200);
+    await expect(stage(page)).toHaveAttribute('data-mode', 'playing');
+    expect(await rangeValue(page)).toBe(0); // buffering, like any video
+    await expect.poll(async () => (await audioState(page)).playing, { timeout: 8000 }).toBe(true);
+    await expect.poll(() => rangeValue(page)).toBeGreaterThan(0);
+  });
+
+  test('the picture holds until the narrator finishes the line', async ({ page }) => {
+    await page.goto(PATH);
+    const nextLine = await page.locator('#hx-script p[data-seg]').nth(1).evaluate(p => Number((p as HTMLElement).dataset.start));
+    await page.locator('#hx-bigplay').click();
+    await expect.poll(async () => (await audioState(page)).playing).toBe(true);
+    // A slower narrator: the first line now runs past the end of its slot.
+    await page.locator('#hx-audio').evaluate(el => { (el as HTMLAudioElement).playbackRate = 0.5; });
+    await page.waitForTimeout(nextLine + 1200);
+    await expect(page.locator('#hx-caption')).toContainText('Day one: you rent a brain');
+    expect(await rangeValue(page)).toBeLessThanOrEqual(nextLine + 125); // the scrub bar rounds to 250 ms
+    await expect(page.locator('#hx-caption')).toContainText('brilliant new hire', { timeout: 10_000 });
+  });
+
+  test('falls back to captions when the voice-over cannot load', async ({ page }) => {
+    await page.route('**/assets/audio/harness/*.mp3', route => route.fulfill({ status: 404, body: '' }));
+    await page.goto(PATH);
+    await page.locator('#hx-bigplay').click();
+    await expect(page.locator('#hx-voice-note')).toContainText('captions carry the full script');
     await expect(page.locator('#hx-voice')).toHaveAttribute('aria-pressed', 'false');
     await expect(stage(page)).toHaveAttribute('data-mode', 'playing');
     const at = await rangeValue(page);

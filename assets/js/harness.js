@@ -1,9 +1,11 @@
 /* The AI Harness — interactive video player and "Pull a floor" tool.
    Vanilla JS, no dependencies. The narration lives in the page's transcript,
    so every word exists without JavaScript; this script turns it into a
-   timeline and animates the building and the chat in step with it. Every
-   frame is a pure function of the playhead, so seeking, chapters and floor
-   clicks all land on exactly the right picture. */
+   timeline and animates the building and the chat in step with it. Each line
+   has a recorded British English voice-over (made by tools/voiceover.py), and
+   its length sets the timeline. Every frame is a pure function of the
+   playhead, so seeking, chapters and floor clicks all land on exactly the
+   right picture. */
 (function () {
   'use strict';
 
@@ -169,9 +171,11 @@
     },
   };
 
-  /* Reading pace for captions, close to a narrator's speaking pace. */
+  /* Reading pace for a line that has no recording yet. */
   const segmentLength = (text, plain) =>
     Math.min(9500, Math.max(2600, 650 + text.split(' ').length * 330)) + (plain ? 800 : 0);
+  const BREATH = 600; // pause after each recorded line
+  const VOICE_DIR = '/assets/audio/harness/';
 
   /* ═════════════════════════ VIDEO PLAYER ═════════════════════════ */
   function initPlayer(player) {
@@ -206,8 +210,10 @@
         chapter: li.dataset.chapter,
         story: STORY[li.dataset.scene],
         segs: $$('p[data-seg]', li).map((p) => ({
+          el: p,
           text: p.textContent.replace(/\s+/g, ' ').trim(),
           plain: p.hasAttribute('data-plain'),
+          voiceMs: Number(p.dataset.ms) || 0,
         })),
       }))
       .filter((sc) => sc.segs.length && sc.story);
@@ -218,12 +224,17 @@
     scenes.forEach((sc, index) => {
       sc.index = index;
       sc.start = clock;
-      sc.segs.forEach((sg) => {
-        sg.dur = segmentLength(sg.text, sg.plain);
+      sc.segs.forEach((sg, i) => {
+        const words = sg.text.split(' ').length;
+        sg.dur = sg.voiceMs ? sg.voiceMs + BREATH + (sg.plain ? 700 : 0) : segmentLength(sg.text, sg.plain);
+        // Story beats are written against a steady reading pace; stretch them to the recording.
+        sg.scale = sg.voiceMs ? sg.voiceMs / (words * 330) : 1;
+        sg.src = sg.voiceMs ? VOICE_DIR + sc.id + '-' + (i + 1) + '.mp3' : null;
         sg.start = clock;
         clock += sg.dur;
         sg.end = clock;
         sg.scene = sc;
+        sg.el.dataset.start = String(sg.start);
         segs.push(sg);
       });
       sc.end = clock;
@@ -233,7 +244,7 @@
     // A moment in a scene: [narration line, ms into it] → ms from the start of the video.
     const at = (sc, pair) => {
       const sg = sc.segs[Math.min(pair[0], sc.segs.length - 1)];
-      return Math.min(sg.start + pair[1], sg.end - 1);
+      return Math.min(sg.start + Math.round(pair[1] * sg.scale), sg.end - 1);
     };
 
     scenes.forEach((sc, index) => {
@@ -267,7 +278,6 @@
     let timed = [];
     let plainCard = null;
     let captionsOn = true;
-    let voiceOn = false;
 
     /* ── The story panel ── */
     const timedAttrs = (on, until, strike, done) => ({ 'data-at': on, 'data-until': until, 'data-strike': strike, 'data-done': done });
@@ -526,11 +536,7 @@
       }
       playing = true;
       setMode('playing');
-      if (voiceOn) {
-        time = shownSeg.start;
-        render(true);
-        speak(shownSeg);
-      }
+      speak(shownSeg);
       last = performance.now();
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(tick);
@@ -540,7 +546,7 @@
       if (!playing) return;
       playing = false;
       cancelAnimationFrame(raf);
-      stopSpeech();
+      stopVoice();
       setMode('paused');
     }
 
@@ -551,8 +557,9 @@
       const dt = Math.min(100, Math.max(0, now - last));
       last = now;
       let next = time + dt;
-      // With narration on, hold the frame until the narrator finishes the line.
-      if (voiceOn && speech.active && next >= shownSeg.end - 1) next = Math.max(time, shownSeg.end - 1);
+      // Like any video: wait while the next line loads, and hold the frame until the narrator finishes it.
+      if (voice.loading) next = time;
+      else if (voice.active && next >= shownSeg.end - 1) next = Math.max(time, shownSeg.end - 1);
       if (next >= TOTAL) {
         finish();
         return;
@@ -560,29 +567,25 @@
       time = next;
       const before = shownSeg;
       render(false);
-      if (voiceOn && shownSeg !== before) speak(shownSeg);
+      if (shownSeg !== before) speak(shownSeg);
       raf = requestAnimationFrame(tick);
     }
 
     function finish() {
       playing = false;
       cancelAnimationFrame(raf);
-      stopSpeech();
+      stopVoice();
       time = TOTAL;
       render(false);
       setMode('ended');
     }
 
     function seek(ms) {
-      stopSpeech();
+      stopVoice();
       time = Math.max(0, Math.min(TOTAL - 1, ms));
       if (mode === 'poster' || mode === 'ended') setMode(playing ? 'playing' : 'paused');
       render(true);
-      if (playing && voiceOn) {
-        time = shownSeg.start;
-        render(true);
-        speak(shownSeg);
-      }
+      if (playing) speak(shownSeg);
     }
 
     function jump(index) {
@@ -611,92 +614,99 @@
       ccBtn.setAttribute('aria-pressed', String(on));
     }
 
-    /* ── Narration (the browser's own text-to-speech) ── */
-    const synth = 'speechSynthesis' in window && typeof window.SpeechSynthesisUtterance === 'function'
-      ? window.speechSynthesis : null;
-    const speech = { active: false, token: 0, timers: [] };
-    let voice = null;
+    /* ── Voice-over: one recorded British English line per caption ── */
+    const audio = $('#hx-audio', player);
+    const voice = { active: false, loading: false, token: 0, timer: 0 };
+    let voiceOn = !!audio && voiceBtn.getAttribute('aria-pressed') === 'true';
 
-    function pickVoice() {
-      const english = synth.getVoices().filter((v) => /^en([-_]|$)/i.test(v.lang));
-      const score = (v) =>
-        (/natural|neural|premium|enhanced/i.test(v.name) ? 4 : 0) +
-        (/google|microsoft|siri|samantha|daniel|karen|catherine/i.test(v.name) ? 2 : 0) +
-        (/^en[-_](au|gb)/i.test(v.lang) ? 1 : 0) +
-        (v.localService ? 0.5 : 0);
-      voice = english.sort((a, b) => score(b) - score(a))[0] || null;
+    // Each line is fetched once and played from memory, so it can start anywhere in the line
+    // on any web server, and later lines are ready before they are needed.
+    const clips = new Map();
+    const ready = new Map();
+    function clip(src) {
+      if (!clips.has(src)) {
+        clips.set(src, fetch(src)
+          .then((res) => {
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            return res.blob();
+          })
+          .then((blob) => {
+            const url = URL.createObjectURL(blob);
+            ready.set(src, url);
+            return url;
+          }));
+      }
+      return clips.get(src);
+    }
+    const prefetch = (sg) => { if (sg && sg.src) clip(sg.src).catch(() => {}); };
+
+    function stopVoice() {
+      voice.token += 1;
+      voice.active = false;
+      voice.loading = false;
+      clearTimeout(voice.timer);
+      if (audio && !audio.paused) audio.pause();
     }
 
-    function stopSpeech() {
-      speech.token += 1;
-      speech.active = false;
-      speech.timers.forEach(clearTimeout);
-      speech.timers = [];
-      if (synth && (synth.speaking || synth.pending)) synth.cancel();
-    }
-
+    // Play the line under the playhead from wherever the playhead is, so a pause resumes mid-sentence.
     function speak(sg) {
-      if (!synth || !voiceOn || !sg) return;
-      stopSpeech();
-      const token = speech.token;
-      let started = false;
+      stopVoice();
+      if (!voiceOn || !playing || !sg || !sg.src) return;
+      if (time - sg.start >= sg.voiceMs - 120) return; // that line has already been said
+      const token = voice.token;
       const done = () => {
-        if (token !== speech.token) return;
-        speech.active = false;
-        speech.timers.forEach(clearTimeout);
-        speech.timers = [];
+        if (token !== voice.token) return;
+        voice.active = false;
+        voice.loading = false;
+        clearTimeout(voice.timer);
       };
-      const line = new SpeechSynthesisUtterance(sg.text);
-      if (voice) line.voice = voice;
-      line.lang = voice ? voice.lang : 'en-GB';
-      line.onstart = () => { started = true; };
-      line.onend = done;
-      line.onerror = (event) => {
-        if (token !== speech.token) return;
+      const fail = (err) => {
+        if (token !== voice.token || (err && err.name === 'AbortError')) return;
         done();
-        if (event.error && !/interrupted|canceled/.test(event.error)) voiceUnavailable();
+        voiceUnavailable();
       };
-      speech.active = true;
-      // A narrator that never starts, or never finishes, must not stall the video.
-      speech.timers.push(setTimeout(() => { if (token === speech.token && !started) { done(); voiceUnavailable(); } }, 3000));
-      speech.timers.push(setTimeout(done, sg.dur + 8000));
-      speech.timers.push(setTimeout(() => { if (token === speech.token) synth.speak(line); }, 60));
+      const start = (url) => {
+        if (token !== voice.token) return;
+        const offset = Math.max(0, time - sg.start);
+        if (audio.src !== url) audio.src = url;
+        try { audio.currentTime = offset / 1000; } catch (e) { /* not seekable yet: start from the top */ }
+        audio.onended = done;
+        audio.onerror = fail;
+        clearTimeout(voice.timer);
+        // A line that never finishes must not stall the video.
+        voice.timer = setTimeout(done, sg.voiceMs - offset + 4000);
+        audio.play().then(() => { if (token === voice.token) voice.loading = false; }, fail);
+      };
+      voice.active = true;
+      voice.loading = true;
+      // A line that never starts must not stall the video either.
+      voice.timer = setTimeout(done, 8000);
+      // Start inside the click when the line is already loaded: some browsers only allow sound that way.
+      if (ready.has(sg.src)) start(ready.get(sg.src));
+      else clip(sg.src).then(start, fail);
+      prefetch(segs[segs.indexOf(sg) + 1]);
     }
 
     function setVoice(on) {
-      voiceOn = on;
-      voiceBtn.setAttribute('aria-pressed', String(on));
-      $('use', voiceBtn).setAttribute('href', on ? '#hx-i-voice' : '#hx-i-mute');
-      if (!on) stopSpeech();
+      voiceOn = on && !!audio;
+      voiceBtn.setAttribute('aria-pressed', String(voiceOn));
+      $('use', voiceBtn).setAttribute('href', voiceOn ? '#hx-i-voice' : '#hx-i-mute');
+      if (voiceOn) speak(shownSeg);
+      else stopVoice();
     }
 
     function voiceUnavailable() {
       setVoice(false);
-      voiceNote.textContent = 'Narration needs a text-to-speech voice and this browser does not offer one. The captions carry the full script.';
+      voiceNote.textContent = 'The voice-over could not play in this browser, so the captions carry the full script.';
     }
 
-    if (!synth) {
-      voiceBtn.hidden = true;
-    } else {
-      pickVoice();
-      if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', pickVoice);
-    }
+    if (!audio) voiceBtn.hidden = true;
+    else prefetch(segs[0]);
 
     voiceBtn.addEventListener('click', () => {
-      if (voiceOn) {
-        setVoice(false);
-        voiceNote.textContent = '';
-        return;
-      }
-      setVoice(true);
-      voiceNote.textContent = 'Narration uses your browser’s built-in voice.';
-      if (playing) {
-        time = shownSeg.start;
-        render(true);
-        speak(shownSeg);
-      } else if (mode === 'poster') {
-        play();
-      }
+      voiceNote.textContent = '';
+      setVoice(!voiceOn);
+      if (voiceOn && mode === 'poster') play();
     });
 
     /* ── Full screen ── */

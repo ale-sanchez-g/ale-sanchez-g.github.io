@@ -61,7 +61,7 @@ npx playwright test tests/e2e/strategy.spec.ts -g "speed paradox" --project="Des
   - Absolute links to `https://ale-sanchez-g.github.io/...` (e.g. `/card/` and `/releaseMaturity/` on the Apps page) can point at other repos' project sites, which share the domain, not at files here.
   - GitHub Pages is case-sensitive: keep file names lowercase and reference them with the exact case. Commit `3c55a25` fixed a hero image that broke because the file was `img/AJ-low.jpg` but the page requested `/img/aj-low.jpg`.
 - **Jekyll does almost nothing.**
-  - No page has front matter or `{% seo %}`, so `jekyll-seo-tag` is inert. Meta and Open Graph tags must be written by hand; only the strategy page has them.
+  - No page has front matter or `{% seo %}`, so `jekyll-seo-tag` is inert. Meta and Open Graph tags must be written by hand; only the strategy and AI harness pages have them.
   - `jekyll-sitemap` lists the static `.html` and `.pdf` files.
   - GitHub Pages' default plugins also publish Markdown files that have no front matter as pages (README, LICENSE and a few others excepted). That is why `_config.yml` excludes `CLAUDE.md`. Exclude any new repo-only `.md` file the same way.
 
@@ -81,7 +81,7 @@ The page is `reference/ai-native-qa-strategy.html`. Its styles are in `assets/cs
 - `assets/js/strategy-model.js`: the pure models and constants. It is UMD: `window.StrategyModel` in the browser, `require()` in Node.
 - `assets/js/strategy.js`: one IIFE holding the DOM tools. It logs a console error and stops if the model script is missing.
 
-It is the only page with JavaScript.
+It and the AI harness page are the only pages with JavaScript.
 
 - **Progressive enhancement.** All content is static HTML that reads fine without JS; the `<noscript>` note says so. An inline script adds `html.js`, and each tool initialises only if its root element (e.g. `#cheese-lab`) exists. Build DOM with the `h()` / `sv()` helpers, which set `textContent`. There is no `innerHTML`; keep it that way.
 - **Keep DOM-free code in `strategy-model.js`**, so it stays unit-testable. Anything that touches `document` or `window` belongs in `strategy.js`.
@@ -117,6 +117,14 @@ It is the only page with JavaScript.
     ```bash
     node -e "const {chromium}=require('@playwright/test');(async()=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('http://localhost:8765/reference/ai-native-qa-strategy.html',{waitUntil:'networkidle'});await p.evaluate(()=>document.fonts.ready);await p.pdf({path:'assets/docs/ai-native-qa-strategy.pdf',format:'A4',preferCSSPageSize:true,printBackground:true});await b.close();})()"
     ```
+
+## The AI harness page
+
+The page is `reference/ai-quality-architecture.html`, an interactive video on the layers of a company AI. Its styles are in `assets/css/harness.css` (`hx-` classes) and its behaviour in `assets/js/harness.js` (one IIFE). `tests/e2e/harness.spec.ts` covers it.
+
+- **The transcript is the script.** Each `#hx-script` line (`p[data-seg]`) is both a caption and a narrated line, and `harness.js` builds the timeline from them. The on-screen chat (each question, answer and break) is the `STORY` table in `harness.js`, keyed by the transcript's `data-scene`. Edit the two together.
+- **Voice-over.** Each line has a recording, `assets/audio/harness/<scene>-<line>.mp3`, and its length in `data-ms`, which times the video. After editing a narrated line, run `tools/voiceover.py` (setup is in its header) to record it again and refresh `data-ms`. A line without `data-ms` falls back to a reading-pace duration and plays no audio. `_config.yml` keeps `tools/` out of the published site.
+- **Credit.** The floors-and-breaks framing is adapted from a post by @pragmaticcoder.ai on Instagram. Keep the credits in the hero and on the video's end screen.
 
 ## Content and style conventions
 

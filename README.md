@@ -38,8 +38,11 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── js/strategy-model.js    # Models behind the strategy page's tools (unit tested)
 │   ├── js/strategy.js          # Interactive tools on the strategy page
 │   ├── js/harness.js           # Video player engine and "Pull a floor" tool
+│   ├── audio/harness/          # The AI Harness video's voice-over, one MP3 per narrated line
 │   └── docs/                   # Strategy PDF, generated from the page's print layout
-└── img/                        # Images and badge icons
+├── img/                        # Images and badge icons
+└── tools/
+    └── voiceover.py            # Records the AI Harness voice-over (not published)
 ```
 
 ## Local Development
@@ -108,8 +111,13 @@ A failing workflow only blocks merging once the gates are marked as required: Se
 
 `reference/ai-quality-architecture.html` explains the layers of a company AI harness as an interactive video: one continuous conversation with an HR assistant, told floor by floor (model, system prompt, RAG, MCP tools, RBAC + OAuth, guardrails, cache + routing, observability + evals). Each floor lands, the question that broke the AI last time is asked again and now works, then a new question breaks it, which is why the next floor exists. It closes with the quality engineering lens.
 
-- **The script lives in the page.** The transcript (`#hx-script`) holds every narrated line; `assets/js/harness.js` reads it, builds the timeline and animates the stage in step with it. Edit the words in the HTML and the captions, chapters and timings follow. The on-screen chat (each question, answer and break) is the `STORY` table in `harness.js`.
-- **Player:** click-to-play (no autoplay), play/pause, chapters, scrub bar, captions, optional narration through the browser's own text-to-speech, full screen, and keyboard shortcuts (Space, ←/→, C, M, F). Every frame is a pure function of the playhead, so seeking always lands on the right picture.
+- **The script lives in the page.** The transcript (`#hx-script`) holds every narrated line; `assets/js/harness.js` reads it, builds the timeline and animates the stage in step with it. Edit the words in the HTML, then record the voice-over again; the captions, chapters and timings follow. The on-screen chat (each question, answer and break) is the `STORY` table in `harness.js`.
+- **Player:** click-to-play (no autoplay), play/pause, chapters, scrub bar, captions, a British English voice-over (on by default, M to mute), full screen, and keyboard shortcuts (Space, ←/→, C, M, F). Every frame is a pure function of the playhead, so seeking always lands on the right picture.
+- **Voice-over:** every narrated line has a recording, `assets/audio/harness/<scene>-<line>.mp3`, made by `tools/voiceover.py` with Kokoro-82M (open weights, Apache-2.0) in a British English voice. The script writes each recording's length onto the transcript as `data-ms`, and the player times the video from it, so the picture and the voice stay in step. The page says the voice is AI-generated. To change a line, edit the transcript and run the script again (setup steps are at the top of the script):
+
+  ```bash
+  python3 tools/voiceover.py --model-dir ~/kokoro
+  ```
 - **Layouts:** a 16:9 stage on wide screens and a 9:16 vertical layout on phones, scaled with container query units.
 - **Without JavaScript** the stage shows the finished building and the transcript reads as an article.
 
