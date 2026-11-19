@@ -22,6 +22,7 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── learning.html           # Learning resources and certifications
 │   ├── apps.html               # Projects and tools
 │   ├── ai-native-qa-strategy.html  # Open-source, interactive AI-native QA strategy
+│   ├── ai-quality-architecture.html  # The AI Harness: interactive video on the QE architecture of company AI
 │   └── sums/                   # Event summaries (e.g. AWS Observability Day)
 ├── support/
 │   ├── support-list.html       # Support materials index
@@ -32,11 +33,16 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── css/design.css          # Design system used by every page
 │   ├── css/style.css           # Legacy styles (unused by current pages)
 │   ├── css/strategy.css        # Components for the strategy page
+│   ├── css/harness.css         # Video player and tools for the AI Harness page
 │   ├── js/main.js              # Legacy mobile menu toggle (unused by current pages)
 │   ├── js/strategy-model.js    # Models behind the strategy page's tools (unit tested)
 │   ├── js/strategy.js          # Interactive tools on the strategy page
+│   ├── js/harness.js           # Video player engine and "Pull a floor" tool
+│   ├── audio/harness/          # The AI Harness video's voice-over, one MP3 per narrated line
 │   └── docs/                   # Strategy PDF, generated from the page's print layout
-└── img/                        # Images and badge icons
+├── img/                        # Images and badge icons
+└── tools/
+    └── voiceover.py            # Records the AI Harness voice-over (not published)
 ```
 
 ## Local Development
@@ -71,6 +77,9 @@ npm run test:strategy
 
 # Dependency checks: known vulnerabilities, registry signatures and provenance
 npm run security
+
+# E2E tests for the AI Harness video player and "Pull a floor" tool
+npm run test:harness
 ```
 
 | Suite | Location | What it guards |
@@ -97,6 +106,24 @@ The downloadable strategy PDF is produced from the page's print layout, which ex
 Dependabot (`.github/dependabot.yml`) opens weekly, grouped update PRs for npm packages and GitHub Actions.
 
 A failing workflow only blocks merging once the gates are marked as required: Settings → Rules (or Branches) → protect `main` → require status checks → select the jobs above.
+
+## The AI Harness page
+
+`reference/ai-quality-architecture.html` explains the layers of a company AI harness as an interactive video: one continuous conversation with an HR assistant, told floor by floor (model, system prompt, RAG, MCP tools, RBAC + OAuth, guardrails, cache + routing, observability + evals). Each floor lands, the question that broke the AI last time is asked again and now works, then a new question breaks it, which is why the next floor exists. It closes with the quality engineering lens.
+
+- **The script lives in the page.** The transcript (`#hx-script`) holds every narrated line; `assets/js/harness.js` reads it, builds the timeline and animates the stage in step with it. Edit the words in the HTML, then record the voice-over again; the captions, chapters and timings follow. The on-screen chat (each question, answer and break) is the `STORY` table in `harness.js`.
+- **Player:** click-to-play (no autoplay), play/pause, chapters, scrub bar, captions, a British English voice-over (on by default, M to mute), full screen, and keyboard shortcuts (Space, ←/→, C, M, F). Every frame is a pure function of the playhead, so seeking always lands on the right picture.
+- **Voice-over:** every narrated line has a recording, `assets/audio/harness/<scene>-<line>.mp3`, made by `tools/voiceover.py` with Kokoro-82M (open weights, Apache-2.0) in a British English voice. The script writes each recording's length onto the transcript as `data-ms`, and the player times the video from it, so the picture and the voice stay in step. The page says the voice is AI-generated. To change a line, edit the transcript and run the script again (setup steps are at the top of the script):
+
+  ```bash
+  python3 tools/voiceover.py --model-dir ~/kokoro
+  ```
+- **Layouts:** a 16:9 stage on wide screens and a 9:16 vertical layout on phones, scaled with container query units.
+- **Without JavaScript** the stage shows the finished building and the transcript reads as an article.
+
+- **Credit:** the floors-and-breaks framing is adapted from a post by [@pragmaticcoder.ai](https://www.instagram.com/pragmaticcoder.ai/) on Instagram; the page credits it in the header and on the video's end screen.
+
+Its behaviour is covered by `tests/e2e/harness.spec.ts`.
 
 ## Jekyll Configuration
 

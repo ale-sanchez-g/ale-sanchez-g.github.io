@@ -64,6 +64,16 @@ test.describe('Navigation — back links', () => {
     await page.goto('/reference/publications.html');
     await expect(page.locator('main a[href="/reference/ai-native-qa-strategy.html"]')).toBeVisible();
   });
+
+  test('AI Quality Architecture has back link to Publications', async ({ page }) => {
+    await page.goto('/reference/ai-quality-architecture.html');
+    await expect(page.locator('.back-link')).toHaveAttribute('href', '/reference/publications.html');
+  });
+
+  test('Publications links to the AI Quality Architecture page', async ({ page }) => {
+    await page.goto('/reference/publications.html');
+    await expect(page.locator('main a[href="/reference/ai-quality-architecture.html"]')).toBeVisible();
+  });
 });
 
 test.describe('Home page — key sections', () => {
@@ -80,6 +90,13 @@ test.describe('Home page — key sections', () => {
     const banner = page.locator('.strategy-banner');
     await expect(banner).toBeVisible();
     await expect(banner.locator('a')).toHaveAttribute('href', '/reference/ai-native-qa-strategy.html');
+  });
+
+  test('Harness banner links to the AI quality architecture page', async ({ page }) => {
+    await page.goto('/index.html');
+    const banner = page.locator('.harness-banner');
+    await expect(banner).toBeVisible();
+    await expect(banner.locator('a')).toHaveAttribute('href', '/reference/ai-quality-architecture.html');
   });
 
   test('Capability cards are visible (6 cards)', async ({ page }) => {
@@ -135,6 +152,7 @@ test.describe('Home page — key sections', () => {
     await expect(page.locator('#contact a[href*="work-experience"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="publications"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="ai-native-qa-strategy"]')).toBeVisible();
+    await expect(page.locator('#contact a[href*="ai-quality-architecture"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="conferences"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="learning"]')).toBeVisible();
     await expect(page.locator('#contact a[href*="support-list"]')).toBeVisible();
@@ -150,6 +168,7 @@ test.describe('Inner pages — nav links', () => {
     '/reference/apps.html',
     '/support/support-list.html',
     '/reference/ai-native-qa-strategy.html',
+    '/reference/ai-quality-architecture.html',
   ];
 
   for (const path of navPages) {
