@@ -1,16 +1,16 @@
 {
   "name": "ale-sanchez-g-website",
   "version": "1.0.0",
-  "description": "Visual tests for ale-sanchez-g.github.io",
+  "description": "Quality gates (unit, E2E and security checks) for ale-sanchez-g.github.io",
   "scripts": {
-    "test": "playwright test",
-    "test:visual": "playwright test tests/visual.spec.ts",
-    "test:update": "playwright test tests/visual.spec.ts --update-snapshots",
-    "test:strategy": "playwright test tests/strategy.spec.ts",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test tests/unit/*.test.js",
+    "test:e2e": "playwright test",
+    "test:strategy": "playwright test tests/e2e/strategy.spec.ts",
+    "security": "npm audit --audit-level=high && npm audit signatures",
     "serve": "python3 -m http.server 8765"
   },
   "devDependencies": {
-    "@playwright/test": "^1.56.1",
-    "wait-on": "^9.0.4"
+    "@playwright/test": "^1.56.1"
   }
 }
