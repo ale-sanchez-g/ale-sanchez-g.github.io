@@ -3,3 +3,5 @@ description: automation, performace, observability, and more
 plugins:
 - jekyll-seo-tag
 - jekyll-sitemap
+exclude:
+- CLAUDE.md
