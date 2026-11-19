@@ -81,7 +81,7 @@ test.describe('AI Harness — playback', () => {
     await expect(hudTitle(page)).toHaveText('RAG');
     await expect(chapter(page, 2)).toHaveAttribute('aria-current', 'true');
     await expect(builtFloors(page)).toHaveCount(2);
-    await expect(page.locator('#hx-caption')).toContainText('Break two');
+    await expect(page.locator('#hx-caption')).toContainText('Add floor three');
 
     await page.locator('.hx-floor[data-floor="5"] .hx-slot').click();
     await expect(hudTitle(page)).toHaveText('RBAC + OAuth');
@@ -101,29 +101,68 @@ test.describe('AI Harness — playback', () => {
     await expect(hudTitle(page)).toHaveText('RBAC + OAuth');
   });
 
-  test('a break turns the empty floor red, then the new floor lands and connects', async ({ page }) => {
+  test('day one rents the brain, and the first question breaks it', async ({ page }) => {
+    await page.goto(PATH);
+    await openPaused(page, 0);
+    await expect(page.locator('.hx-floor[data-floor="1"]')).not.toHaveClass(/is-built/);
+    await page.keyboard.press('ArrowRight'); // 5 s: the brain is rented
+    await expect(page.locator('.hx-floor[data-floor="1"]')).toHaveClass(/is-built/);
+    await expect(page.locator('.hx-sys[data-floor="1"]')).toHaveClass(/is-on/);
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowRight'); // 15 s: "Who are you?" — "I'm ChatGPT."
+    const log = page.locator('#hx-panel .hx-log');
+    await expect(log.locator('.hx-li--user.is-on')).toContainText('Who are you?');
+    await expect(log.locator('.hx-li.is-on .hx-msg--bad')).toContainText('I’m ChatGPT.');
+    await expect(page.locator('#hx-panel .hx-badge--bad.is-on')).toHaveText('Break 1 of 7');
+    await expect(page.locator('.hx-floor[data-floor="2"]')).toHaveClass(/is-gap/);
+  });
+
+  test('each floor fixes the last question, then a new question breaks it', async ({ page }) => {
     await page.goto(PATH);
     await openPaused(page, 2); // RAG
-
-    await page.keyboard.press('ArrowRight'); // 5 s in: the break
+    const log = page.locator('#hx-panel .hx-log');
     const floor = page.locator('.hx-floor[data-floor="3"]');
+
+    // The conversation carries on: the question that broke the AI last time is still on screen.
     await expect(floor).toHaveClass(/is-gap/);
     await expect(floor).not.toHaveClass(/is-built/);
-    await expect(page.locator('#hx-panel .hx-badge--bad.is-on')).toHaveText('Broke');
-    await expect(page.locator('#hx-panel .hx-msg--bad.is-on')).toContainText('30 paid days');
+    await expect(page.locator('#hx-panel .hx-badge--bad.is-on')).toHaveText('Break 2 of 7');
+    await expect(log.locator('.hx-li.is-on .hx-msg--bad')).toContainText('30 paid days');
 
-    await page.keyboard.press('ArrowRight'); // 10 s in: the fix
+    await page.keyboard.press('ArrowRight'); // 5 s: the floor lands
     await expect(floor).toHaveClass(/is-built/);
     await expect(floor).toHaveClass(/is-current/);
     await expect(floor.locator('.hx-slot')).toHaveAttribute('aria-current', 'step');
     await expect(page.locator('.hx-sys[data-floor="3"]')).toHaveClass(/is-on/);
-    await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('Fixed · floor 03');
-    await expect(page.locator('#hx-panel .hx-msg--bad')).toHaveClass(/is-struck/);
-    await expect(page.locator('#hx-panel .hx-msg--good.is-on')).toContainText('20 days a year');
-
-    await page.keyboard.press('ArrowRight'); // 15 s in: in plain terms
     await expect(page.locator('#hx-panel .hx-plain.is-on')).toContainText('open-book exam');
-    await expect(page.locator('#hx-caption')).toHaveClass(/is-plain/);
+
+    await page.keyboard.press('ArrowRight'); // 10 s: the same question again, now answered properly
+    await expect(log.locator('.hx-li--user.is-on').last()).toContainText('What is my leave policy?');
+    await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('20 days a year');
+    await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('Fixed by floor 03');
+    await expect(log.locator('.hx-li.is-struck .hx-msg--bad')).toContainText('30 paid days');
+    await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('✓ Break 2 fixed');
+
+    await page.keyboard.press('ArrowRight'); // 15 s: a new question breaks it, and the next floor is needed
+    await expect(log.locator('.hx-li.is-on .hx-msg--bad').last()).toContainText('Open the HR portal');
+    await expect(log.locator('.hx-li.is-on .hx-msg--bad').last()).toContainText('can’t act');
+    await expect(page.locator('#hx-panel .hx-badge--bad.is-on')).toHaveText('Break 3 of 7');
+    await expect(page.locator('.hx-floor[data-floor="4"]')).toHaveClass(/is-gap/);
+    await expect(floor).not.toHaveClass(/is-current/);
+  });
+
+  test('the last floor finds the root cause and closes every break', async ({ page }) => {
+    await page.goto(PATH);
+    await openPaused(page, 7); // observability + evals
+    for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight'); // 15 s: the trace has found the cause
+    const log = page.locator('#hx-panel .hx-log');
+    await expect(log.locator('.hx-li.is-on .hx-trace')).toContainText('Answered from the cache');
+    await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('✓ Break 7 fixed');
+    await expect(page.locator('.hx-floor.is-gap')).toHaveCount(0);
+
+    await page.keyboard.press('k'); // play on to the final answer
+    await expect(log.locator('.hx-li.is-on .hx-msg--good').last()).toContainText('25 days a year', { timeout: 10_000 });
+    await expect(page.locator('#hx-panel .hx-badge--ok.is-on')).toHaveText('✓ All seven breaks fixed');
   });
 
   test('captions toggle, and the end screen shows the quality engineering lens and replays', async ({ page }) => {
@@ -177,17 +216,17 @@ test.describe('AI Harness — narration', () => {
     await page.locator('#hx-voice').click(); // narration on starts the video
     await expect(page.locator('#hx-voice')).toHaveAttribute('aria-pressed', 'true');
     await expect(stage(page)).toHaveAttribute('data-mode', 'playing');
-    await expect.poll(() => page.evaluate(() => (window as any).__spoken[0])).toBe('Day one: your company AI is one API call to a model you rent.');
+    await expect.poll(() => page.evaluate(() => (window as any).__spoken[0])).toBe('Day one: you rent a brain, with a single API call.');
 
-    // The first line lasts a little over five seconds; the narrator is still talking, so the picture waits.
+    // The first line lasts about four seconds; the narrator is still talking, so the picture waits.
     await page.waitForTimeout(6500);
-    await expect(page.locator('#hx-caption')).toContainText('Day one: your company AI');
+    await expect(page.locator('#hx-caption')).toContainText('Day one: you rent a brain');
     expect(await page.evaluate(() => (window as any).__spoken.length)).toBe(1);
 
     // Once the line ends the clock moves on, and the next line is spoken. (Generous timeouts for slow CI runners.)
     await page.evaluate(() => (window as any).__finishLine());
-    await expect(page.locator('#hx-caption')).toContainText('The demo is impressive', { timeout: 10_000 });
-    await expect.poll(() => page.evaluate(() => (window as any).__spoken[1]), { timeout: 10_000 }).toContain('The demo is impressive');
+    await expect(page.locator('#hx-caption')).toContainText('brilliant new hire', { timeout: 10_000 });
+    await expect.poll(() => page.evaluate(() => (window as any).__spoken[1]), { timeout: 10_000 }).toContain('brilliant new hire');
   });
 
   test('falls back to captions when the browser has no voice', async ({ page }) => {

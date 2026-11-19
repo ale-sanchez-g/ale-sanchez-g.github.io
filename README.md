@@ -106,9 +106,9 @@ A failing workflow only blocks merging once the gates are marked as required: Se
 
 ## The AI Harness page
 
-`reference/ai-quality-architecture.html` explains the layers of a company AI harness as an interactive video: a building that gains a floor each time something breaks (model, system prompt, RAG, MCP tools, RBAC + OAuth, guardrails, cache + routing, observability + evals), closing with the quality engineering lens.
+`reference/ai-quality-architecture.html` explains the layers of a company AI harness as an interactive video: one continuous conversation with an HR assistant, told floor by floor (model, system prompt, RAG, MCP tools, RBAC + OAuth, guardrails, cache + routing, observability + evals). Each floor lands, the question that broke the AI last time is asked again and now works, then a new question breaks it, which is why the next floor exists. It closes with the quality engineering lens.
 
-- **The script lives in the page.** The transcript (`#hx-script`) holds every narrated line; `assets/js/harness.js` reads it, builds the timeline and animates the stage in step with it. Edit the words in the HTML and the video, captions, chapters and timings follow.
+- **The script lives in the page.** The transcript (`#hx-script`) holds every narrated line; `assets/js/harness.js` reads it, builds the timeline and animates the stage in step with it. Edit the words in the HTML and the captions, chapters and timings follow. The on-screen chat (each question, answer and break) is the `STORY` table in `harness.js`.
 - **Player:** click-to-play (no autoplay), play/pause, chapters, scrub bar, captions, optional narration through the browser's own text-to-speech, full screen, and keyboard shortcuts (Space, ←/→, C, M, F). Every frame is a pure function of the playhead, so seeking always lands on the right picture.
 - **Layouts:** a 16:9 stage on wide screens and a 9:16 vertical layout on phones, scaled with container query units.
 - **Without JavaScript** the stage shows the finished building and the transcript reads as an article.
