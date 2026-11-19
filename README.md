@@ -113,6 +113,8 @@ A failing workflow only blocks merging once the gates are marked as required: Se
 - **Layouts:** a 16:9 stage on wide screens and a 9:16 vertical layout on phones, scaled with container query units.
 - **Without JavaScript** the stage shows the finished building and the transcript reads as an article.
 
+- **Credit:** the floors-and-breaks framing is adapted from a post by [@pragmaticcoder.ai](https://www.instagram.com/pragmaticcoder.ai/) on Instagram; the page credits it in the header and on the video's end screen.
+
 Its behaviour is covered by `tests/e2e/harness.spec.ts`.
 
 ## Jekyll Configuration

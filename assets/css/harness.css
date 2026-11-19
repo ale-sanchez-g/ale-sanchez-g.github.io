@@ -25,6 +25,11 @@
   text-transform: uppercase; color: var(--muted);
 }
 .hx-hero-meta li + li::before { content: '·'; color: var(--accent); margin: 0 0.9rem; }
+.hx-hero-meta a {
+  color: var(--fg); text-transform: none; letter-spacing: 0.04em;
+  text-decoration: underline; text-decoration-color: #555; text-underline-offset: 3px; transition: color 0.2s;
+}
+.hx-hero-meta a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 .hx-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
 .hx-btn-sm { padding: 0.65rem 1.2rem; font-size: 0.68rem; cursor: pointer; font-family: var(--mono); }
 button.btn { cursor: pointer; }
@@ -495,6 +500,9 @@ html:not(.js) .hx-slot { cursor: default; }
 .hx-end-title { font-size: 4em; font-weight: 900; line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; }
 .hx-end-title span { color: var(--accent); }
 .hx-end-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; }
+.hx-end-credit { font-family: var(--mono); font-size: 0.95em; letter-spacing: 0.04em; color: #a8a8a8; }
+.hx-end-credit a { color: var(--fg); text-decoration: underline; text-decoration-color: #666; text-underline-offset: 0.2em; }
+.hx-end-credit a:hover { color: var(--accent); }
 
 /* ── CONTROLS ── */
 .hx-controls {
@@ -753,6 +761,7 @@ html:not(.js) .hx-below, html:not(.js) .hx-caption, html:not(.js) .hx-voice-note
   .hx-poster-hint { font-size: 0.8em; max-width: 24em; }
   .hx-end-title { font-size: 2.6em; }
   .hx-end-actions { flex-direction: column; align-items: stretch; }
+  .hx-end-credit { font-size: 1.05em; }
 
   .hx-controls { max-width: 460px; margin: 0 auto; flex-wrap: wrap; padding: 0.3rem 0.4rem; }
   .hx-scrub { order: -1; flex-basis: 100%; margin: 0 0.35rem; height: 32px; }

@@ -37,6 +37,14 @@ test.describe('AI Harness — page', () => {
     expect(errors).toEqual([]);
   });
 
+  test('credits the original post by @pragmaticcoder.ai', async ({ page }) => {
+    await page.goto(PATH);
+    const credit = 'a[href="https://www.instagram.com/pragmaticcoder.ai/"]';
+    await expect(page.locator(`.hx-hero ${credit}`)).toBeVisible();
+    await expect(page.locator(`.hx-hero ${credit}`)).toHaveText('@pragmaticcoder.ai');
+    await expect(page.locator(`#hx-end ${credit}`)).toHaveCount(1);
+  });
+
   test('the transcript drives the timeline: chapter times match the transcript', async ({ page }) => {
     await page.goto(PATH);
     const chapterTimes = await page.locator('#hx-chapters .hx-ch-time').allTextContents();
@@ -180,6 +188,7 @@ test.describe('AI Harness — playback', () => {
     await page.locator('#hx-next').click();
     await expect(stage(page)).toHaveAttribute('data-mode', 'ended');
     await expect(page.locator('#hx-end')).toBeVisible();
+    await expect(page.locator('#hx-end .hx-end-credit')).toContainText('@pragmaticcoder.ai');
     await expect(page.locator('#hx-play')).toHaveAttribute('aria-label', 'Replay');
     await expect(builtFloors(page)).toHaveCount(8);
     await expect(stage(page)).toHaveClass(/is-qe/);
