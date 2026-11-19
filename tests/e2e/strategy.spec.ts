@@ -28,12 +28,14 @@ test.describe('AI-Native QA Strategy — page', () => {
   test('stays free of company, product, industry and dated-rollout references', async ({ page }) => {
     await page.goto(PATH);
     const pageText = await page.locator('main').evaluate(main => main.textContent ?? '');
-    const scriptText = readFileSync('assets/js/strategy.js', 'utf8');
+    const scripts = ['assets/js/strategy.js', 'assets/js/strategy-model.js'];
     const banned = [/trading/i, /client data/i, /regulated report/i, /order flow/i, /checkout/i, /\bmarket\b/i,
       /copilot/i, /terraform/i, /\bhelm\b/i, /aviation/i, /healthcare/i, /\b20(26|27)\b/, /phase 1 review/i];
     for (const term of banned) {
       expect(pageText, `page text mentions ${term}`).not.toMatch(term);
-      expect(scriptText, `strategy.js mentions ${term}`).not.toMatch(term);
+      for (const script of scripts) {
+        expect(readFileSync(script, 'utf8'), `${script} mentions ${term}`).not.toMatch(term);
+      }
     }
   });
 

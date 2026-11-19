@@ -1,52 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { pages } from './pages';
 
 // Block external font requests in every test to avoid ~40s network timeouts
 // in offline/CI environments where fonts.googleapis.com is unreachable.
 test.beforeEach(async ({ page }) => {
   await page.route('https://fonts.googleapis.com/**', route => route.abort());
   await page.route('https://fonts.gstatic.com/**', route => route.abort());
-});
-
-const pages = [
-  { name: 'home',            path: '/index.html',                          title: 'Home' },
-  { name: 'work-experience', path: '/reference/work-experience.html',       title: 'Work Experience' },
-  { name: 'publications',    path: '/reference/publications.html',          title: 'Publications' },
-  { name: 'conferences',     path: '/reference/conferences.html',           title: 'Conferences' },
-  { name: 'learning',        path: '/reference/learning.html',              title: 'Learning Resources' },
-  { name: 'apps',            path: '/reference/apps.html',                  title: 'Apps' },
-  { name: 'aws-obs-summary', path: '/reference/sums/aws-obs-sum.html',     title: 'AWS Observability Day' },
-  { name: 'support',         path: '/support/support-list.html',            title: 'Support Materials' },
-  { name: 'fake-numbers',    path: '/support/fake-numbers.html',            title: 'Fake Phone Numbers' },
-  { name: 'connections',     path: '/people/connections.html',              title: 'Connections' },
-  { name: 'ai-native-qa-strategy', path: '/reference/ai-native-qa-strategy.html', title: 'AI-Native QA Strategy' },
-];
-
-test.describe('Visual regression — full page', () => {
-  for (const pg of pages) {
-    test(`${pg.title}`, async ({ page }, testInfo) => {
-      // Long pages (e.g. the strategy page) need longer to capture two stable full-page shots.
-      test.setTimeout(90_000);
-      await page.goto(pg.path, { waitUntil: 'domcontentloaded' });
-
-      // Allow time for layout to settle
-      await page.waitForTimeout(300);
-
-      // Hide fixed nav so scroll position doesn't affect baseline diffs
-      await page.addStyleTag({
-        content: `nav { position: relative !important; }`
-      });
-
-      const screenshot = await page.screenshot({ fullPage: true, animations: 'disabled' });
-
-      // Attach to the test report so it's visible in CI artifacts
-      await testInfo.attach(`${pg.name}-screenshot`, {
-        body: screenshot,
-        contentType: 'image/png',
-      });
-
-      await expect(page).toHaveScreenshot(`${pg.name}.png`, { fullPage: true, timeout: 45_000 });
-    });
-  }
 });
 
 test.describe('Navigation — links and titles', () => {
