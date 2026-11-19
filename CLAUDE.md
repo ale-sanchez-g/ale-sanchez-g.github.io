@@ -9,7 +9,7 @@ Alejandro Sanchez-Giraldo's personal site, published by GitHub Pages from `main`
 ## Commands
 
 ```bash
-npm ci                                  # Playwright 1.56.1, pinned by package-lock.json
+npm ci                                  # Playwright 1.63.0, pinned by package-lock.json (1.56.1 couldn't install Chromium on ubuntu-latest, now Ubuntu 26.04)
 npx playwright install chromium         # the Chromium build that version expects
 npm run serve                           # http://localhost:8765 (python3 -m http.server, run from the repo root)
 npm test                                # unit tests, then E2E tests
