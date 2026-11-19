@@ -12,4 +12,5 @@ export const pages = [
   { path: '/support/fake-numbers.html',            title: 'Fake Phone Numbers' },
   { path: '/people/connections.html',              title: 'Connections' },
   { path: '/reference/ai-native-qa-strategy.html', title: 'AI-Native QA Strategy' },
+  { path: '/reference/ai-quality-architecture.html', title: 'AI Quality Architecture' },
 ];

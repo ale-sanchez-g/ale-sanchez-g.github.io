@@ -22,6 +22,7 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── learning.html           # Learning resources and certifications
 │   ├── apps.html               # Projects and tools
 │   ├── ai-native-qa-strategy.html  # Open-source, interactive AI-native QA strategy
+│   ├── ai-quality-architecture.html  # The AI Harness: interactive video on the QE architecture of company AI
 │   └── sums/                   # Event summaries (e.g. AWS Observability Day)
 ├── support/
 │   ├── support-list.html       # Support materials index
@@ -32,9 +33,11 @@ Personal portfolio website for Alejandro Sanchez-Giraldo — Product Owner for Q
 │   ├── css/design.css          # Design system used by every page
 │   ├── css/style.css           # Legacy styles (unused by current pages)
 │   ├── css/strategy.css        # Components for the strategy page
+│   ├── css/harness.css         # Video player and tools for the AI Harness page
 │   ├── js/main.js              # Legacy mobile menu toggle (unused by current pages)
 │   ├── js/strategy-model.js    # Models behind the strategy page's tools (unit tested)
 │   ├── js/strategy.js          # Interactive tools on the strategy page
+│   ├── js/harness.js           # Video player engine and "Pull a floor" tool
 │   └── docs/                   # Strategy PDF, generated from the page's print layout
 └── img/                        # Images and badge icons
 ```
@@ -71,6 +74,9 @@ npm run test:strategy
 
 # Dependency checks: known vulnerabilities, registry signatures and provenance
 npm run security
+
+# E2E tests for the AI Harness video player and "Pull a floor" tool
+npm run test:harness
 ```
 
 | Suite | Location | What it guards |
@@ -97,6 +103,17 @@ The downloadable strategy PDF is produced from the page's print layout, which ex
 Dependabot (`.github/dependabot.yml`) opens weekly, grouped update PRs for npm packages and GitHub Actions.
 
 A failing workflow only blocks merging once the gates are marked as required: Settings → Rules (or Branches) → protect `main` → require status checks → select the jobs above.
+
+## The AI Harness page
+
+`reference/ai-quality-architecture.html` explains the layers of a company AI harness as an interactive video: a building that gains a floor each time something breaks (model, system prompt, RAG, MCP tools, RBAC + OAuth, guardrails, cache + routing, observability + evals), closing with the quality engineering lens.
+
+- **The script lives in the page.** The transcript (`#hx-script`) holds every narrated line; `assets/js/harness.js` reads it, builds the timeline and animates the stage in step with it. Edit the words in the HTML and the video, captions, chapters and timings follow.
+- **Player:** click-to-play (no autoplay), play/pause, chapters, scrub bar, captions, optional narration through the browser's own text-to-speech, full screen, and keyboard shortcuts (Space, ←/→, C, M, F). Every frame is a pure function of the playhead, so seeking always lands on the right picture.
+- **Layouts:** a 16:9 stage on wide screens and a 9:16 vertical layout on phones, scaled with container query units.
+- **Without JavaScript** the stage shows the finished building and the transcript reads as an article.
+
+Its behaviour is covered by `tests/e2e/harness.spec.ts`.
 
 ## Jekyll Configuration
 

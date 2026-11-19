@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The AI Harness — Quality Engineering Architecture of AI | Alejandro Sanchez-Giraldo</title>
+  <meta name="description" content="An interactive video on the quality engineering architecture of company AI: eight floors, seven breaks and one rented model — explained in plain executive language."/>
+  <meta name="author" content="Alejandro Sanchez-Giraldo"/>
+  <link rel="canonical" href="https://ale-sanchez-g.github.io/reference/ai-quality-architecture.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="The AI Harness — Quality Engineering Architecture of AI"/>
+  <meta property="og:description" content="The model is rented. The harness is yours. An interactive video on the eight floors every company AI ends up needing — and where quality engineering belongs."/>
+  <meta property="og:url" content="https://ale-sanchez-g.github.io/reference/ai-quality-architecture.html"/>
+  <meta property="og:image" content="https://ale-sanchez-g.github.io/img/ai-harness-og.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/assets/css/design.css"/>
+  <link rel="stylesheet" href="/assets/css/harness.css"/>
+  <script>document.documentElement.classList.add('js');</script>
+  <script src="/assets/js/harness.js" defer></script>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">AJ / ASG</a>
+  <ul class="nav-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/reference/work-experience.html">Work Experience</a></li>
+    <li><a href="/reference/publications.html" class="active">Publications</a></li>
+    <li><a href="/reference/conferences.html">Conferences</a></li>
+    <li><a href="/reference/learning.html">Learning</a></li>
+    <li><a href="/reference/apps.html">Apps</a></li>
+    <li><a href="/support/support-list.html">Support</a></li>
+  </ul>
+</nav>
+
+<!-- Icon sprite: floor icons and player glyphs, referenced with <use>. -->
+<svg class="hx-sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="hx-i-model" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><rect x="9.5" y="9.5" width="5" height="5"/><path d="M9 2.5V6M15 2.5V6M9 18v3.5M15 18v3.5M2.5 9H6M2.5 15H6M18 9h3.5M18 15h3.5"/></symbol>
+  <symbol id="hx-i-prompt" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <symbol id="hx-i-rag" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7" ry="2.5"/><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13"/><path d="M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5"/></symbol>
+  <symbol id="hx-i-tools" viewBox="0 0 24 24"><path d="M9 2.5V7M15 2.5V7"/><path d="M6 7h12v4a6 6 0 0 1-12 0z"/><path d="M12 17v4.5"/></symbol>
+  <symbol id="hx-i-access" viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="1.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14.5v3"/></symbol>
+  <symbol id="hx-i-guard" viewBox="0 0 24 24"><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+  <symbol id="hx-i-route" viewBox="0 0 24 24"><path d="M12 21.5V13"/><path d="M12 13L6 5M12 13l6-8"/><path d="M6 5h4M6 5v4M18 5h-4M18 5v4"/></symbol>
+  <symbol id="hx-i-observe" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="hx-i-person" viewBox="0 0 24 24"><circle cx="12" cy="7.5" r="3.6"/><path d="M4.5 21.5v-1.2a7.5 7.5 0 0 1 15 0v1.2z"/></symbol>
+  <symbol id="hx-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="hx-i-pause" viewBox="0 0 24 24"><path d="M7 5h3.6v14H7zM13.4 5H17v14h-3.6z"/></symbol>
+  <symbol id="hx-i-prev" viewBox="0 0 24 24"><path d="M6 5h2v14H6zM19 5v14l-10-7z"/></symbol>
+  <symbol id="hx-i-next" viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM5 5v14l10-7z"/></symbol>
+  <symbol id="hx-i-replay" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.3-5.4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 3.5v5h5z"/></symbol>
+  <symbol id="hx-i-voice" viewBox="0 0 24 24"><path d="M3.5 9.5H7l4.5-4v13L7 14.5H3.5z"/><path d="M15 9a4 4 0 0 1 0 6M17.6 6.4a7.6 7.6 0 0 1 0 11.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="hx-i-mute" viewBox="0 0 24 24"><path d="M3.5 9.5H7l4.5-4v13L7 14.5H3.5z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="hx-i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+  <symbol id="hx-i-shrink" viewBox="0 0 24 24"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+</svg>
+
+<div class="page-hero hx-hero">
+  <p class="page-tag">// Interactive Video — Quality Engineering Architecture of AI</p>
+  <h1>The AI<br/><span>Harness</span></h1>
+  <p>Day one, your company AI is a single API call. Then something breaks, and you add a floor. Seven incidents later, you own a system. This short interactive video walks through every floor in plain executive language, and shows where quality engineering belongs.</p>
+  <ul class="hx-hero-meta">
+    <li>Alejandro Sanchez-Giraldo</li>
+    <li><time datetime="2026-11-19">Nov 19, 2026</time></li>
+    <li>8 floors · 7 breaks · 1 rented brain</li>
+  </ul>
+  <div class="hx-actions">
+    <a class="btn btn-accent" href="#watch">Watch the video &darr;</a>
+    <a class="btn btn-ghost" href="#floors">Read floor by floor</a>
+  </div>
+</div>
+
+<main class="page-content hx-content">
+  <a href="/reference/publications.html" class="back-link">&#8592; Back to Publications</a>
+
+  <!-- ═════════════════════════ THE VIDEO ═════════════════════════ -->
+  <section class="hx-watch" id="watch" aria-labelledby="watch-title">
+    <p class="section-label">Watch — about 3 minutes</p>
+    <h2 class="hx-h2" id="watch-title">Every floor exists because <span>something broke</span></h2>
+
+    <div class="hx-player" id="hx-player">
+      <div class="hx-frame">
+        <div class="hx-stage is-users is-summary" id="hx-stage" data-mode="poster" tabindex="0" aria-label="Video: the AI harness. Press space to play, left and right arrows for chapters.">
+
+          <p class="hx-hud" aria-hidden="true"><span class="hx-hud-num" id="hx-hud-num">All floors</span><span class="hx-hud-title" id="hx-hud-title">The AI harness</span></p>
+
+          <div class="hx-people" aria-hidden="true">
+            <span class="hx-people-label">Employees</span>
+            <span class="hx-people-row">
+              <svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg><svg><use href="#hx-i-person"/></svg>
+            </span>
+          </div>
+
+          <p class="hx-sign" aria-hidden="true"><span class="hx-sign-dot"></span>Company AI</p>
+
+          <!-- The building: floor 01 at the bottom, floor 08 on top. -->
+          <ol class="hx-floors" aria-label="Floors of the AI harness">
+            <li class="hx-floor is-built" data-floor="1">
+              <button type="button" class="hx-slot" aria-label="Floor 01, Model: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">01 · Model</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">01</span>
+                  <svg class="hx-ficon"><use href="#hx-i-model"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">Model</span><span class="hx-fsub">rented brain</span></span>
+                  <span class="hx-flink">rented · per token</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="2">
+              <button type="button" class="hx-slot" aria-label="Floor 02, System prompt: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">02 · System prompt</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">02</span>
+                  <svg class="hx-ficon"><use href="#hx-i-prompt"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">System prompt</span><span class="hx-fsub">name · role · tone</span></span>
+                  <span class="hx-flink">who it is</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="3">
+              <button type="button" class="hx-slot" aria-label="Floor 03, RAG: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">03 · RAG</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">03</span>
+                  <svg class="hx-ficon"><use href="#hx-i-rag"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">RAG</span><span class="hx-fsub">docs · chunks · search</span></span>
+                  <span class="hx-flink">company docs</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="4">
+              <button type="button" class="hx-slot" aria-label="Floor 04, MCP tools: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">04 · MCP tools</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">04</span>
+                  <svg class="hx-ficon"><use href="#hx-i-tools"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">MCP tools</span><span class="hx-fsub">HR · tickets · chat</span></span>
+                  <span class="hx-flink">company tools</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="5">
+              <button type="button" class="hx-slot" aria-label="Floor 05, RBAC and OAuth: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">05 · RBAC + OAuth</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">05</span>
+                  <svg class="hx-ficon"><use href="#hx-i-access"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">RBAC + OAuth</span><span class="hx-fsub">your access, every call</span></span>
+                  <span class="hx-flink">identity · SSO</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="6">
+              <button type="button" class="hx-slot" aria-label="Floor 06, Guardrails: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">06 · Guardrails</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">06</span>
+                  <svg class="hx-ficon"><use href="#hx-i-guard"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">Guardrails</span><span class="hx-fsub">screen · redact · check</span></span>
+                  <span class="hx-flink">in &amp; out</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="7">
+              <button type="button" class="hx-slot" aria-label="Floor 07, Cache and routing: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">07 · Cache + routing</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">07</span>
+                  <svg class="hx-ficon"><use href="#hx-i-route"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">Cache + routing</span><span class="hx-fsub">small or big model</span></span>
+                  <span class="hx-flink">small model</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+            <li class="hx-floor is-built" data-floor="8">
+              <button type="button" class="hx-slot" aria-label="Floor 08, Observability and evals: jump to this chapter">
+                <span class="hx-ghost" aria-hidden="true">08 · Observability</span>
+                <span class="hx-slab" aria-hidden="true">
+                  <span class="hx-fnum">08</span>
+                  <svg class="hx-ficon"><use href="#hx-i-observe"/></svg>
+                  <span class="hx-ftext"><span class="hx-fname">Observability</span><span class="hx-fsub">traces · logs · evals</span></span>
+                  <span class="hx-flink">dashboards</span>
+                  <span class="hx-fdot"></span>
+                </span>
+              </button>
+              <span class="hx-fcheck" aria-hidden="true">&#10003;</span>
+            </li>
+          </ol>
+
+          <!-- The quality engineering spine: evals and traces on every floor. -->
+          <div class="hx-spine" aria-hidden="true"><span>evals + traces</span></div>
+
+          <!-- What each floor connects to, outside the building. -->
+          <ul class="hx-systems" aria-hidden="true">
+            <li class="hx-sys hx-sys--cloud is-on" data-floor="1"><span class="hx-via">API</span><span class="hx-sys-name">Rented model</span><span class="hx-sys-sub">billed per token</span><span class="hx-stamp">Rented</span></li>
+            <li class="hx-sys is-on" data-floor="3"><span class="hx-via">ingest</span><span class="hx-sys-name">Company docs</span><span class="hx-sys-sub">HR · IT · policies</span></li>
+            <li class="hx-sys is-on" data-floor="4"><span class="hx-via">MCP</span><span class="hx-sys-name">Company tools</span><span class="hx-sys-sub">HR · tickets · chat</span></li>
+            <li class="hx-sys is-on" data-floor="5"><span class="hx-via">token</span><span class="hx-sys-name">Identity · SSO</span><span class="hx-sys-sub">who is asking?</span></li>
+            <li class="hx-sys is-on" data-floor="7"><span class="hx-via">route</span><span class="hx-sys-name">Small model</span><span class="hx-sys-sub">cheap · fast</span></li>
+            <li class="hx-sys is-on" data-floor="8"><span class="hx-via">traces</span><span class="hx-sys-name">Dashboards</span><span class="hx-sys-sub">traces · logs · evals</span></li>
+          </ul>
+
+          <p class="hx-ground" aria-hidden="true"><span>Your company</span><span>Off-site · rented</span></p>
+
+          <!-- Left panel: what broke, and how the new floor fixes it. Rebuilt per scene by harness.js. -->
+          <div class="hx-panel" id="hx-panel">
+            <p class="hx-kicker"><span class="hx-badge hx-badge--ok is-on">8 floors · 7 breaks</span></p>
+            <p class="hx-ptitle">Every floor exists because something broke</p>
+            <ul class="hx-checklist">
+              <li class="is-on"><span>02</span>It didn’t know who it worked for</li>
+              <li class="is-on"><span>03</span>It made up your policies</li>
+              <li class="is-on"><span>04</span>It answered, but couldn’t act</li>
+              <li class="is-on"><span>05</span>An intern saw the CEO’s salary</li>
+              <li class="is-on"><span>06</span>Anyone could hijack it</li>
+              <li class="is-on"><span>07</span>$3,600 a month for “hi”</li>
+              <li class="is-on"><span>08</span>Nobody knew why</li>
+            </ul>
+          </div>
+
+          <p class="hx-caption" id="hx-caption" aria-live="off"><span></span></p>
+
+          <div class="hx-poster" id="hx-poster">
+            <p class="hx-poster-kicker">Interactive video · about 3 min</p>
+            <p class="hx-poster-title">8 floors. 7 breaks.<br/><span>1 rented brain.</span></p>
+            <button type="button" class="hx-bigplay" id="hx-bigplay" aria-label="Play the video"><svg aria-hidden="true"><use href="#hx-i-play"/></svg></button>
+            <p class="hx-poster-hint">Captions on · narration optional · click any floor to jump</p>
+          </div>
+
+          <div class="hx-end" id="hx-end" hidden>
+            <p class="hx-end-title">The model is rented.<br/><span>The harness is yours.</span></p>
+            <div class="hx-end-actions">
+              <button type="button" class="btn btn-accent" id="hx-replay">Replay</button>
+              <a class="btn btn-ghost" href="#pull">Pull a floor &darr;</a>
+              <a class="btn btn-ghost" href="#floors">Floor by floor &darr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hx-controls" role="group" aria-label="Video controls">
+        <button type="button" class="hx-btn hx-btn--play" id="hx-play" aria-label="Play"><svg aria-hidden="true"><use href="#hx-i-play"/></svg></button>
+        <button type="button" class="hx-btn" id="hx-prev" aria-label="Previous chapter"><svg aria-hidden="true"><use href="#hx-i-prev"/></svg></button>
+        <button type="button" class="hx-btn" id="hx-next" aria-label="Next chapter"><svg aria-hidden="true"><use href="#hx-i-next"/></svg></button>
+        <div class="hx-scrub">
+          <div class="hx-ticks" id="hx-ticks" aria-hidden="true"></div>
+          <input class="hx-range" id="hx-range" type="range" min="0" max="1000" step="250" value="0" aria-label="Seek"/>
+        </div>
+        <p class="hx-time" id="hx-time" aria-hidden="true">0:00 / 0:00</p>
+        <button type="button" class="hx-btn hx-btn--text" id="hx-cc" aria-pressed="true" aria-label="Captions">CC</button>
+        <button type="button" class="hx-btn" id="hx-voice" aria-pressed="false" aria-label="Narration"><svg aria-hidden="true"><use href="#hx-i-mute"/></svg></button>
+        <button type="button" class="hx-btn" id="hx-fs" aria-label="Full screen"><svg aria-hidden="true"><use href="#hx-i-expand"/></svg></button>
+      </div>
+      <p class="hx-voice-note" id="hx-voice-note" role="status"></p>
+    </div>
+
+    <div class="hx-below">
+      <ol class="hx-chapters" id="hx-chapters" aria-label="Chapters"></ol>
+      <p class="hx-keys" aria-hidden="true"><kbd>Space</kbd> play / pause · <kbd>&larr;</kbd><kbd>&rarr;</kbd> chapters · <kbd>C</kbd> captions · <kbd>M</kbd> narration · <kbd>F</kbd> full screen</p>
+    </div>
+
+    <details class="hx-transcript" id="hx-transcript">
+      <summary>Read the transcript</summary>
+      <ol class="hx-script" id="hx-script">
+        <li data-scene="day-one" data-floor="1" data-title="Day one" data-chapter="Day one — one API call">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Day one — one API call</p>
+          <p data-seg>Day one: your company AI is one API call to a model you rent.</p>
+          <p data-seg>The demo is impressive. Then thousands of employees start using it, and things break.</p>
+          <p data-seg data-plain>The model is a brilliant new hire: it knows the world, but nothing about your company.</p>
+        </li>
+        <li data-scene="prompt" data-floor="2" data-break="1" data-title="System prompt" data-chapter="System prompt — who it is">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 02 — System prompt</p>
+          <p data-seg>Break one. An employee asks, “Who are you?” It answers with another company’s product name.</p>
+          <p data-seg>Fix: a system prompt — its name, job and tone, written down and used in every conversation.</p>
+          <p data-seg data-plain>The job description and name badge you give every new hire.</p>
+        </li>
+        <li data-scene="rag" data-floor="3" data-break="2" data-title="RAG" data-chapter="RAG — answers from your documents">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 03 — RAG</p>
+          <p data-seg>Break two. Asked about leave, it makes up a policy: thirty paid days, unlimited sick leave.</p>
+          <p data-seg>Fix: retrieval, or RAG. Before answering, it searches your own documents and cites the source.</p>
+          <p data-seg data-plain>An open-book exam, instead of answering from memory.</p>
+        </li>
+        <li data-scene="tools" data-floor="4" data-break="3" data-title="MCP tools" data-chapter="MCP tools — from answers to actions">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 04 — MCP tools</p>
+          <p data-seg>Break three. It explains how to apply for leave, but it can’t actually apply.</p>
+          <p data-seg>Fix: tools. Through MCP, an open standard, it connects to HR, ticketing and chat, and does the work.</p>
+          <p data-seg data-plain>One universal plug, like USB-C, between the AI and your systems.</p>
+        </li>
+        <li data-scene="access" data-floor="5" data-break="4" data-title="RBAC + OAuth" data-chapter="RBAC + OAuth — your access, every call">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 05 — RBAC + OAuth</p>
+          <p data-seg>Break four. An intern asks for the CEO’s salary, and gets it.</p>
+          <p data-seg>Fix: access control. The AI acts with the asking employee’s own permissions, checked on every call.</p>
+          <p data-seg data-plain>A key card that opens only the doors the person asking may enter. Never a master key.</p>
+        </li>
+        <li data-scene="guard" data-floor="6" data-break="5" data-title="Guardrails" data-chapter="Guardrails — screen in, check out">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 06 — Guardrails</p>
+          <p data-seg>Break five. Someone types, “Ignore all previous instructions,” and it obeys.</p>
+          <p data-seg>Fix: guardrails. Screen what goes in, check what comes out, and hide personal data.</p>
+          <p data-seg data-plain>Airport security: it stops most threats, not all. So never give the AI more access than it needs.</p>
+        </li>
+        <li data-scene="route" data-floor="7" data-break="6" data-title="Cache + routing" data-chapter="Cache + routing — right-size every question">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 07 — Cache + routing</p>
+          <p data-seg>Break six. Ten thousand people say “hi” every morning, and every one hits the biggest model: $3,600 a month.</p>
+          <p data-seg>Fix: caching and routing. Repeat questions get a saved answer; simple ones go to a small, fast model.</p>
+          <p data-seg data-plain>You don’t send the senior partner to answer the front desk.</p>
+        </li>
+        <li data-scene="observe" data-floor="8" data-break="7" data-title="Observability + evals" data-chapter="Observability + evals — know why">
+          <p class="hx-script-head"><span class="hx-script-time"></span>Floor 08 — Observability + evals</p>
+          <p data-seg>Break seven. A wrong answer goes out, and nobody can explain why. There are no logs.</p>
+          <p data-seg>Fix: observability and evals. Trace every answer to its sources, and test quality before every change.</p>
+          <p data-seg data-plain>A flight recorder for every answer, and a health check before every release.</p>
+        </li>
+        <li data-scene="harness" data-floor="0" data-title="The harness" data-chapter="The harness — what you actually own">
+          <p class="hx-script-head"><span class="hx-script-time"></span>The harness</p>
+          <p data-seg>Eight floors, and only one of them is rented.</p>
+          <p data-seg>Anyone can rent the same model. Everything above it is your company AI, and your advantage.</p>
+          <p data-seg data-plain>The model is rented. The harness is yours.</p>
+        </li>
+        <li data-scene="qe" data-floor="0" data-title="Quality engineering" data-chapter="Quality engineering — inspect every floor">
+          <p class="hx-script-head"><span class="hx-script-time"></span>The quality engineering lens</p>
+          <p data-seg>Most companies add these floors one incident at a time, after their employees find the break.</p>
+          <p data-seg>Quality engineering flips the order. Evals and traces go in first, so every new floor arrives with its own test.</p>
+          <p data-seg data-plain>Inspect each floor as it goes up, not after the tenants move in.</p>
+        </li>
+      </ol>
+    </details>
+  </section>
+
+  <!-- ═════════════════════════ PULL A FLOOR ═════════════════════════ -->
+  <section class="hx-section hx-js-only" id="pull" aria-labelledby="pull-title">
+    <p class="section-label">Try it</p>
+    <h2 class="hx-h2" id="pull-title">Pull a floor. <span>See what breaks.</span></h2>
+    <p class="hx-lede">Switch off every floor your company AI doesn’t have yet. The risk depends on what is still standing: an AI with no company data has nothing to leak, and an AI that can act is the one worth hijacking.</p>
+
+    <div class="page-card hx-lab" id="pull-lab">
+      <div class="hx-pull">
+        <div>
+          <p class="hx-mini-label" id="pull-floors-label">Your building — select a floor to pull it</p>
+          <ol class="hx-pull-floors" aria-labelledby="pull-floors-label">
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="8"><span class="hx-pull-num">08</span><svg aria-hidden="true"><use href="#hx-i-observe"/></svg><span class="hx-pull-name">Observability + evals</span><span class="hx-pull-state"></span></button></li>
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="7"><span class="hx-pull-num">07</span><svg aria-hidden="true"><use href="#hx-i-route"/></svg><span class="hx-pull-name">Cache + routing</span><span class="hx-pull-state"></span></button></li>
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="6"><span class="hx-pull-num">06</span><svg aria-hidden="true"><use href="#hx-i-guard"/></svg><span class="hx-pull-name">Guardrails</span><span class="hx-pull-state"></span></button></li>
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="5"><span class="hx-pull-num">05</span><svg aria-hidden="true"><use href="#hx-i-access"/></svg><span class="hx-pull-name">RBAC + OAuth</span><span class="hx-pull-state"></span></button></li>
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="4"><span class="hx-pull-num">04</span><svg aria-hidden="true"><use href="#hx-i-tools"/></svg><span class="hx-pull-name">MCP tools</span><span class="hx-pull-state"></span></button></li>
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="3"><span class="hx-pull-num">03</span><svg aria-hidden="true"><use href="#hx-i-rag"/></svg><span class="hx-pull-name">RAG</span><span class="hx-pull-state"></span></button></li>
+            <li><button type="button" class="hx-pull-floor" role="switch" aria-checked="true" data-floor="2"><span class="hx-pull-num">02</span><svg aria-hidden="true"><use href="#hx-i-prompt"/></svg><span class="hx-pull-name">System prompt</span><span class="hx-pull-state"></span></button></li>
+            <li class="hx-pull-base"><span class="hx-pull-num">01</span><svg aria-hidden="true"><use href="#hx-i-model"/></svg><span class="hx-pull-name">Model</span><span class="hx-pull-state">Rented</span></li>
+          </ol>
+          <div class="hx-pull-actions">
+            <button type="button" class="btn btn-ghost hx-btn-sm" id="pull-all">Back to day one</button>
+            <button type="button" class="btn btn-ghost hx-btn-sm" id="pull-none">Rebuild every floor</button>
+          </div>
+        </div>
+        <div class="hx-pull-out" id="pull-out">
+          <div class="hx-pull-score">
+            <p class="hx-mini-label">Floors standing above the model</p>
+            <p class="hx-pull-count" id="pull-count">7 / 7</p>
+          </div>
+          <p class="hx-pull-verdict" id="pull-verdict" aria-live="polite"></p>
+          <ul class="hx-pull-breaks" id="pull-breaks"></ul>
+          <div class="hx-pull-next" id="pull-next"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════ FLOOR BY FLOOR ═════════════════════════ -->
+  <section class="hx-section" id="floors" aria-labelledby="floors-title">
+    <p class="section-label">Floor by floor</p>
+    <h2 class="hx-h2" id="floors-title">What each floor prevents, <span>and how to prove it</span></h2>
+    <p class="hx-lede">The video adds floors in the order most companies discover them: one incident at a time. For each floor, here is what breaks without it, the one question to ask your team, and the evidence that shows it works.</p>
+
+    <ol class="hx-fl-list">
+      <li>
+        <details class="hx-fl" id="floor-01">
+          <summary>
+            <span class="hx-fl-num">01</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">Model</span><span class="hx-fl-why">The rented brain. Powerful, general, and identical for everyone who rents it.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What it is</p><p>A general-purpose model rented from an AI provider and billed per token. Providers update and retire models on their own schedule.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>A brilliant new hire: knows the world, knows nothing about your company.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>If the provider changed or retired our model tomorrow, how quickly would we know whether our answers got worse?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Run the same evaluation suite against any model before switching, and pin the model version in production.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-02">
+          <summary>
+            <span class="hx-fl-num">02</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">System prompt</span><span class="hx-fl-why">Without it: “Who are you?” — “I’m ChatGPT.” It doesn’t know who it works for.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>Standing instructions sent with every conversation: its name, its role, its tone, and what it must never do.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>The job description and name badge you give every new hire.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>Who owns the assistant’s instructions, and is every change reviewed and versioned like code?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Identity and tone checks in the evaluation suite. A prompt change ships only when the suite passes.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-03">
+          <summary>
+            <span class="hx-fl-num">03</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">RAG — retrieval</span><span class="hx-fl-why">Without it: it makes up your leave policy, confidently.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>Your documents, split into passages and indexed for search. Before answering, the AI retrieves the relevant passages, answers from them and cites the source.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>An open-book exam, instead of answering from memory.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>Does every answer show its source, and does it say “I don’t know” when our documents don’t cover the question?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Groundedness and citation-accuracy scores, a set of questions it must decline, and a freshness check on the documents. RAG reduces made-up answers; it does not eliminate them.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-04">
+          <summary>
+            <span class="hx-fl-num">04</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">MCP tools</span><span class="hx-fl-why">Without it: it explains how to apply for leave, but can’t apply.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>Connectors to HR, ticketing and chat through MCP, the Model Context Protocol: an open standard for plugging AI into business systems.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>One universal plug, like USB-C, between the AI and your systems.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>Which actions can it take on its own, and which need a person to confirm?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Tool-call accuracy (right tool, right details) tested before release. Start read-only; require confirmation for anything that changes data or can’t be undone.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-05">
+          <summary>
+            <span class="hx-fl-num">05</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">RBAC + OAuth</span><span class="hx-fl-why">Without it: an intern asks for the CEO’s salary, and gets it.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>Single sign-on identity on every request. The AI acts on the employee’s behalf with their permissions (role-based access control, OAuth tokens), never through a shared master account. The same rule covers the documents it searches.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>A key card that opens only the doors the person asking may enter. Never a master key.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>Can the AI ever see more than the person asking? How do we prove that on every release?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Permission tests: the same question asked as an intern and as an executive must get different answers. Every tool call is logged with who asked.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-06">
+          <summary>
+            <span class="hx-fl-num">06</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">Guardrails</span><span class="hx-fl-why">Without it: “Ignore all previous instructions” — and it obeys.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>Checks on the way in (attack and policy classifiers) and on the way out (personal-data redaction, policy filters). The hardest attacks hide inside the documents and emails the AI reads, not in what people type.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>Airport security: it stops most threats, not all.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>What happens when someone tries to trick it, and when a document it reads tries to?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>A red-team test suite of direct and hidden attacks on every release, with the attack success rate trending down. National cyber agencies warn prompt injection may never be fully fixed, so also limit what a fooled AI is able to do.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-07">
+          <summary>
+            <span class="hx-fl-num">07</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">Cache + routing</span><span class="hx-fl-why">Without it: 10,000 × “hi” every morning on the biggest model, about $3,600 a month in our example.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>A cache that answers repeated questions instantly, and a router that sends simple requests to a small, fast model and saves the large model for hard ones.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>You don’t send the senior partner to answer the front desk.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>What does one useful answer cost us, and is that cost going down?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Cost per conversation, cache hit rate and response time on one dashboard, with quality scored per route so cheaper never quietly means worse.</p></div>
+          </div>
+        </details>
+      </li>
+      <li>
+        <details class="hx-fl" id="floor-08">
+          <summary>
+            <span class="hx-fl-num">08</span>
+            <span class="hx-fl-main"><span class="hx-fl-name">Observability + evals</span><span class="hx-fl-why">Without it: a wrong answer goes out, and nobody knows why.</span></span>
+          </summary>
+          <div class="hx-fl-body">
+            <div><p class="hx-mini-label">What you add</p><p>A trace of every conversation (question, documents, tool calls, answer), plus logs, dashboards and evals: automated tests of answer quality.</p></div>
+            <div><p class="hx-mini-label">In plain terms</p><p>A flight recorder for every answer, and a health check before every release.</p></div>
+            <div><p class="hx-mini-label">Ask your team</p><p>When it gets something wrong, how fast can we see why, and stop it happening again?</p></div>
+            <div><p class="hx-mini-label">Prove it works</p><p>Traces for every conversation, evals in the release pipeline and on a sample of live traffic, and every incident turned into a new test case.</p></div>
+          </div>
+        </details>
+      </li>
+    </ol>
+
+    <div class="hx-callout">
+      <p class="hx-callout-label">The quality engineering move</p>
+      <p>Build floor 08 on day one. With evals and traces in place first, every other floor arrives with its own test, and you find the next break before your employees do. The order in the video is how most companies learn; it is not the order to build in.</p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════ GO DEEPER ═════════════════════════ -->
+  <section class="hx-section hx-related" id="related" aria-labelledby="related-title">
+    <p class="section-label">Go deeper</p>
+    <h2 class="hx-h2" id="related-title">From the harness <span>to the whole delivery system</span></h2>
+    <p class="hx-lede">The harness is how a company AI earns trust in production. The AI-Native Quality Assurance Strategy covers the other half: how quality works when AI agents write the code.</p>
+    <div class="hx-actions">
+      <a class="btn btn-accent" href="/reference/ai-native-qa-strategy.html">Explore the strategy &rarr;</a>
+      <a class="btn btn-ghost" href="https://github.com/ale-sanchez-g/ale-sanchez-g.github.io/blob/main/reference/ai-quality-architecture.html" target="_blank" rel="noopener">View the source &#8599;</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">Discuss it with me &#8599;</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 Alejandro Sanchez-Giraldo</p>
+  <p>
+    <a href="https://slo-education.com.au" target="_blank" rel="noopener">SLO Education</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/ale-sanchez-g" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://www.linkedin.com/in/alejandrosanchezgiraldo" target="_blank" rel="noopener">LinkedIn</a>
+  </p>
+</footer>
+
+</body>
+</html>
